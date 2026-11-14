@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'etapa-**'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    name: App (análisis, pruebas y APK demo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.50.0'
+          cache: true
+
+      - name: Versiones
+        run: flutter --version
+
+      - name: Dependencias y textos generados
+        run: flutter pub get
+
+      - name: Formato
+        run: dart format --output=none --set-exit-if-changed lib test integration_test
+
+      - name: Análisis
+        run: flutter analyze
+
+      - name: Pruebas
+        run: flutter test
+
+      - name: APK demo
+        run: flutter build apk --debug --dart-define-from-file=config/demo.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: alpaso-demo-apk
+          path: apps/mobile/build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14

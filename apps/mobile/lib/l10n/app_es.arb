@@ -1,0 +1,33 @@
+{
+  "@@locale": "es",
+
+  "appTitle": "Al Paso",
+
+  "demoBannerLabel": "DEMO",
+  "demoBannerSemantics": "Versión de demostración. No se cobra dinero real.",
+
+  "tabExplore": "Explorar",
+  "tabBookings": "Reservas",
+  "tabProfile": "Perfil",
+
+  "exploreTitle": "Explorar",
+  "exploreEmptyTitle": "Aquí verás los hostales cercanos",
+  "exploreEmptyBody": "El mapa con precios y cuartos disponibles llega en la etapa 3.",
+
+  "bookingsTitle": "Mis reservas",
+  "bookingsEmptyTitle": "Aún no tienes reservas",
+  "bookingsEmptyBody": "Tus reservas y su código de ingreso aparecerán aquí.",
+
+  "profileTitle": "Perfil",
+  "profileEmptyTitle": "Tu cuenta",
+  "profileEmptyBody": "El registro y el inicio de sesión llegan en la parte 1B.",
+  "profileBusinessModeAction": "Ir al modo negocio",
+  "profileServerNotConfigured": "Sin servidor configurado",
+  "profileServerConfigured": "Servidor configurado",
+  "profileEnvironmentDemo": "Entorno: demo",
+
+  "businessTitle": "Modo negocio",
+  "businessEmptyTitle": "Panel del hostal",
+  "businessEmptyBody": "El registro del hostal, los cuartos y las tarifas llegan en la etapa 2.",
+  "businessBackToClientAction": "Volver al modo cliente"
+}

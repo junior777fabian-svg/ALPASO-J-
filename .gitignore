@@ -16,3 +16,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.iml
+
+# Capturas de los recorridos en navegador
+e2e/capturas/

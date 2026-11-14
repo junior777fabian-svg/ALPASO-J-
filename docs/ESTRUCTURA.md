@@ -350,12 +350,21 @@ Cada carpeta de `features/` se divide igual:
 | Avisos | firebase_messaging y avisos locales |
 | Textos | Centralizados en archivos de traducción, en español |
 
-Las versiones exactas se fijan al crear el proyecto en la etapa 1.
+Las versiones exactas quedan fijadas en `apps/mobile/pubspec.lock`.
 
-La app tiene dos variantes de compilación:
+Decisiones tomadas al crear el proyecto (parte 1A, implementadas):
 
-- **demo**: se instala como "Al Paso DEMO", apunta al entorno demo y muestra el rótulo.
-- **prod**: la que irá a las tiendas. No arranca con conectores demo.
+- **Flutter 3.50 estable.** Desde esta versión Material se importa de `package:material_ui/material_ui.dart`; el import anterior está obsoleto.
+- **Identificador `pe.alpaso.app`** en Android y iOS. Es la propuesta de la sección 17 y se puede cambiar hasta el día de publicar.
+- **Marca:** se conservan los colores de la versión anterior (oro, carbón y perla), en tema oscuro. La tipografía Inter viaja dentro de la app y no se descarga al abrirla.
+- **Textos** centralizados en `lib/l10n/app_es.arb`.
+
+La app tiene dos entornos, elegidos al compilar con un archivo de `apps/mobile/config/`:
+
+- **demo**: muestra la cinta "DEMO" sobre todas las pantallas. Puede correr sin servidor.
+- **prod**: la que irá a las tiendas. Exige servidor con https y no arranca con conectores demo.
+
+Pendiente para la parte de publicación: que la variante demo se instale con nombre e identificador propios ("Al Paso DEMO"), para convivir en el mismo teléfono con la de tiendas. Requiere configuración nativa de Android y de iOS que debe comprobarse en una Mac.
 
 ---
 
@@ -430,7 +439,7 @@ Cada etapa se divide en partes al empezarla. Estas son las de la etapa 1:
 
 | Parte | Entrega | Cómo se comprueba | Estado |
 |---|---|---|---|
-| 1A | Esqueleto de la app: proyecto Flutter, configuración demo y prod, tema, navegación base, primeras pruebas y automatización | Análisis y pruebas en la nube; el agente local la compila y la abre en el teléfono | Pendiente |
+| 1A | Esqueleto de la app: proyecto Flutter, configuración demo y prod, tema, navegación base, primeras pruebas y automatización | Análisis y pruebas en la nube; el agente local la compila y la abre en el teléfono | Implementada. Verificado en la nube: análisis, 24 pruebas y recorrido en navegador. Falta: compilación Android y teléfono real (agente local) |
 | 1B | Servidor local y cuentas: tablas base, registro, inicio de sesión y confirmación de mayoría de edad | Pruebas de reglas de la base y de la app contra el servidor local | Pendiente |
 | 1C | Entorno demo: proyecto demo de Supabase, migraciones aplicadas por la automatización, APK demo descargable y compilación de iOS en la nube | Registro real desde el teléfono contra el entorno demo; iOS compila | Pendiente |
 
