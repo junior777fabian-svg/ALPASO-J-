@@ -1,0 +1,18 @@
+# Secretos y configuración local: nunca al repositorio
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+key.properties
+*.p8
+*.p12
+*.mobileprovision
+config/*.local.json
+
+# Sistema e IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
