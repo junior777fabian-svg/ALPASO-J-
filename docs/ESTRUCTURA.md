@@ -1,6 +1,6 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 0, estructura propuesta y pendiente de aprobación. Nada de lo descrito aquí está implementado todavía.
+**Estado:** Etapa 0 entregada. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Nada de lo descrito aquí está implementado todavía.
 **Última actualización:** 14 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
@@ -46,6 +46,7 @@ No compite con Booking ni Airbnb. Apunta a hospedajes de precio accesible, por h
 | Pago | Total en la app al reservar |
 | Costos | Solo herramientas gratuitas por ahora; lo que exige pago queda en demo, listo para conectar |
 | Pruebas | Automáticas y a cargo del agente de la nube |
+| Forma de trabajo | Dos agentes autónomos; el trabajo se divide en partes y cada parte termina con un prompt para el agente local |
 | Repositorio | `ALPASO-J-`; el agente de la nube escribe y el PC del dueño descarga |
 | Equipos disponibles | PC con Windows, celular Android, iPhone, y una Mac en el instituto |
 
@@ -292,7 +293,9 @@ ALPASO-J-/
 ├─ README.md
 ├─ AGENTS.md                    reglas de trabajo para agentes y colaboradores
 ├─ docs/
-│  └─ ESTRUCTURA.md             este documento
+│  ├─ ESTRUCTURA.md             este documento
+│  └─ pruebas-locales/          instrucciones de cada parte para el agente local
+├─ reportes/                    resultados que sube el agente local
 ├─ apps/
 │  ├─ mobile/                   la app Flutter (Cliente y Negocio)
 │  │  ├─ lib/
@@ -390,12 +393,17 @@ Una etapa se da por terminada cuando sus pruebas automáticas pasan, hay evidenc
 
 ## 14. Forma de trabajo
 
-- El **agente de la nube** escribe el código y las pruebas, y sube los cambios a GitHub.
-- El **PC del dueño** (o su agente local) descarga con `git pull` y ejecuta la app. No modifica `main`.
-- Cada etapa se trabaja en una rama y entra a `main` mediante un Pull Request, solo con todas las pruebas en verde.
-- Si el agente local necesita cambiar algo, lo hace en una rama propia y abre un Pull Request.
-- Ningún secreto se guarda en el repositorio.
+Decidido por el dueño el 14/11/2026: los dos agentes trabajan de forma autónoma, el trabajo se divide en partes cortas y cada parte termina con un prompt para el agente local.
+
+- El **agente de la nube** escribe el código y las pruebas, las ejecuta y sube los cambios a GitHub.
+- El **agente local**, en la laptop del dueño, trae los cambios, ejecuta las pruebas en la laptop y en el teléfono, y sube su reporte. No cambia código.
+- Cada etapa se divide en **partes** (1A, 1B…). Cada parte se desarrolla en una rama y se integra a `main` cuando sus pruebas pasan.
+- Al terminar una parte, el agente de la nube deja las instrucciones en `docs/pruebas-locales/` y entrega al dueño un prompt corto para su chat local.
+- El agente local guarda su resultado en `reportes/`. El agente de la nube lo lee antes de empezar la parte siguiente.
+- Ningún secreto ni dato personal se guarda en el repositorio.
 - Idioma: documentación y textos de la app en español; código, tablas y carpetas en inglés.
+
+El detalle del traspaso está en `AGENTS.md`.
 
 ---
 
@@ -415,6 +423,16 @@ Una etapa se da por terminada cuando sus pruebas automáticas pasan, hay evidenc
 | 9 | Piloto y publicación | Prueba cerrada con hostales reales, envío a Google Play y App Store | Aprobación de ambas tiendas |
 
 Las etapas 1 a 7 se completan sin gastar. La 8 empieza cuando el dueño adquiera cada servicio y puede hacerse por partes.
+
+### Partes de la etapa 1
+
+Cada etapa se divide en partes al empezarla. Estas son las de la etapa 1:
+
+| Parte | Entrega | Cómo se comprueba | Estado |
+|---|---|---|---|
+| 1A | Esqueleto de la app: proyecto Flutter, configuración demo y prod, tema, navegación base, primeras pruebas y automatización | Análisis y pruebas en la nube; el agente local la compila y la abre en el teléfono | Pendiente |
+| 1B | Servidor local y cuentas: tablas base, registro, inicio de sesión y confirmación de mayoría de edad | Pruebas de reglas de la base y de la app contra el servidor local | Pendiente |
+| 1C | Entorno demo: proyecto demo de Supabase, migraciones aplicadas por la automatización, APK demo descargable y compilación de iOS en la nube | Registro real desde el teléfono contra el entorno demo; iOS compila | Pendiente |
 
 ---
 

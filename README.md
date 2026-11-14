@@ -10,8 +10,8 @@ El plano completo del proyecto está en [`docs/ESTRUCTURA.md`](docs/ESTRUCTURA.m
 
 | # | Etapa | Estado |
 |---|---|---|
-| 0 | Estructura | Propuesta, pendiente de aprobación |
-| 1 | Cimientos | Pendiente |
+| 0 | Estructura | Entregada |
+| 1 | Cimientos | En curso (partes 1A, 1B, 1C) |
 | 2 | Negocio publica | Pendiente |
 | 3 | Cliente descubre | Pendiente |
 | 4 | Reserva y pago demo | Pendiente |
@@ -31,8 +31,9 @@ El plano completo del proyecto está en [`docs/ESTRUCTURA.md`](docs/ESTRUCTURA.m
 ## Cómo se trabaja
 
 - El agente de la nube escribe el código y las pruebas, y sube los cambios a este repositorio.
-- En el PC se descarga con `git pull` para ejecutar y probar.
-- Los cambios entran a `main` por rama y Pull Request, con las pruebas en verde.
-- Ningún secreto (llaves, contraseñas, archivos de firma) se guarda en el repositorio.
+- El agente local, en la laptop, trae los cambios, ejecuta las pruebas en la laptop y en el teléfono, y sube su reporte a [`reportes/`](reportes/).
+- El trabajo se divide en partes cortas. Al terminar cada una hay instrucciones para el agente local en [`docs/pruebas-locales/`](docs/pruebas-locales/).
+- `main` solo avanza con trabajo probado.
+- Ningún secreto ni dato personal se guarda en el repositorio.
 
 Las reglas completas para agentes y colaboradores están en [`AGENTS.md`](AGENTS.md).
