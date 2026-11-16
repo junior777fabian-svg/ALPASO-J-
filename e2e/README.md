@@ -1,8 +1,25 @@
-# Recorridos en navegador
+# Recorridos de punta a punta
 
-Pruebas que abren la app web compilada en un navegador y la recorren como lo haría una persona. Las ejecuta el agente de la nube antes de entregar cada parte.
+Dos recorridos que prueban el sistema por fuera, como lo usaría una persona o la app. Los ejecuta el agente de la nube antes de entregar cada parte.
 
-## Cómo se ejecutan
+| Archivo | Qué recorre |
+|---|---|
+| `smoke.cjs` | La app web compilada, en un navegador |
+| `api-smoke.cjs` | La API del servidor local, con cuentas reales |
+
+## Recorrido por la API
+
+Con el servidor local levantado (`npm run server:start` desde la raíz):
+
+```
+npm run api:smoke
+```
+
+Registra cuentas en el servicio de cuentas local y comprueba que el perfil se crea, que cada cuenta solo ve y edita lo suyo, y que lo privado no sale por la API. Las cuentas que crea se borran al terminar.
+
+## Recorrido en navegador
+
+### Cómo se ejecuta
 
 1. Compilar la app web con el árbol de accesibilidad activo, desde `apps/mobile`:
 
@@ -24,7 +41,7 @@ Pruebas que abren la app web compilada en un navegador y la recorren como lo har
 
 El script necesita Playwright con Chromium. Imprime cada paso con `ok` o `FALLA`, guarda capturas en la carpeta indicada y termina con código distinto de cero si algo falló.
 
-## Qué cubre `smoke.cjs`
+### Qué cubre `smoke.cjs`
 
 - La app abre en Explorar.
 - Las tres pestañas llevan a su pantalla.

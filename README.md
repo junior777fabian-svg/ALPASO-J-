@@ -2,18 +2,18 @@
 
 App móvil para Android y iPhone que permite encontrar y reservar cuartos en hostales y hospedajes de Lima: por horas (4, 6 u 8), por 12 horas o por 24 horas. El cliente ve antes las fotos reales del cuarto, agrega extras que lo esperan en la habitación, paga en la app y entra con un código.
 
-**Estado actual: Etapa 1, parte 1A.** Existe el esqueleto de la app: abre, navega entre sus pantallas base y muestra la cinta "DEMO". Todavía no hay servidor ni funciones reales.
+**Estado actual: Etapa 1, parte 1B.** Existe el esqueleto de la app (abre, navega entre sus pantallas base y muestra la cinta "DEMO") y la base del servidor (perfiles, administradores y configuración, con sus permisos probados). La app y el servidor todavía no están conectados.
 
 El plano completo del proyecto está en [`docs/ESTRUCTURA.md`](docs/ESTRUCTURA.md): producto, pantallas por rol, reglas, datos, conectores, carpetas, pruebas y etapas.
 
-Para compilar y probar la app, ver [`apps/mobile/README.md`](apps/mobile/README.md).
+Para compilar y probar la app, ver [`apps/mobile/README.md`](apps/mobile/README.md). Para el servidor, ver [`supabase/README.md`](supabase/README.md).
 
 ## Etapas
 
 | # | Etapa | Estado |
 |---|---|---|
 | 0 | Estructura | Entregada |
-| 1 | Cimientos | En curso (partes 1A, 1B, 1C) |
+| 1 | Cimientos | En curso: 1A y 1B hechas; faltan 1C y 1D |
 | 2 | Negocio publica | Pendiente |
 | 3 | Cliente descubre | Pendiente |
 | 4 | Reserva y pago demo | Pendiente |

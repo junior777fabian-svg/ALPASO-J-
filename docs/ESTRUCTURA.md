@@ -227,6 +227,10 @@ Tablas previstas, agrupadas por tema. Las columnas se definen en cada etapa, den
 | Operación | `notifications`, `device_tokens`, `support_cases`, `audit_log` | Avisos, teléfonos registrados para push, incidencias, registro de acciones sensibles |
 | Configuración | `app_settings`, `districts` | Comisión, tiempos, duraciones, conectores activos; distritos de Lima y Callao |
 
+Implementado en la parte 1B: `profiles`, `admins` y `app_settings`, con las funciones `confirm_adult` y `get_public_settings`. El resto sigue propuesto.
+
+Las tablas que la app nunca debe leer ni escribir directamente, como `admins` y `app_settings`, viven en un esquema `private` que la API no expone. Las reglas para escribir migraciones están en `supabase/README.md`.
+
 Reglas de integridad:
 
 - **`room_occupancy` es la única fuente de verdad de la disponibilidad.** Reservas, clientes directos, limpieza y mantenimiento escriben ahí, y una restricción de exclusión impide que dos filas del mismo cuarto se crucen.
@@ -440,8 +444,11 @@ Cada etapa se divide en partes al empezarla. Estas son las de la etapa 1:
 | Parte | Entrega | Cómo se comprueba | Estado |
 |---|---|---|---|
 | 1A | Esqueleto de la app: proyecto Flutter, configuración demo y prod, tema, navegación base, primeras pruebas y automatización | Análisis y pruebas en la nube; el agente local la compila y la abre en el teléfono | Implementada. Verificado en la nube: análisis, 24 pruebas y recorrido en navegador. Falta: compilación Android y teléfono real (agente local) |
-| 1B | Servidor local y cuentas: tablas base, registro, inicio de sesión y confirmación de mayoría de edad | Pruebas de reglas de la base y de la app contra el servidor local | Pendiente |
-| 1C | Entorno demo: proyecto demo de Supabase, migraciones aplicadas por la automatización, APK demo descargable y compilación de iOS en la nube | Registro real desde el teléfono contra el entorno demo; iOS compila | Pendiente |
+| 1B | Servidor base: Supabase local, tablas de identidad (perfiles, administradores, configuración), permisos y sus pruebas | Pruebas de reglas y permisos en la nube y en GitHub | Implementada. Verificado en la nube: 41 pruebas de reglas, que fallan si se rompe una regla a propósito, y un registro real por el servicio de cuentas local |
+| 1C | Cuentas en la app: registro, inicio de sesión, confirmación de mayoría de edad y perfil | Pruebas de la app contra el servidor local | Pendiente |
+| 1D | Entorno demo: proyecto demo de Supabase con las migraciones aplicadas, APK demo descargable y compilación de iOS en la nube | Registro real desde el teléfono contra el entorno demo; iOS compila | Pendiente |
+
+La parte 1B original incluía también las cuentas en la app. Se dividió en 1B y 1C para que cada parte sea corta.
 
 ---
 

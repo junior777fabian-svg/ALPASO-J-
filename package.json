@@ -1,0 +1,17 @@
+{
+  "name": "alpaso",
+  "private": true,
+  "description": "Herramientas de servidor y de pruebas de Al Paso. La app está en apps/mobile.",
+  "scripts": {
+    "db:start": "supabase db start",
+    "db:test": "supabase test db",
+    "db:lint": "supabase db lint --fail-on warning",
+    "db:reset": "supabase db reset",
+    "server:start": "supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor",
+    "server:stop": "supabase stop",
+    "api:smoke": "node e2e/api-smoke.cjs"
+  },
+  "devDependencies": {
+    "supabase": "3.2.0"
+  }
+}

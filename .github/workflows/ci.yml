@@ -61,3 +61,30 @@ jobs:
           path: apps/mobile/build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+  db:
+    name: Base de datos (reglas y permisos)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Herramienta de Supabase en la versión fijada
+        run: npm ci
+
+      - name: Entorno local con todas las migraciones
+        run: npm run server:start
+
+      - name: Pruebas de reglas y permisos
+        run: npm run db:test
+
+      - name: Revisión de funciones
+        run: npm run db:lint
+
+      - name: Recorrido por la API con cuentas reales
+        run: npm run api:smoke

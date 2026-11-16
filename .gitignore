@@ -19,3 +19,6 @@ Thumbs.db
 
 # Capturas de los recorridos en navegador
 e2e/capturas/
+
+# Herramientas de Node
+node_modules/
