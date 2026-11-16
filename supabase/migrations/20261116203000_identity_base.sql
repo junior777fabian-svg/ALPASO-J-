@@ -18,10 +18,11 @@
 create schema if not exists private;
 
 revoke all on schema private from public;
--- Las políticas de `public` llaman funciones de `private`, así que estos roles
--- necesitan poder nombrar el esquema. No pueden leer sus tablas: la API no lo
--- expone y cada tabla revoca sus permisos más abajo.
-grant usage on schema private to anon, authenticated, service_role;
+-- Las políticas de `public` llaman funciones de `private` cuando consulta una
+-- cuenta con sesión, así que ese rol necesita poder nombrar el esquema. No
+-- puede leer sus tablas: la API no lo expone y cada tabla revoca sus permisos
+-- más abajo. Sin sesión no hay acceso al esquema.
+grant usage on schema private to authenticated;
 
 -- Postgres deja ejecutar a cualquiera toda función nueva. Ese permiso no se
 -- puede quitar por esquema, así que cada función de este archivo lo revoca
@@ -67,7 +68,7 @@ as $$
 $$;
 
 revoke all on function private.is_admin() from public, anon;
-grant execute on function private.is_admin() to authenticated, service_role;
+grant execute on function private.is_admin() to authenticated;
 
 -- ──────────────────────────────────────────────────────────────────── perfiles
 
