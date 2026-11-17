@@ -20,8 +20,8 @@
 
 El trabajo se divide en etapas y cada etapa en partes cortas (1A, 1B…). Al terminar una parte:
 
-1. El agente de la nube deja las instrucciones en `docs/pruebas-locales/<parte>.md` y le entrega al dueño un prompt corto para su chat local.
-2. El dueño pega ese prompt en el chat local.
+1. El agente de la nube deja el detalle de la parte en `docs/pruebas-locales/<parte>.md` y actualiza `docs/pruebas-locales/TRASPASO.md`, que resume qué se hizo, cómo traerlo y qué tareas están pendientes.
+2. El agente de la nube le entrega al dueño ese `TRASPASO.md`, y el dueño se lo envía a su chat local.
 3. El agente local sigue las instrucciones y guarda su resultado en `reportes/<parte>.md`. Las capturas van en `reportes/<parte>/`.
 4. El agente local sube el reporte a `main` con `git pull --rebase origin main` seguido de `git push origin main`.
 5. El agente de la nube lee ese reporte antes de empezar la parte siguiente y corrige lo que haya fallado.
