@@ -4,6 +4,8 @@ App Flutter para Android y iPhone, con los modos Cliente y Negocio. La organizac
 
 Se compila con **Flutter 3.50 estable**.
 
+En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni espacios: la compilación de Android falla con un error de `gradlew.bat`. Por ejemplo, `C:\dev\ALPASO-J` funciona y `C:\Users\...\ALPASO(J)` no.
+
 ## Comandos
 
 Desde esta carpeta (`apps/mobile`):

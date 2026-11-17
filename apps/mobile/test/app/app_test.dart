@@ -41,6 +41,18 @@ void main() {
       expect(find.byType(DemoBanner), findsNothing);
       expect(find.byType(Banner), findsNothing);
     });
+
+    testWidgets('no tapa la barra de estado del teléfono', (tester) async {
+      // Un teléfono cuya barra de estado (hora, señal, batería) mide 40 px.
+      tester.view.devicePixelRatio = 1;
+      tester.view.padding = const FakeViewPadding(top: 40);
+      tester.view.viewPadding = const FakeViewPadding(top: 40);
+      addTearDown(tester.view.reset);
+
+      await tester.pumpAlPaso(config: demoConfig);
+
+      expect(tester.getTopLeft(find.byType(Banner)).dy, 40);
+    });
   });
 
   group('navegación del modo cliente', () {

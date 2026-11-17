@@ -13,11 +13,24 @@ class DemoBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Banner(
-      message: AppLocalizations.of(context).demoBannerLabel,
-      location: BannerLocation.topEnd,
-      color: AppColors.demo,
-      child: child,
+    // La cinta empieza debajo de la barra de estado del teléfono. Dibujada
+    // desde el borde de la pantalla tapaba la batería y la señal.
+    final statusBarHeight = MediaQuery.viewPaddingOf(context).top;
+
+    return Stack(
+      children: [
+        child,
+        Positioned.fill(
+          top: statusBarHeight,
+          child: IgnorePointer(
+            child: Banner(
+              message: AppLocalizations.of(context).demoBannerLabel,
+              location: BannerLocation.topEnd,
+              color: AppColors.demo,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

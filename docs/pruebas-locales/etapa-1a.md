@@ -35,6 +35,14 @@ El agente de la nube no puede compilar para Android ni usar un teléfono. Tú co
 
 Esta parte necesita Flutter 3.50 estable. Si todavía no se hizo la etapa 0, sigue primero `docs/pruebas-locales/etapa-0.md`.
 
+En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni espacios. Si los tiene, la compilación de Android falla en segundos con un error de `gradlew.bat`. Mientras el dueño no renombre la carpeta, se puede montar como unidad temporal y compilar desde ahí:
+
+```
+subst P: "<ruta completa de la carpeta del repositorio>"
+P:
+cd apps\mobile
+```
+
 ## Pasos
 
 Anota el resultado de cada paso: si pasó, cuánto tardó y, si falló, el mensaje exacto.

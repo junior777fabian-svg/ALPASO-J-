@@ -61,6 +61,8 @@ git log --oneline -1
 
 Debe mostrar el commit `182266e` o uno más reciente. Después lee `AGENTS.md` completo.
 
+En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni espacios: la compilación de Android falla con un error de `gradlew.bat`. Si la carpeta actual los tiene y el dueño aún no la renombró, móntala como unidad temporal con `subst P: "<ruta de la carpeta>"` y trabaja desde `P:`.
+
 ## 5. Qué tienes que hacer, en orden
 
 Hay tres tareas pendientes. Cada una tiene un archivo con el detalle paso a paso y el formato del reporte. **Si algo de este resumen difiere de esos archivos, mandan esos archivos.**
