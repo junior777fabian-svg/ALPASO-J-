@@ -1,0 +1,4 @@
+tags:
+  # Pruebas que hablan con un servidor de Supabase de verdad. Sin servidor se
+  # saltan solas. Ver test/server/README.md.
+  server:

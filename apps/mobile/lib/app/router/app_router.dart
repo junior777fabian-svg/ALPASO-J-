@@ -1,3 +1,5 @@
+import 'package:alpaso/features/auth/presentation/sign_in_screen.dart';
+import 'package:alpaso/features/auth/presentation/sign_up_screen.dart';
 import 'package:alpaso/features/business/presentation/business_home_screen.dart';
 import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
@@ -12,6 +14,8 @@ abstract final class AppRoutes {
   static const bookings = '/reservas';
   static const profile = '/perfil';
   static const business = '/negocio';
+  static const signIn = '/ingresar';
+  static const signUp = '/registro';
 }
 
 GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
@@ -48,6 +52,15 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
             ],
           ),
         ],
+      ),
+      // Cuenta: se abren encima de las pestañas.
+      GoRoute(
+        path: AppRoutes.signIn,
+        builder: (context, state) => const SignInScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.signUp,
+        builder: (context, state) => const SignUpScreen(),
       ),
       // Modo negocio: tendrá su propia navegación a partir de la etapa 2.
       GoRoute(

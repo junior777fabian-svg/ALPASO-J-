@@ -63,9 +63,9 @@ jobs:
           retention-days: 14
 
   db:
-    name: Base de datos (reglas y permisos)
+    name: Servidor (reglas, permisos y app contra el servidor)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
 
@@ -88,3 +88,20 @@ jobs:
 
       - name: Recorrido por la API con cuentas reales
         run: npm run api:smoke
+
+      # La app contra el servidor de verdad: registro, perfil y permisos con el
+      # mismo código que corre en el teléfono.
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.50.0'
+          cache: true
+
+      - name: Configuración de la app para el servidor local
+        run: npm run app:config:local
+
+      - name: Pruebas de la app contra el servidor
+        working-directory: apps/mobile
+        run: |
+          flutter pub get
+          flutter test --tags server --dart-define-from-file=config/server.local.json

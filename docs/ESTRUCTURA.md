@@ -1,7 +1,7 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 0 entregada. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Nada de lo descrito aquí está implementado todavía.
-**Última actualización:** 14 de noviembre de 2026.
+**Estado:** Etapa 1 en curso: partes 1A, 1B y 1C implementadas. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
+**Última actualización:** 18 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
 
@@ -368,6 +368,17 @@ La app tiene dos entornos, elegidos al compilar con un archivo de `apps/mobile/c
 - **demo**: muestra la cinta "DEMO" sobre todas las pantallas. Puede correr sin servidor.
 - **prod**: la que irá a las tiendas. Exige servidor con https y no arranca con conectores demo.
 
+Decisiones de la parte 1C (cuentas en la app, implementadas):
+
+- **Registro con correo y contraseña**, de al menos 8 caracteres, igual que la regla del servidor. Google y Apple llegan cuando se conecten (sección 9).
+- **El registro exige marcar "Confirmo que tengo 18 años o más".** La app llama entonces a `confirm_adult`, y la fecha la pone el servidor. Si esa llamada falla, el perfil vuelve a pedir la confirmación con un botón. La app no puede escribir `adult_confirmed_at` ni `is_blocked`: lo impiden los permisos de la base.
+- **Sin correo de confirmación.** El servicio de cuentas entrega la sesión al registrarse. Así está el servidor local y así debe quedar el entorno demo (parte 1D) mientras no haya servicio de correo (sección 9). Si el servidor pidiera confirmar el correo, la app lo explica en vez de fallar en silencio.
+- **La sesión se guarda en el teléfono** y se recupera al abrir la app.
+- **Perfil (C7):** nombre editable, correo, estado de la mayoría de edad, aviso de cuenta bloqueada, cierre de sesión y paso al modo negocio. Sin servidor configurado, el perfil avisa que las cuentas no están disponibles.
+- **Direcciones:** `/ingresar` y `/registro`.
+- **Los errores del servidor se traducen a mensajes en español.** El texto técnico nunca se muestra.
+- **Android:** el permiso de internet va en todas las compilaciones. Solo la compilación de depuración puede usar http, y solo hacia el servidor local (`10.0.2.2`, `127.0.0.1`).
+
 Pendiente para la parte de publicación: que la variante demo se instale con nombre e identificador propios ("Al Paso DEMO"), para convivir en el mismo teléfono con la de tiendas. Requiere configuración nativa de Android y de iOS que debe comprobarse en una Mac.
 
 ---
@@ -445,7 +456,7 @@ Cada etapa se divide en partes al empezarla. Estas son las de la etapa 1:
 |---|---|---|---|
 | 1A | Esqueleto de la app: proyecto Flutter, configuración demo y prod, tema, navegación base, primeras pruebas y automatización | Análisis y pruebas en la nube; el agente local la compila y la abre en el teléfono | Implementada. Verificado en la nube: análisis, 24 pruebas y recorrido en navegador. Falta: compilación Android y teléfono real (agente local) |
 | 1B | Servidor base: Supabase local, tablas de identidad (perfiles, administradores, configuración), permisos y sus pruebas | Pruebas de reglas y permisos en la nube y en GitHub | Implementada. Verificado en la nube: 41 pruebas de reglas, que fallan si se rompe una regla a propósito, y un registro real por el servicio de cuentas local |
-| 1C | Cuentas en la app: registro, inicio de sesión, confirmación de mayoría de edad y perfil | Pruebas de la app contra el servidor local | Pendiente |
+| 1C | Cuentas en la app: registro, inicio de sesión, confirmación de mayoría de edad y perfil | Pruebas de la app contra el servidor local | Implementada. Verificado en la nube: análisis, 54 pruebas de pantalla, 10 pruebas de la app contra el servidor local, recorrido de cuentas en navegador (9 de 9) y las pruebas de reglas del servidor sin cambios. Falta: APK y emulador o teléfono (agente local) |
 | 1D | Entorno demo: proyecto demo de Supabase con las migraciones aplicadas, APK demo descargable y compilación de iOS en la nube | Registro real desde el teléfono contra el entorno demo; iOS compila | Pendiente |
 
 La parte 1B original incluía también las cuentas en la app. Se dividió en 1B y 1C para que cada parte sea corta.

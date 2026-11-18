@@ -1,31 +1,86 @@
 {
   "@@locale": "es",
-
   "appTitle": "Al Paso",
-
   "demoBannerLabel": "DEMO",
   "demoBannerSemantics": "Versión de demostración. No se cobra dinero real.",
-
   "tabExplore": "Explorar",
   "tabBookings": "Reservas",
   "tabProfile": "Perfil",
-
   "exploreTitle": "Explorar",
   "exploreEmptyTitle": "Aquí verás los hostales cercanos",
   "exploreEmptyBody": "El mapa con precios y cuartos disponibles llega en la etapa 3.",
-
   "bookingsTitle": "Mis reservas",
   "bookingsEmptyTitle": "Aún no tienes reservas",
   "bookingsEmptyBody": "Tus reservas y su código de ingreso aparecerán aquí.",
-
   "profileTitle": "Perfil",
   "profileEmptyTitle": "Tu cuenta",
-  "profileEmptyBody": "El registro y el inicio de sesión llegan en la parte 1B.",
+  "profileSignedOutBody": "Inicia sesión o crea tu cuenta para reservar y ver tus reservas.",
+  "profileNoServerTitle": "Cuentas no disponibles",
+  "profileNoServerBody": "Esta versión de la app no está conectada a un servidor. Las cuentas funcionan en el APK demo con servidor.",
+  "profileSignInAction": "Iniciar sesión",
+  "profileSignUpAction": "Crear cuenta",
+  "profileSignOutAction": "Cerrar sesión",
+  "profileNameLabel": "Nombre",
+  "profileEmailLabel": "Correo",
+  "profileNameEmpty": "Sin nombre",
+  "profileEditNameAction": "Cambiar nombre",
+  "profileEditNameTitle": "Tu nombre",
+  "profileSaveAction": "Guardar",
+  "profileCancelAction": "Cancelar",
+  "profileAdultConfirmedLabel": "Mayoría de edad confirmada",
+  "profileAdultPendingTitle": "Confirma que eres mayor de edad",
+  "profileAdultPendingBody": "Al Paso es solo para mayores de 18 años. Confírmalo para poder reservar.",
+  "profileAdultConfirmAction": "Tengo 18 años o más",
+  "profileBlockedBody": "Tu cuenta está bloqueada. Escríbenos desde Ayuda para revisarlo.",
+  "profileLoadErrorTitle": "No pudimos cargar tu cuenta",
+  "profileRetryAction": "Reintentar",
+  "authSignInTitle": "Iniciar sesión",
+  "authSignUpTitle": "Crear cuenta",
+  "authNameLabel": "Nombre",
+  "authNameHint": "Como quieres que te llame el hostal",
+  "authEmailLabel": "Correo",
+  "authPasswordLabel": "Contraseña",
+  "authPasswordHelp": "Al menos {min} caracteres",
+  "@authPasswordHelp": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "authShowPassword": "Mostrar contraseña",
+  "authHidePassword": "Ocultar contraseña",
+  "authAdultCheckbox": "Confirmo que tengo 18 años o más",
+  "authSignInSubmit": "Entrar",
+  "authSignUpSubmit": "Crear cuenta",
+  "authGoToSignUp": "¿No tienes cuenta? Créala aquí",
+  "authGoToSignIn": "¿Ya tienes cuenta? Inicia sesión",
+  "authErrorNameRequired": "Escribe tu nombre (hasta 80 caracteres).",
+  "authErrorEmailInvalid": "Escribe un correo válido.",
+  "authErrorPasswordShort": "La contraseña debe tener al menos {min} caracteres.",
+  "@authErrorPasswordShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "authErrorPasswordRequired": "Escribe tu contraseña.",
+  "authErrorAdultRequired": "Para usar Al Paso debes ser mayor de 18 años.",
+  "authErrorInvalidCredentials": "El correo o la contraseña no son correctos.",
+  "authErrorEmailInUse": "Ya existe una cuenta con ese correo. Inicia sesión.",
+  "authErrorWeakPassword": "Esa contraseña es muy fácil de adivinar. Prueba con otra.",
+  "authErrorInvalidEmail": "El servidor no aceptó ese correo.",
+  "authErrorEmailNotConfirmed": "Tu cuenta se creó, pero el servidor pide confirmar el correo. En la demo esto no debería pasar: avísale al equipo.",
+  "authErrorRateLimited": "Demasiados intentos. Espera un momento y vuelve a probar.",
+  "authErrorSignupDisabled": "Por ahora no se aceptan cuentas nuevas.",
+  "authErrorNetwork": "No hay conexión con el servidor. Revisa tu internet.",
+  "authErrorBlocked": "Esta cuenta está bloqueada.",
+  "authErrorUnknown": "Algo salió mal. Vuelve a intentarlo.",
   "profileBusinessModeAction": "Ir al modo negocio",
   "profileServerNotConfigured": "Sin servidor configurado",
   "profileServerConfigured": "Servidor configurado",
   "profileEnvironmentDemo": "Entorno: demo",
-
   "businessTitle": "Modo negocio",
   "businessEmptyTitle": "Panel del hostal",
   "businessEmptyBody": "El registro del hostal, los cuartos y las tarifas llegan en la etapa 2.",

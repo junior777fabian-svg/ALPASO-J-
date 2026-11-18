@@ -6,6 +6,7 @@ Dos recorridos que prueban el sistema por fuera, como lo usaría una persona o l
 |---|---|
 | `smoke.cjs` | La app web compilada, en un navegador |
 | `api-smoke.cjs` | La API del servidor local, con cuentas reales |
+| `accounts.cjs` | La app web conectada al servidor local: registro, perfil, cierre e inicio de sesión |
 
 ## Recorrido por la API
 
@@ -49,3 +50,18 @@ El script necesita Playwright con Chromium. Imprime cada paso con `ok` o `FALLA`
 - No hay errores en la consola del navegador.
 
 La cinta "DEMO" se dibuja sobre el lienzo y no es visible para el navegador como texto. Su presencia la comprueban las pruebas de `apps/mobile/test/app/app_test.dart` y las capturas.
+
+## Recorrido de cuentas en navegador
+
+Con el servidor local levantado, desde la raíz:
+
+```
+npm run app:config:local
+cd apps/mobile
+flutter build web --no-web-resources-cdn --dart-define-from-file=config/server.local.json --dart-define=FORCE_SEMANTICS=true -o build/web-server
+cd ../..
+python3 -m http.server 8788 --bind 127.0.0.1 --directory apps/mobile/build/web-server
+node e2e/accounts.cjs http://127.0.0.1:8788/ e2e/capturas-cuentas
+```
+
+Cubre: el perfil sin sesión, que el registro exige la mayoría de edad, el registro con su perfil, el cambio de nombre, que la sesión sobrevive a recargar, el cierre de sesión, el aviso de clave equivocada y el nuevo inicio de sesión. Cada corrida crea una cuenta `@example.test`; no se usa contra el entorno demo de la nube.
