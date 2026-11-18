@@ -1,6 +1,6 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 1 en curso: partes 1A, 1B y 1C implementadas. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
+**Estado:** Etapa 1 en curso: partes 1A, 1B y 1C implementadas; 1D preparada, a la espera del proyecto demo. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
 **Última actualización:** 18 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
@@ -388,7 +388,7 @@ Pendiente para la parte de publicación: que la variante demo se instale con nom
 | Entorno | Dónde vive | Para qué | Costo |
 |---|---|---|---|
 | Local | Contenedores Docker, en la nube del agente y en la automatización | Pruebas automáticas contra un servidor completo | Ninguno |
-| Demo | Proyecto gratuito de Supabase | Probar en teléfonos reales con pagos demo | Ninguno |
+| Demo | Proyecto gratuito de Supabase, región São Paulo. Lo mantiene al día `.github/workflows/demo.yml`; guía en `docs/ENTORNO-DEMO.md` | Probar en teléfonos reales con pagos demo. El APK se descarga de la página de descargas del repositorio ("Al Paso DEMO") | Ninguno |
 | Producción | Proyecto de Supabase separado | Clientes reales | Plan Pro al lanzar |
 
 Los cambios de base de datos son archivos versionados en `supabase/migrations/`. La automatización los aplica; no se pega SQL a mano.
@@ -457,7 +457,7 @@ Cada etapa se divide en partes al empezarla. Estas son las de la etapa 1:
 | 1A | Esqueleto de la app: proyecto Flutter, configuración demo y prod, tema, navegación base, primeras pruebas y automatización | Análisis y pruebas en la nube; el agente local la compila y la abre en el teléfono | Implementada. Verificado en la nube: análisis, 24 pruebas y recorrido en navegador. Falta: compilación Android y teléfono real (agente local) |
 | 1B | Servidor base: Supabase local, tablas de identidad (perfiles, administradores, configuración), permisos y sus pruebas | Pruebas de reglas y permisos en la nube y en GitHub | Implementada. Verificado en la nube: 41 pruebas de reglas, que fallan si se rompe una regla a propósito, y un registro real por el servicio de cuentas local |
 | 1C | Cuentas en la app: registro, inicio de sesión, confirmación de mayoría de edad y perfil | Pruebas de la app contra el servidor local | Implementada. Verificado en la nube: análisis, 54 pruebas de pantalla, 10 pruebas de la app contra el servidor local, recorrido de cuentas en navegador (9 de 9) y las pruebas de reglas del servidor sin cambios. Falta: APK y emulador o teléfono (agente local) |
-| 1D | Entorno demo: proyecto demo de Supabase con las migraciones aplicadas, APK demo descargable y compilación de iOS en la nube | Registro real desde el teléfono contra el entorno demo; iOS compila | Pendiente |
+| 1D | Entorno demo: proyecto demo de Supabase con las migraciones aplicadas, APK demo descargable y compilación de iOS en la nube | Registro real desde el teléfono contra el entorno demo; iOS compila | Implementada la automatización (`.github/workflows/demo.yml`) y la guía `docs/ENTORNO-DEMO.md`. Verificado en la nube: revisión de las automatizaciones y comprobación del servidor contra el local. Falta: que el dueño cree el proyecto demo y cargue sus datos en GitHub, la primera corrida en GitHub y el registro desde el teléfono |
 
 La parte 1B original incluía también las cuentas en la app. Se dividió en 1B y 1C para que cada parte sea corta.
 

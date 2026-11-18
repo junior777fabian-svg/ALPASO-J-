@@ -33,7 +33,8 @@ Al Paso es una app móvil para Android y iPhone, hecha en Flutter, con servidor 
 | Etapa 0 | Estructura del proyecto y reglas de trabajo | No aplica; son documentos | `reportes/etapa-0.md` ✔ |
 | Parte 1A | Esqueleto de la app en `apps/mobile` | Análisis, pruebas, recorrido en navegador y APK en GitHub | `reportes/etapa-1a.md` ✔ |
 | Parte 1B | Base del servidor en `supabase/` | 41 pruebas de reglas y recorrido por la API | `reportes/etapa-1b.md` ✔ (Docker apagado) |
-| **Parte 1C** | **Cuentas en la app: registro, inicio de sesión, mayoría de edad y perfil** | 54 pruebas de pantalla, 10 de la app contra el servidor local, recorrido de cuentas en navegador 9 de 9 | **Pendiente: es tu tarea ahora** |
+| **Parte 1C** | **Cuentas en la app: registro, inicio de sesión, mayoría de edad y perfil** | 54 pruebas de pantalla, 10 de la app contra el servidor local, recorrido de cuentas en navegador 9 de 9 | **Pendiente: tarea 1** |
+| **Parte 1D** | **Entorno demo en la nube: automatización que publica el APK "Al Paso DEMO" conectado al servidor demo, y compilación de iPhone** | Revisión de las automatizaciones; comprobación del servidor contra el local | **Pendiente: tarea 2, solo si ya existe "Al Paso DEMO" en Releases** |
 
 Lo que corregí de tus reportes anteriores:
 
@@ -69,7 +70,9 @@ En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni e
 
 ## 5. Qué tienes que hacer
 
-Una tarea: **probar la parte 1C**. El detalle paso a paso y el formato del reporte están en `docs/pruebas-locales/etapa-1c.md`. **Si algo de este resumen difiere de ese archivo, manda ese archivo.**
+Dos tareas, en orden. La segunda depende de que el dueño haya configurado el entorno demo (`docs/ENTORNO-DEMO.md`). Si en la página de descargas (Releases) del repositorio no existe "Al Paso DEMO", la tarea 2 queda para otra sesión: anótalo y recuérdaselo al dueño.
+
+### Tarea 1: probar la parte 1C El detalle paso a paso y el formato del reporte están en `docs/pruebas-locales/etapa-1c.md`. **Si algo de este resumen difiere de ese archivo, manda ese archivo.**
 
 Resumen:
 
@@ -92,6 +95,10 @@ flutter test integration_test -d <id-del-dispositivo>
 Luego instala el APK demo, abre Perfil y guarda la captura. Si `docker info` responde, sigue también el paso 6 del archivo de detalle: pruebas de la app contra el servidor local y registro real en el emulador. Si Docker está apagado, no lo enciendas: anótalo.
 
 Reporte: `reportes/etapa-1c.md`, capturas en `reportes/etapa-1c/`.
+
+### Tarea 2: probar la parte 1D
+
+Detalle: `docs/pruebas-locales/etapa-1d.md`. Revisa en GitHub el resultado de la automatización "Entorno demo", instala el APK demo y crea una cuenta real contra el servidor demo. Reporte: `reportes/etapa-1d.md`, capturas en `reportes/etapa-1d/`.
 
 ## 6. Cómo reportar
 

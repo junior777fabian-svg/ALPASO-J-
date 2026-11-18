@@ -6,6 +6,7 @@ Dos recorridos que prueban el sistema por fuera, como lo usaría una persona o l
 |---|---|
 | `smoke.cjs` | La app web compilada, en un navegador |
 | `api-smoke.cjs` | La API del servidor local, con cuentas reales |
+| `demo-check.cjs` | El servidor demo desde fuera, con la llave publicable y sin crear datos. Lo usa `.github/workflows/demo.yml`; también corre contra el local en `ci.yml` |
 | `accounts.cjs` | La app web conectada al servidor local: registro, perfil, cierre e inicio de sesión |
 
 ## Recorrido por la API

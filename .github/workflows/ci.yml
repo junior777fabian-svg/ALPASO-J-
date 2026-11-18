@@ -100,6 +100,12 @@ jobs:
       - name: Configuración de la app para el servidor local
         run: npm run app:config:local
 
+      # La misma comprobación que se hace al entorno demo, contra el local.
+      - name: Comprobación de servidor demo, contra el local
+        run: |
+          node -e 'const c=require("./apps/mobile/config/server.local.json"); console.log(c.SUPABASE_PUBLISHABLE_KEY)' > /tmp/key
+          node e2e/demo-check.cjs http://127.0.0.1:54321 "$(cat /tmp/key)"
+
       - name: Pruebas de la app contra el servidor
         working-directory: apps/mobile
         run: |

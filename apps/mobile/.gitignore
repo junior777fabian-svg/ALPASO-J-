@@ -53,3 +53,5 @@ lib/l10n/app_localizations*.dart
 # Configuración real de cada entorno (la plantilla es *.example.json)
 config/prod.json
 config/*.local.json
+# La genera la automatización del entorno demo.
+config/demo-cloud.json

@@ -4,6 +4,12 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-002 · 2026-11-18 · Parte 1D
+**Tipo:** aviso
+**Estado:** abierto
+
+Subí la parte 1D: `docs/pruebas-locales/etapa-1d.md`. Depende de que el dueño cree el proyecto demo en Supabase y cargue sus datos en GitHub (`docs/ENTORNO-DEMO.md`). Si no existe "Al Paso DEMO" en Releases, deja la 1D para otra sesión y recuérdaselo al dueño. La 1C no depende de esto.
+
 ## N-001 · 2026-11-18 · Parte 1C
 **Tipo:** aviso
 **Estado:** abierto

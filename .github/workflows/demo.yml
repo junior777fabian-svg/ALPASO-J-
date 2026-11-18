@@ -1,0 +1,217 @@
+name: Entorno demo
+
+# Publica el entorno demo: aplica las migraciones al proyecto demo de
+# Supabase, compila el APK demo conectado a ese servidor y lo deja para
+# descargar, y comprueba que la app compila para iPhone.
+#
+# Lo que necesita en GitHub (Settings → Secrets and variables → Actions):
+#   Secretos:  SUPABASE_ACCESS_TOKEN, SUPABASE_DEMO_DB_PASSWORD
+#   Variables: SUPABASE_DEMO_PROJECT_REF, SUPABASE_DEMO_URL,
+#              SUPABASE_DEMO_PUBLISHABLE_KEY
+# Cómo conseguirlos: docs/ENTORNO-DEMO.md.
+
+on:
+  push:
+    branches:
+      - main
+    # Solo cuando cambia algo que afecta al entorno demo.
+    paths:
+      - 'supabase/migrations/**'
+      - 'apps/mobile/**'
+      - 'e2e/demo-check.cjs'
+      - '.github/workflows/demo.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: demo
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  config:
+    name: ¿Está configurado el entorno demo?
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          DB_PASSWORD: ${{ secrets.SUPABASE_DEMO_DB_PASSWORD }}
+          PROJECT_REF: ${{ vars.SUPABASE_DEMO_PROJECT_REF }}
+          DEMO_URL: ${{ vars.SUPABASE_DEMO_URL }}
+          DEMO_KEY: ${{ vars.SUPABASE_DEMO_PUBLISHABLE_KEY }}
+        run: |
+          missing=""
+          [ -n "$ACCESS_TOKEN" ] || missing="$missing SUPABASE_ACCESS_TOKEN"
+          [ -n "$DB_PASSWORD" ]  || missing="$missing SUPABASE_DEMO_DB_PASSWORD"
+          [ -n "$PROJECT_REF" ]  || missing="$missing SUPABASE_DEMO_PROJECT_REF"
+          [ -n "$DEMO_URL" ]     || missing="$missing SUPABASE_DEMO_URL"
+          [ -n "$DEMO_KEY" ]     || missing="$missing SUPABASE_DEMO_PUBLISHABLE_KEY"
+          if [ -n "$missing" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Entorno demo sin configurar. Faltan:$missing. Ver docs/ENTORNO-DEMO.md."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  server:
+    name: Servidor demo (migraciones y cuentas)
+    needs: config
+    if: needs.config.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DEMO_DB_PASSWORD }}
+      PROJECT_REF: ${{ vars.SUPABASE_DEMO_PROJECT_REF }}
+      DEMO_URL: ${{ vars.SUPABASE_DEMO_URL }}
+      DEMO_KEY: ${{ vars.SUPABASE_DEMO_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Herramienta de Supabase en la versión fijada
+        run: npm ci
+
+      - name: Enlazar el proyecto demo
+        run: npx supabase link --project-ref "$PROJECT_REF"
+
+      - name: Aplicar las migraciones pendientes
+        run: npx supabase db push --include-all
+
+      # Mientras no haya servicio de correo, el registro entrega la sesión sin
+      # pedir confirmar el correo (docs/ESTRUCTURA.md, sección 9). Se fija
+      # aquí para que no dependa de que alguien lo cambie a mano en el panel.
+      - name: Cuentas sin correo de confirmación, contraseña de 8 o más
+        run: |
+          curl --fail-with-body -sS -X PATCH \
+            "https://api.supabase.com/v1/projects/$PROJECT_REF/config/auth" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"disable_signup": false, "external_email_enabled": true, "mailer_autoconfirm": true, "password_min_length": 8, "external_anonymous_users_enabled": false}' \
+            -o /dev/null
+          echo "Configuración de cuentas aplicada."
+
+      - name: Comprobar el servidor demo desde fuera
+        run: node e2e/demo-check.cjs "$DEMO_URL" "$DEMO_KEY"
+
+  apk:
+    name: APK demo para descargar
+    needs: [config, server]
+    if: needs.config.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.50.0'
+          cache: true
+
+      - name: Configuración del entorno demo
+        env:
+          DEMO_URL: ${{ vars.SUPABASE_DEMO_URL }}
+          DEMO_KEY: ${{ vars.SUPABASE_DEMO_PUBLISHABLE_KEY }}
+        run: node ../../tools/demo-app-config.cjs
+
+      - name: Compilar el APK demo
+        run: |
+          flutter pub get
+          flutter build apk --release \
+            --dart-define-from-file=config/demo-cloud.json \
+            --build-number=${{ github.run_number }}
+          cp build/app/outputs/flutter-apk/app-release.apk ../../al-paso-demo.apk
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: al-paso-demo-apk
+          path: al-paso-demo.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      # Siempre el mismo enlace de descarga: la versión "demo" se reemplaza
+      # con cada compilación.
+      - name: Publicar en la página de descargas
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="APK de demostración, compilado del commit ${GITHUB_SHA::7}.
+          Conectado al servidor demo. Los pagos y verificaciones son de prueba: no se cobra dinero real.
+          Instrucciones: docs/ENTORNO-DEMO.md."
+          if gh release view demo >/dev/null 2>&1; then
+            gh release upload demo al-paso-demo.apk --clobber
+            gh release edit demo --notes "$notes" --target "$GITHUB_SHA"
+          else
+            gh release create demo al-paso-demo.apk --prerelease \
+              --title "Al Paso DEMO" --notes "$notes" --target "$GITHUB_SHA"
+          fi
+
+  ios:
+    name: iPhone (compila sin firmar)
+    runs-on: macos-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.50.0'
+          cache: true
+
+      - name: Versiones
+        run: |
+          flutter --version
+          xcodebuild -version
+
+      - name: Dependencias
+        run: flutter pub get
+
+      - name: Configuración del entorno demo
+        env:
+          DEMO_URL: ${{ vars.SUPABASE_DEMO_URL }}
+          DEMO_KEY: ${{ vars.SUPABASE_DEMO_PUBLISHABLE_KEY }}
+        # Sin entorno demo configurado, compila sin servidor.
+        run: node ../../tools/demo-app-config.cjs --allow-empty
+
+      # Para iPhone real hace falta firmar con una cuenta de Apple
+      # (docs/ESTRUCTURA.md, sección 16). Mientras tanto se comprueba que
+      # compila, y se deja la versión de simulador para abrirla en una Mac.
+      - name: Compilar para iPhone, sin firmar
+        run: flutter build ios --release --no-codesign --dart-define-from-file=config/demo-cloud.json
+
+      - name: Compilar para el simulador
+        run: |
+          flutter build ios --simulator --debug --dart-define-from-file=config/demo-cloud.json
+          cd build/ios/iphonesimulator
+          ditto -c -k --keepParent Runner.app ../../../../../al-paso-simulador.zip
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: al-paso-ios-simulador
+          path: al-paso-simulador.zip
+          if-no-files-found: error
+          retention-days: 14
