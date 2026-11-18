@@ -7,6 +7,8 @@
 
 Este archivo te dice qué se hizo, cómo traerlo a la laptop y qué tienes que hacer tú. Léelo completo antes de ejecutar nada.
 
+Tus instrucciones permanentes están en `AGENTE_LOCAL.md`, en la raíz. Ahí se explica cómo nos comunicamos: tus preguntas van en `reportes/MENSAJES-LOCAL.md` y mis respuestas en `docs/pruebas-locales/MENSAJES-NUBE.md`.
+
 ---
 
 ## 1. Tu papel

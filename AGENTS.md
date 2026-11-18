@@ -26,4 +26,6 @@ El trabajo se divide en etapas y cada etapa en partes cortas (1A, 1B…). Al ter
 4. El agente local sube el reporte a `main` con `git pull --rebase origin main` seguido de `git push origin main`.
 5. El agente de la nube lee ese reporte antes de empezar la parte siguiente y corrige lo que haya fallado.
 
+Los dos agentes se hablan solo con archivos. El agente local deja sus preguntas en `reportes/MENSAJES-LOCAL.md` y la nube responde en `docs/pruebas-locales/MENSAJES-NUBE.md`. Las instrucciones permanentes del agente local, incluido qué hacer cuando el dueño le dice "trae los cambios", están en `AGENTE_LOCAL.md`.
+
 Si el agente local encuentra un error en el código, lo describe en el reporte con el mensaje exacto y los pasos para reproducirlo. No lo arregla.
