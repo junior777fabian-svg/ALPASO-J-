@@ -504,6 +504,26 @@ Decisiones de la parte 3A (implementadas):
 - **Pruebas de base de datos:** cada una mira solo sus propios datos, para pasar también en una base con datos de otras pruebas.
 - **Búsqueda:** hasta 7 días adelante (`max_advance_days`), radio de 5 km por omisión y 30 km como máximo, o por distrito. Devuelve el precio más bajo del bloque pedido entre los tipos de cuarto con uno libre. Nadie ve las ocupaciones salvo el personal del hostal.
 
+### Partes de la etapa 4
+
+| Parte | Entrega | Cómo se comprueba | Estado |
+|---|---|---|---|
+| 4A | Servidor de reservas y pago demo: cotización, reserva con retención, pasarela demo, avisos idempotentes, vencimiento, cancelación y reembolso | Pruebas de reglas | Implementada. Verificado en la nube: 52 pruebas pgTAP nuevas (201 en total) |
+| 4B | Reservar en la app (C5): duración, llegada, extras, total del servidor, pago demo con rótulo y confirmación con código | Pruebas de pantalla y contra el servidor local | Pendiente |
+| 4C | Mis reservas (C6): reserva activa con código y QR, cómo llegar, tiempo restante, cancelación, historial | Ídem | Pendiente |
+| 4D | Recorrido: buscar, reservar, pagar en demo, ver el código y cancelar con reembolso | Recorrido en navegador contra el servidor local | Pendiente |
+
+Decisiones de la parte 4A (implementadas):
+
+- **El precio lo calcula el servidor** (`get_quote` para mostrar, y de nuevo en `create_booking`). La reserva guarda una copia del precio del cuarto y de cada extra.
+- **`create_booking`** exige sesión, mayoría de edad y una sola reserva sin pagar por cuenta. Asigna el primer cuarto libre del tipo, bloqueando el tipo de cuarto para que dos personas no se lleven el mismo cuarto, y lo retiene 10 minutos (`hold_minutes`). Reintentar con la misma clave devuelve la misma reserva.
+- **Solo el aviso del conector confirma.** `private.apply_payment_event` registra cada aviso una sola vez por su identificador. Un pago que llega cuando la reserva ya venció o se canceló no la confirma y se reembolsa completo.
+- **La pasarela demo** (`demo_gateway_complete`) solo funciona con `payments_provider = 'demo'`.
+- **Cancelación:** sin pagar, se cancela libre. Pagada, con reembolso total hasta 1 hora antes de la llegada, o dentro de los 5 minutos desde el pago si se reservó para dentro de menos de 1 hora. Fuera de plazo no se cancela desde la app; queda la vía de soporte.
+- **Vencimiento:** una tarea de `pg_cron` vence cada minuto las retenciones sin pagar. Reservar y pagar también las vencen antes de actuar.
+- **Permisos:** el cliente ve sus reservas y pagos; el personal del hostal ve las reservas de su hostal pero no los cobros. Nadie escribe estas tablas directamente.
+- **Pendiente:** la verificación del celular antes de la primera reserva (módulo C1, con su conector demo) queda para una parte posterior.
+
 ## 16. Lo que depende del dueño
 
 | Qué | Cuándo | Costo |

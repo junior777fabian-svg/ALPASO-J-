@@ -49,13 +49,15 @@ select results_eq(
       where grantee = 'authenticated'
         and table_schema in ('public', 'private')
       order by 1 $$,
-  $$ values ('public.districts:SELECT'),
+  $$ values ('public.booking_events:SELECT'), ('public.booking_items:SELECT'),
+            ('public.bookings:SELECT'), ('public.districts:SELECT'),
             ('public.lodging_members:SELECT'),
             ('public.lodging_photos:DELETE'), ('public.lodging_photos:SELECT'),
-            ('public.lodgings:SELECT'),
+            ('public.lodgings:SELECT'), ('public.payments:SELECT'),
             ('public.products:DELETE'), ('public.products:SELECT'),
             ('public.profiles:SELECT'),
             ('public.rates:DELETE'), ('public.rates:SELECT'),
+            ('public.refunds:SELECT'),
             ('public.room_occupancy:SELECT'),
             ('public.room_type_photos:DELETE'), ('public.room_type_photos:SELECT'),
             ('public.room_types:DELETE'), ('public.room_types:SELECT'),
@@ -111,7 +113,7 @@ select results_eq(
       where n.nspname in ('public', 'private')
         and has_function_privilege('anon', p.oid, 'execute')
       order by 1 $$,
-  $$ values ('get_lodging_offer'), ('get_public_settings'),
+  $$ values ('get_lodging_offer'), ('get_public_settings'), ('get_quote'),
             ('is_lodging_published'), ('search_lodgings') $$,
   'sin sesión solo se ejecutan las funciones de consulta previstas'
 );
@@ -123,14 +125,17 @@ select results_eq(
       where n.nspname in ('public', 'private')
         and has_function_privilege('authenticated', p.oid, 'execute')
       order by 1 $$,
-  $$ values ('private.is_admin'), ('private.is_lodging_member'),
+  $$ values ('private.can_see_booking'), ('private.is_admin'),
+            ('private.is_booking_customer'), ('private.is_lodging_member'),
             ('private.is_lodging_owner'), ('private.is_lodging_published'),
             ('private.lodging_role'), ('private.try_uuid'),
-            ('public.admin_review_lodging'), ('public.confirm_adult'),
-            ('public.create_lodging'), ('public.get_lodging_offer'),
-            ('public.get_public_settings'),
+            ('public.admin_review_lodging'), ('public.cancel_booking'),
+            ('public.confirm_adult'), ('public.create_booking'),
+            ('public.create_lodging'), ('public.demo_gateway_complete'),
+            ('public.get_lodging_offer'),
+            ('public.get_public_settings'), ('public.get_quote'),
             ('public.save_room_type'), ('public.search_lodgings'),
-            ('public.submit_lodging') $$,
+            ('public.start_payment'), ('public.submit_lodging') $$,
   'una cuenta solo puede ejecutar las funciones previstas'
 );
 
