@@ -3,7 +3,9 @@ import 'package:alpaso/core/format/money.dart';
 import 'package:alpaso/features/auth/presentation/auth_form_widgets.dart';
 import 'package:alpaso/features/business/data/business_providers.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
+import 'package:alpaso/features/business/domain/photo.dart';
 import 'package:alpaso/features/business/presentation/business_messages.dart';
+import 'package:alpaso/features/business/presentation/photo_widgets.dart';
 import 'package:alpaso/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -168,11 +170,13 @@ class _RoomTypeFormScreenState extends ConsumerState<RoomTypeFormScreen> {
     final rules = ref.watch(platformRulesProvider);
     final title = _isNew ? l10n.roomTypeNewTitle : l10n.roomTypeEditTitle;
 
+    RoomType? current;
     if (!_isNew) {
       final types = ref.watch(roomTypesProvider(widget.lodgingId));
       final type = types.value
           ?.where((t) => t.id == widget.roomTypeId)
           .firstOrNull;
+      current = type;
       if (type == null) {
         return Scaffold(
           appBar: AppBar(title: Text(title)),
@@ -318,6 +322,63 @@ class _RoomTypeFormScreenState extends ConsumerState<RoomTypeFormScreen> {
                       ? null
                       : l10n.roomTypeErrorRooms,
                 ),
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  l10n.roomTypePhotosTitle,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                if (current == null)
+                  Text(
+                    l10n.roomTypePhotosAfterSave,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  )
+                else
+                  for (final kind in [
+                    PhotoKind.room,
+                    PhotoKind.bathroom,
+                    if (_hasJacuzzi) PhotoKind.jacuzzi,
+                    PhotoKind.other,
+                  ])
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.sm),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(photoKindLabel(l10n, kind)),
+                          const SizedBox(height: AppSpacing.xs),
+                          PhotoStrip(
+                            key: Key('photos-${kind.db}'),
+                            photos: [
+                              for (final p in current.photos)
+                                if (p.kind == kind) p,
+                            ],
+                            addLabel: l10n.photoAddAction,
+                            onAdd: (picked) async {
+                              await ref
+                                  .read(businessRepositoryProvider)!
+                                  .addRoomTypePhoto(
+                                    widget.lodgingId,
+                                    widget.roomTypeId!,
+                                    kind,
+                                    picked,
+                                  );
+                              ref.invalidate(
+                                roomTypesProvider(widget.lodgingId),
+                              );
+                            },
+                            onDelete: (photo) async {
+                              await ref
+                                  .read(businessRepositoryProvider)!
+                                  .deletePhoto(photo, roomType: true);
+                              ref.invalidate(
+                                roomTypesProvider(widget.lodgingId),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(l10n.roomTypeActiveLabel),

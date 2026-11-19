@@ -1,5 +1,6 @@
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
+import 'package:alpaso/features/business/domain/photo.dart';
 import 'package:alpaso/features/business/presentation/lodging_detail_screen.dart';
 import 'package:alpaso/features/business/presentation/room_type_form_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +34,9 @@ Future<Setup> openLodging(
 }
 
 Future<void> tapText(WidgetTester tester, String text) async {
+  // Un campo con foco vuelve a desplazar la pantalla hacia él.
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pump();
   final finder = find.text(text);
   if (finder.evaluate().isEmpty) {
     await tester.scrollUntilVisible(
@@ -81,7 +85,10 @@ void main() {
     expect(find.byType(LodgingDetailScreen), findsOneWidget);
     expect(find.text('Matrimonial'), findsOneWidget);
     expect(
-      find.text('4 h S/ 45.00 · 12 h S/ 90.50\nCuartos: 201, 202, 203'),
+      find.text(
+        '4 h S/ 45.00 · 12 h S/ 90.50\nCuartos: 201, 202, 203\n'
+        'Faltan fotos: Habitación, Baño',
+      ),
       findsOneWidget,
     );
     final saved = s.business.roomTypesByLodging[s.lodging.id]!.single;
@@ -134,6 +141,7 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).hitTestable().first,
     );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(Key('room-type-$id')));
     await tester.pumpAndSettle();
     expect(find.text('30'), findsOneWidget, reason: 'el precio cargado');
@@ -147,19 +155,107 @@ void main() {
     expect(find.text('Simple (oculto)'), findsOneWidget);
   });
 
-  testWidgets('con un tipo de cuarto listo, el hostal se envía a revisión', (
-    tester,
-  ) async {
+  testWidgets('sin fotos, el envío a revisión dice qué falta', (tester) async {
     final s = await openLodging(tester);
     await tapText(tester, 'Agregar tipo de cuarto');
     await fillRoomType(tester);
     await save(tester);
+    expect(find.textContaining('Faltan fotos: Habitación, Baño'), findsOne);
+
+    await tapText(tester, 'Enviar a revisión');
+    expect(find.textContaining('Al menos una foto del hostal'), findsOne);
+    expect(find.textContaining('foto de la habitación y del baño'), findsOne);
+    expect(s.business.lodgings[s.lodging.id]!.status, LodgingStatus.draft);
+  });
+
+  testWidgets('con fotos del hostal y del cuarto, se envía a revisión', (
+    tester,
+  ) async {
+    late String typeId;
+    final s = await openLodging(
+      tester,
+      before: (business, lodging) async {
+        typeId = await business.saveRoomType(
+          lodging.id,
+          const RoomTypeDraft(
+            name: 'Suite',
+            hasJacuzzi: true,
+            rates: {4: 4500},
+            rooms: ['201'],
+          ),
+        );
+      },
+    );
+
+    // Foto del hostal, desde su ficha.
+    await tapText(tester, 'Agregar foto');
+    await tapText(tester, 'Elegir de la galería');
+    expect(s.business.lodgingPhotosByLodging[s.lodging.id], hasLength(1));
+
+    // Fotos del cuarto, desde su formulario: habitación, baño y jacuzzi.
+    await tester.scrollUntilVisible(
+      find.byKey(Key('room-type-$typeId')),
+      300,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key('room-type-$typeId')));
+    await tester.pumpAndSettle();
+    for (final kind in ['room', 'bathroom', 'jacuzzi']) {
+      final add = find.descendant(
+        of: find.byKey(Key('photos-$kind')),
+        matching: find.text('Agregar foto'),
+      );
+      await tester.ensureVisible(add);
+      await tester.pumpAndSettle();
+      await tester.tap(add);
+      await tester.pumpAndSettle();
+      await tapText(tester, 'Tomar foto');
+    }
+    final type = s.business.roomTypesByLodging[s.lodging.id]!.single;
+    expect(type.missingPhotos, isEmpty);
+    // pageBack() busca el botón de Material anterior; aquí se toca por su
+    // descripción.
+    await tester.tap(find.byTooltip('Atrás'));
+    await tester.pumpAndSettle();
 
     await tapText(tester, 'Enviar a revisión');
     expect(
       s.business.lodgings[s.lodging.id]!.status,
       LodgingStatus.pendingReview,
     );
+  });
+
+  testWidgets('quitar una foto la borra y cancelar no sube nada', (
+    tester,
+  ) async {
+    final picker = FakePhotoPicker()..cancel = true;
+    final accounts = FakeAccountServer();
+    accounts.currentUser = accounts.seed(email: 'a@b.pe', password: 'x');
+    final business = FakeBusinessServer(accounts);
+    final lodging = business.seed(accounts.currentUser!.id);
+    await business.addLodgingPhoto(
+      lodging.id,
+      const PickedPhoto(bytes: [1], mimeType: 'image/jpeg'),
+    );
+    await tester.pumpAlPaso(
+      config: demoServerConfig,
+      server: accounts,
+      business: business,
+      picker: picker,
+      initialLocation: '/negocio/hostal/${lodging.id}',
+    );
+
+    await tapText(tester, 'Agregar foto');
+    await tapText(tester, 'Elegir de la galería');
+    expect(picker.picks, 1);
+    expect(business.lodgingPhotosByLodging[lodging.id], hasLength(1));
+
+    await tester.ensureVisible(find.byTooltip('Quitar foto'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Quitar foto'));
+    await tester.pumpAndSettle();
+    expect(business.lodgingPhotosByLodging[lodging.id], isEmpty);
   });
 
   testWidgets('agrega un extra a la carta', (tester) async {

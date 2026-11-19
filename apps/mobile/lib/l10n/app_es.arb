@@ -89,7 +89,7 @@
   "businessRegisterAction": "Registrar mi hostal",
   "businessErrorNotAdult": "Confirma en tu perfil que eres mayor de edad antes de registrar un hostal.",
   "businessErrorTooMany": "Ya tienes 3 hostales sin publicar. Termina alguno antes de registrar otro.",
-  "businessErrorIncomplete": "Falta información: agrega al menos un tipo de cuarto con precio y con un cuarto activo.",
+  "businessErrorIncomplete": "Falta información: agrega al menos un tipo de cuarto con precio, un cuarto activo y sus fotos.",
   "businessErrorInvalidStatus": "Este hostal ya no está en un estado que permita esa acción. Actualiza la pantalla.",
   "businessErrorNotOwner": "Solo el dueño del hostal puede hacer esto.",
   "businessErrorAlcohol": "La venta de licores no está habilitada en Al Paso.",
@@ -149,7 +149,7 @@
     }
   },
   "lodgingErrorDistrict": "Elige el distrito.",
-  "lodgingSubmitHelp": "Para enviarlo a revisión necesitas al menos un tipo de cuarto con precio y un cuarto activo.",
+  "lodgingSubmitHelp": "Para enviarlo a revisión necesitas al menos una foto del hostal y un tipo de cuarto con precio, un cuarto activo y fotos de la habitación y del baño (y del jacuzzi si lo tiene).",
   "lodgingSubmitAction": "Enviar a revisión",
   "lodgingSubmitted": "Enviado a revisión.",
   "deleteAction": "Eliminar",
@@ -175,7 +175,7 @@
     }
   },
   "roomTypeReady": "Listo para publicar",
-  "roomTypeNotReady": "Falta precio o cuartos",
+  "roomTypeNotReady": "Falta precio, cuartos o fotos",
   "rateLabel": "{hours} h {price}",
   "@rateLabel": {
     "placeholders": {
@@ -231,5 +231,30 @@
   "productCategoryPersonalCare": "Cuidado personal",
   "productCategoryAlcohol": "Licores",
   "productCategoryOther": "Otros",
+  "businessErrorIncompleteTitle": "Todavía no se puede enviar a revisión. Falta:",
+  "missingLodgingPhoto": "• Al menos una foto del hostal.",
+  "missingRoomTypeReady": "• Un tipo de cuarto visible, con precio y con un cuarto activo.",
+  "missingRoomTypePhotos": "• En cada tipo de cuarto con precio: foto de la habitación y del baño, y del jacuzzi si lo tiene.",
+  "lodgingPhotosTitle": "Fotos del hostal",
+  "lodgingPhotosHelp": "Fachada, entrada o recepción. Ayudan al cliente a reconocer el lugar.",
+  "photoAddAction": "Agregar foto",
+  "photoDeleteAction": "Quitar foto",
+  "photoFromGallery": "Elegir de la galería",
+  "photoFromCamera": "Tomar foto",
+  "photoSemantics": "Foto del hostal",
+  "photoKindRoom": "Habitación",
+  "photoKindBathroom": "Baño",
+  "photoKindJacuzzi": "Jacuzzi",
+  "photoKindOther": "Otras",
+  "roomTypePhotosTitle": "Fotos",
+  "roomTypePhotosAfterSave": "Guarda el tipo de cuarto y vuelve a abrirlo para agregar sus fotos.",
+  "roomTypeMissingPhotos": "Faltan fotos: {kinds}",
+  "@roomTypeMissingPhotos": {
+    "placeholders": {
+      "kinds": {
+        "type": "String"
+      }
+    }
+  },
   "businessBackToClientAction": "Volver al modo cliente"
 }

@@ -1,7 +1,9 @@
 import 'package:alpaso/features/auth/data/auth_providers.dart';
 import 'package:alpaso/features/business/data/business_repository.dart';
+import 'package:alpaso/features/business/data/photo_picker.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
+import 'package:alpaso/features/business/domain/photo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Nulo cuando la app corre sin servidor.
@@ -46,4 +48,14 @@ final productsProvider = FutureProvider.family<List<Product>, String>((
   lodgingId,
 ) {
   return ref.watch(businessRepositoryProvider)!.products(lodgingId);
+});
+
+/// Las pruebas lo reemplazan por uno falso.
+final photoPickerProvider = Provider<PhotoPicker>((ref) => DevicePhotoPicker());
+
+final lodgingPhotosProvider = FutureProvider.family<List<Photo>, String>((
+  ref,
+  lodgingId,
+) {
+  return ref.watch(businessRepositoryProvider)!.lodgingPhotos(lodgingId);
 });

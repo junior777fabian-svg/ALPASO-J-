@@ -1,3 +1,5 @@
+import 'package:alpaso/features/business/domain/photo.dart';
+
 /// Reglas de la plataforma que el modo negocio necesita conocer. Vienen de
 /// `get_public_settings`.
 class PlatformRules {
@@ -48,9 +50,16 @@ class RoomTypeDraft {
 }
 
 class RoomType {
-  const RoomType({required this.id, required this.draft});
+  const RoomType({
+    required this.id,
+    required this.draft,
+    this.photos = const [],
+  });
 
-  factory RoomType.fromJson(Map<String, dynamic> json) {
+  factory RoomType.fromJson(
+    Map<String, dynamic> json, {
+    String Function(String path)? photoUrl,
+  }) {
     final rates = <int, int>{
       for (final r
           in ((json['rates'] as List?) ?? const [])
@@ -63,8 +72,20 @@ class RoomType {
               .cast<Map<String, dynamic>>())
         r['label'] as String,
     ]..sort();
+    final photos = [
+      for (final p
+          in ((json['room_type_photos'] as List?) ?? const [])
+              .cast<Map<String, dynamic>>())
+        Photo(
+          id: p['id'] as String,
+          storagePath: p['storage_path'] as String,
+          url: photoUrl?.call(p['storage_path'] as String) ?? '',
+          kind: PhotoKind.fromDb(p['kind'] as String),
+        ),
+    ];
     return RoomType(
       id: json['id'] as String,
+      photos: photos,
       draft: RoomTypeDraft(
         name: json['name'] as String,
         description: (json['description'] as String?) ?? '',
@@ -81,10 +102,24 @@ class RoomType {
 
   final String id;
   final RoomTypeDraft draft;
+  final List<Photo> photos;
 
-  /// Listo para publicarse: activo, con precio y con al menos un cuarto.
+  bool hasPhoto(PhotoKind kind) => photos.any((p) => p.kind == kind);
+
+  /// Etiquetas de foto que faltan para publicar, igual que el servidor.
+  List<PhotoKind> get missingPhotos => [
+    if (!hasPhoto(PhotoKind.room)) PhotoKind.room,
+    if (!hasPhoto(PhotoKind.bathroom)) PhotoKind.bathroom,
+    if (draft.hasJacuzzi && !hasPhoto(PhotoKind.jacuzzi)) PhotoKind.jacuzzi,
+  ];
+
+  /// Listo para publicarse: activo, con precio, con al menos un cuarto y con
+  /// sus fotos.
   bool get isReady =>
-      draft.isActive && draft.rates.isNotEmpty && draft.rooms.isNotEmpty;
+      draft.isActive &&
+      draft.rates.isNotEmpty &&
+      draft.rooms.isNotEmpty &&
+      missingPhotos.isEmpty;
 }
 
 enum ProductCategory {

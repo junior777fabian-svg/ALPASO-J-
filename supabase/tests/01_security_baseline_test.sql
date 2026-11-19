@@ -36,9 +36,10 @@ select results_eq(
       where grantee in ('anon', 'PUBLIC')
         and table_schema in ('public', 'private')
       order by 1 $$,
-  $$ values ('public.districts:SELECT'), ('public.lodgings:SELECT'),
+  $$ values ('public.districts:SELECT'), ('public.lodging_photos:SELECT'),
+            ('public.lodgings:SELECT'),
             ('public.products:SELECT'), ('public.rates:SELECT'),
-            ('public.room_types:SELECT') $$,
+            ('public.room_type_photos:SELECT'), ('public.room_types:SELECT') $$,
   'sin sesión solo se lee la oferta (y RLS deja ver solo lo publicado)'
 );
 
@@ -49,10 +50,13 @@ select results_eq(
         and table_schema in ('public', 'private')
       order by 1 $$,
   $$ values ('public.districts:SELECT'),
-            ('public.lodging_members:SELECT'), ('public.lodgings:SELECT'),
+            ('public.lodging_members:SELECT'),
+            ('public.lodging_photos:DELETE'), ('public.lodging_photos:SELECT'),
+            ('public.lodgings:SELECT'),
             ('public.products:DELETE'), ('public.products:SELECT'),
             ('public.profiles:SELECT'),
             ('public.rates:DELETE'), ('public.rates:SELECT'),
+            ('public.room_type_photos:DELETE'), ('public.room_type_photos:SELECT'),
             ('public.room_types:DELETE'), ('public.room_types:SELECT'),
             ('public.rooms:DELETE'), ('public.rooms:SELECT') $$,
   'una cuenta solo tiene los permisos de tabla previstos'
@@ -66,6 +70,8 @@ select results_eq(
         and privilege_type in ('UPDATE', 'INSERT')
       order by 1 $$,
   $$ values
+    ('lodging_photos.lodging_id'), ('lodging_photos.sort_order'),
+    ('lodging_photos.sort_order'), ('lodging_photos.storage_path'),
     ('lodgings.address'), ('lodgings.address_reference'),
     ('lodgings.cleaning_minutes'), ('lodgings.description'),
     ('lodgings.district_id'), ('lodgings.has_parking'), ('lodgings.has_wifi'),
@@ -79,6 +85,10 @@ select results_eq(
     ('profiles.full_name'),
     ('rates.block_hours'), ('rates.lodging_id'),
     ('rates.price_cents'), ('rates.price_cents'), ('rates.room_type_id'),
+    ('room_type_photos.kind'), ('room_type_photos.kind'),
+    ('room_type_photos.lodging_id'), ('room_type_photos.room_type_id'),
+    ('room_type_photos.sort_order'), ('room_type_photos.sort_order'),
+    ('room_type_photos.storage_path'),
     ('room_types.description'), ('room_types.description'),
     ('room_types.has_air_conditioning'), ('room_types.has_air_conditioning'),
     ('room_types.has_jacuzzi'), ('room_types.has_jacuzzi'),
@@ -113,7 +123,7 @@ select results_eq(
       order by 1 $$,
   $$ values ('private.is_admin'), ('private.is_lodging_member'),
             ('private.is_lodging_owner'), ('private.is_lodging_published'),
-            ('private.lodging_role'),
+            ('private.lodging_role'), ('private.try_uuid'),
             ('public.admin_review_lodging'), ('public.confirm_adult'),
             ('public.create_lodging'), ('public.get_public_settings'),
             ('public.save_room_type'), ('public.submit_lodging') $$,

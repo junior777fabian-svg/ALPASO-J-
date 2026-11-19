@@ -34,6 +34,7 @@ extension PumpApp on WidgetTester {
     AppConfig config = demoConfig,
     FakeAccountServer? server,
     FakeBusinessServer? business,
+    FakePhotoPicker? picker,
     String? initialLocation,
   }) async {
     if (config.hasServer) server ??= FakeAccountServer();
@@ -51,6 +52,7 @@ extension PumpApp on WidgetTester {
             businessRepositoryProvider.overrideWithValue(business),
           ],
           mapTilesEnabledProvider.overrideWithValue(false),
+          photoPickerProvider.overrideWithValue(picker ?? FakePhotoPicker()),
         ],
         child: const AlPasoApp(),
       ),

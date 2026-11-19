@@ -1,12 +1,19 @@
 import 'package:alpaso/features/business/domain/business_failure.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
+import 'package:alpaso/features/business/domain/photo.dart';
 import 'package:alpaso/l10n/app_localizations.dart';
 
 String businessFailureMessage(AppLocalizations l10n, Object error) {
   final reason = error is BusinessFailure
       ? error.reason
       : BusinessFailureReason.unknown;
+  if (error is BusinessFailure &&
+      reason == BusinessFailureReason.lodgingIncomplete &&
+      error.missing.isNotEmpty) {
+    return '${l10n.businessErrorIncompleteTitle}\n'
+        '${missingMessage(l10n, error.missing)}';
+  }
   return switch (reason) {
     BusinessFailureReason.adultNotConfirmed => l10n.businessErrorNotAdult,
     BusinessFailureReason.accountBlocked => l10n.authErrorBlocked,
@@ -48,3 +55,21 @@ String productCategoryLabel(AppLocalizations l10n, ProductCategory category) =>
       ProductCategory.alcohol => l10n.productCategoryAlcohol,
       ProductCategory.other => l10n.productCategoryOther,
     };
+
+String photoKindLabel(AppLocalizations l10n, PhotoKind kind) => switch (kind) {
+  PhotoKind.room => l10n.photoKindRoom,
+  PhotoKind.bathroom => l10n.photoKindBathroom,
+  PhotoKind.jacuzzi => l10n.photoKindJacuzzi,
+  PhotoKind.other => l10n.photoKindOther,
+};
+
+/// Qué falta para enviar a revisión, según lo que devolvió el servidor.
+String missingMessage(AppLocalizations l10n, List<String> missing) => [
+  for (final m in missing)
+    switch (m) {
+      'lodging_photo' => l10n.missingLodgingPhoto,
+      'room_type_ready' => l10n.missingRoomTypeReady,
+      'room_type_photos' => l10n.missingRoomTypePhotos,
+      _ => m,
+    },
+].join('\n');

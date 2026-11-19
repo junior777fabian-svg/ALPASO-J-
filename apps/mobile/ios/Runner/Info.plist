@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Al Paso usa tus fotos para mostrar tu hostal y sus cuartos a los clientes.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Al Paso usa la cámara para fotografiar tu hostal y sus cuartos.</string>
 </dict>
 </plist>

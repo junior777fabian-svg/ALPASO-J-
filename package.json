@@ -7,7 +7,7 @@
     "db:test": "supabase test db",
     "db:lint": "supabase db lint --schema public,private --fail-on warning",
     "db:reset": "supabase db reset",
-    "server:start": "supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor",
+    "server:start": "supabase start -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor",
     "server:stop": "supabase stop",
     "api:smoke": "node e2e/api-smoke.cjs",
     "app:config:local": "node tools/local-app-config.cjs",

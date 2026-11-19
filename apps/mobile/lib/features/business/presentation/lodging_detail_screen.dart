@@ -6,6 +6,7 @@ import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/presentation/business_messages.dart';
 import 'package:alpaso/features/business/presentation/lodging_status_chip.dart';
 import 'package:alpaso/features/business/presentation/offer_sections.dart';
+import 'package:alpaso/features/business/presentation/photo_widgets.dart';
 import 'package:alpaso/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -75,6 +76,8 @@ class _LodgingDetailScreenState extends ConsumerState<LodgingDetailScreen> {
               _StatusCard(lodging: value),
               const SizedBox(height: AppSpacing.md),
               _DataCard(lodging: value),
+              const SizedBox(height: AppSpacing.md),
+              LodgingPhotosSection(lodgingId: widget.lodgingId),
               const SizedBox(height: AppSpacing.md),
               RoomTypesSection(lodgingId: widget.lodgingId),
               const SizedBox(height: AppSpacing.md),

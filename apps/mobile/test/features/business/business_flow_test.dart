@@ -166,7 +166,7 @@ void main() {
     );
 
     await tapText(tester, 'Enviar a revisión');
-    expect(find.textContaining('agrega al menos un tipo de cuarto'), findsOne);
+    expect(find.textContaining('Al menos una foto del hostal'), findsOne);
     expect(business.lodgings[lodging.id]!.status, LodgingStatus.draft);
   });
 

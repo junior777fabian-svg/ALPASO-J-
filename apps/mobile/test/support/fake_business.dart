@@ -1,7 +1,9 @@
 import 'package:alpaso/features/business/data/business_repository.dart';
+import 'package:alpaso/features/business/data/photo_picker.dart';
 import 'package:alpaso/features/business/domain/business_failure.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
+import 'package:alpaso/features/business/domain/photo.dart';
 
 import 'fake_account.dart';
 
@@ -19,6 +21,7 @@ class FakeBusinessServer implements BusinessRepository {
 
   final roomTypesByLodging = <String, List<RoomType>>{};
   final productsByLodging = <String, List<Product>>{};
+  final lodgingPhotosByLodging = <String, List<Photo>>{};
   PlatformRules rules = const PlatformRules(
     blockHours: [4, 6, 8, 12, 24],
     alcoholEnabled: false,
@@ -123,9 +126,32 @@ class FakeBusinessServer implements BusinessRepository {
     if (!l.status.canSubmit) {
       throw const BusinessFailure(BusinessFailureReason.invalidStatus);
     }
-    final ready = (roomTypesByLodging[id] ?? const []).any((t) => t.isReady);
-    if (!complete.contains(id) && !ready) {
-      throw const BusinessFailure(BusinessFailureReason.lodgingIncomplete);
+    if (!complete.contains(id)) {
+      final types = roomTypesByLodging[id] ?? const <RoomType>[];
+      final missing = [
+        if ((lodgingPhotosByLodging[id] ?? const []).isEmpty) 'lodging_photo',
+        if (!types.any(
+          (t) =>
+              t.draft.isActive &&
+              t.draft.rates.isNotEmpty &&
+              t.draft.rooms.isNotEmpty,
+        ))
+          'room_type_ready',
+        if (types.any(
+          (t) =>
+              t.draft.isActive &&
+              t.draft.rates.isNotEmpty &&
+              t.missingPhotos.isNotEmpty,
+        ))
+          'room_type_photos',
+      ];
+      if (missing.isNotEmpty) {
+        throw BusinessFailure(
+          BusinessFailureReason.lodgingIncomplete,
+          'falta',
+          missing,
+        );
+      }
     }
     lodgings[id] = _with(l, status: LodgingStatus.pendingReview);
   }
@@ -155,7 +181,12 @@ class FakeBusinessServer implements BusinessRepository {
       throw const BusinessFailure(BusinessFailureReason.roomLabelTaken);
     }
     final id = roomTypeId ?? 't${_ids++}';
-    final type = RoomType(id: id, draft: draft);
+    final previous = list.where((t) => t.id == id).firstOrNull;
+    final type = RoomType(
+      id: id,
+      draft: draft,
+      photos: previous?.photos ?? const [],
+    );
     final index = list.indexWhere((t) => t.id == id);
     if (index >= 0) {
       list[index] = type;
@@ -204,5 +235,81 @@ class FakeBusinessServer implements BusinessRepository {
     for (final list in productsByLodging.values) {
       list.removeWhere((p) => p.id == productId);
     }
+  }
+
+  Photo _photo(String lodgingId, [PhotoKind? kind]) {
+    final id = 'f${_ids++}';
+    return Photo(
+      id: id,
+      storagePath: '$lodgingId/$id.jpg',
+      url: 'http://fotos.invalid/$id.jpg',
+      kind: kind,
+    );
+  }
+
+  @override
+  Future<List<Photo>> lodgingPhotos(String lodgingId) async =>
+      List.of(lodgingPhotosByLodging[lodgingId] ?? const []);
+
+  @override
+  Future<void> addLodgingPhoto(String lodgingId, PickedPhoto photo) async {
+    _maybeFail();
+    lodgingPhotosByLodging
+        .putIfAbsent(lodgingId, () => [])
+        .add(_photo(lodgingId));
+  }
+
+  @override
+  Future<void> addRoomTypePhoto(
+    String lodgingId,
+    String roomTypeId,
+    PhotoKind kind,
+    PickedPhoto photo,
+  ) async {
+    _maybeFail();
+    final list = roomTypesByLodging[lodgingId]!;
+    final index = list.indexWhere((t) => t.id == roomTypeId);
+    final type = list[index];
+    list[index] = RoomType(
+      id: type.id,
+      draft: type.draft,
+      photos: [...type.photos, _photo(lodgingId, kind)],
+    );
+  }
+
+  @override
+  Future<void> deletePhoto(Photo photo, {required bool roomType}) async {
+    _maybeFail();
+    for (final list in lodgingPhotosByLodging.values) {
+      list.removeWhere((p) => p.id == photo.id);
+    }
+    for (final list in roomTypesByLodging.values) {
+      for (var i = 0; i < list.length; i++) {
+        final t = list[i];
+        list[i] = RoomType(
+          id: t.id,
+          draft: t.draft,
+          photos: [
+            for (final p in t.photos)
+              if (p.id != photo.id) p,
+          ],
+        );
+      }
+    }
+  }
+}
+
+/// Selector de fotos que siempre devuelve una imagen pequeña, o nada si
+/// [cancel] es verdadero.
+class FakePhotoPicker implements PhotoPicker {
+  bool cancel = false;
+  int picks = 0;
+
+  @override
+  Future<PickedPhoto?> pick({required bool camera}) async {
+    picks++;
+    return cancel
+        ? null
+        : const PickedPhoto(bytes: [1, 2, 3], mimeType: 'image/jpeg');
   }
 }

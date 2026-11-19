@@ -468,13 +468,14 @@ La parte 1B original incluía también las cuentas en la app. Se dividió en 1B 
 | 2A | Servidor de la oferta: distritos, hostales con ubicación, personal, tipos de cuarto, cuartos, tarifas, extras; registrar, enviar a revisión y publicar | Pruebas de reglas y permisos | Implementada. Verificado en la nube: 50 pruebas pgTAP nuevas (91 en total) |
 | 2B | Modo negocio en la app: mis hostales, registrar con ubicación en el mapa, editar, estado de revisión y envío | Pruebas de pantalla y de la app contra el servidor local | Implementada. Verificado en la nube: 12 pruebas de pantalla y 7 contra el servidor local |
 | 2C | Tipos de cuarto con tarifas y cuartos, y carta de extras, en la app | Ídem | Implementada. Verificado en la nube: `save_room_type` con 14 pruebas pgTAP (105 en total), 76 pruebas de pantalla en total y 24 de la app contra el servidor local |
-| 2D | Fotos del hostal y de cada tipo de cuarto (habitación, baño, jacuzzi), exigidas para publicar | Ídem, con el almacenamiento de fotos local | Pendiente |
+| 2D | Fotos del hostal y de cada tipo de cuarto (habitación, baño, jacuzzi), exigidas para publicar | Ídem, con el almacenamiento de fotos local | Implementada. Verificado en la nube: 16 pruebas pgTAP nuevas (121 en total), 78 pruebas de pantalla y 28 de la app contra el servidor local con almacenamiento real |
 | 2E | Recorrido completo: un hostal de prueba queda publicado desde la app | Recorrido en navegador contra el servidor local; agente local en el emulador | Pendiente |
 
 Decisiones de la etapa 2 (implementadas en 2A y 2B):
 
 - **El estado del hostal solo lo cambia el servidor:** `create_lodging` lo crea en borrador, `submit_lodging` lo pasa a revisión y `admin_review_lodging` lo publica o lo rechaza con motivo.
-- **Para enviar a revisión** hace falta al menos un tipo de cuarto activo con una tarifa y un cuarto activo. Las fotos se exigirán desde la parte 2D.
+- **Para enviar a revisión** hacen falta: al menos una foto del hostal, al menos un tipo de cuarto activo con una tarifa y un cuarto activo, y en cada tipo de cuarto con precio una foto de la habitación y una del baño (y del jacuzzi si lo tiene). Si falta algo, el servidor dice qué, y la app lo muestra en una lista.
+- **Fotos:** se guardan en el almacenamiento `lodging-photos`, en una carpeta por hostal. Solo el dueño sube o borra, y solo en la carpeta de su hostal. Una fila de foto solo puede apuntar a un archivo ya subido. La app reduce cada foto a 1600 px antes de subirla. La lectura es pública porque las fotos de un hostal publicado las ve cualquiera.
 - **Una cuenta puede tener hasta 3 hostales sin publicar a la vez** (configuración `max_open_lodgings_per_account`). Para registrar un hostal hay que haber confirmado la mayoría de edad.
 - **La ubicación debe caer en Lima Metropolitana o Callao.** Se marca moviendo el mapa de OpenStreetMap bajo un pin fijo.
 - **Hasta que exista el panel de administración (etapa 6)**, los hostales se aprueban con `npm run admin:review`, que usa la llave de servidor.

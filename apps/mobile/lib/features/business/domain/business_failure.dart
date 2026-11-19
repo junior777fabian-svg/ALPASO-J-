@@ -14,10 +14,18 @@ enum BusinessFailureReason {
 }
 
 class BusinessFailure implements Exception {
-  const BusinessFailure(this.reason, [this.debugMessage = '']);
+  const BusinessFailure(
+    this.reason, [
+    this.debugMessage = '',
+    this.missing = const [],
+  ]);
 
   final BusinessFailureReason reason;
   final String debugMessage;
+
+  /// Con [BusinessFailureReason.lodgingIncomplete]: qué falta, según el
+  /// servidor ('lodging_photo', 'room_type_ready', 'room_type_photos').
+  final List<String> missing;
 
   @override
   String toString() => 'BusinessFailure(${reason.name}: $debugMessage)';
@@ -35,6 +43,7 @@ BusinessFailureReason businessReasonFromServer(String message, String? code) {
     'not_owner' => BusinessFailureReason.notOwner,
     'alcohol_disabled' => BusinessFailureReason.alcoholDisabled,
     'room_label_taken' => BusinessFailureReason.roomLabelTaken,
+    'photo_not_uploaded' => BusinessFailureReason.network,
     _ => switch (code) {
       '23505' => BusinessFailureReason.roomLabelTaken,
       '23514' || '22P02' || '23503' => BusinessFailureReason.invalidData,

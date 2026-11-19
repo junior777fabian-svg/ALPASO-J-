@@ -206,6 +206,18 @@ select throws_ok(
   '42501', 'not_owner', 'otra cuenta no envía a revisión un hostal ajeno');
 reset role;
 
+-- Fotos mínimas (parte 2D). Los archivos se registran directo en el
+-- almacenamiento; las reglas de fotos se prueban en 06_photos_test.sql.
+insert into storage.objects (bucket_id, name)
+select 'lodging-photos', (select id from ids where name = 'sol')::text || '/' || f
+  from unnest(array['fachada.jpg', 'suite-cuarto.jpg', 'suite-bano.jpg', 'suite-jacuzzi.jpg']) f;
+insert into public.lodging_photos (lodging_id, storage_path)
+values ((select id from ids where name = 'sol'), (select id from ids where name = 'sol')::text || '/fachada.jpg');
+insert into public.room_type_photos (room_type_id, lodging_id, kind, storage_path)
+select (select id from ids where name = 'suite'), (select id from ids where name = 'sol'), k,
+       (select id from ids where name = 'sol')::text || '/suite-' || f
+  from (values ('room', 'cuarto.jpg'), ('bathroom', 'bano.jpg'), ('jacuzzi', 'jacuzzi.jpg')) v(k, f);
+
 -- ── envío a revisión ───────────────────────────────────────────────────────
 select pg_temp.act_as('11111111-1111-1111-1111-111111111111');
 set local role authenticated;

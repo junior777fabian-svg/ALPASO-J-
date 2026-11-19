@@ -1,6 +1,8 @@
 import 'package:alpaso/features/business/domain/business_failure.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
+import 'package:alpaso/features/business/domain/photo.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 /// Lo que el modo negocio pide al servidor.
@@ -43,6 +45,20 @@ abstract interface class BusinessRepository {
   });
 
   Future<void> deleteProduct(String productId);
+
+  Future<List<Photo>> lodgingPhotos(String lodgingId);
+
+  Future<void> addLodgingPhoto(String lodgingId, PickedPhoto photo);
+
+  Future<void> addRoomTypePhoto(
+    String lodgingId,
+    String roomTypeId,
+    PhotoKind kind,
+    PickedPhoto photo,
+  );
+
+  /// Borra la foto (fila y archivo). [roomType] indica de qué tabla.
+  Future<void> deletePhoto(Photo photo, {required bool roomType});
 }
 
 class SupabaseBusinessRepository implements BusinessRepository {
@@ -141,11 +157,13 @@ class SupabaseBusinessRepository implements BusinessRepository {
         .select(
           'id, name, description, max_guests, has_jacuzzi, has_tv, '
           'has_air_conditioning, is_active, rates(block_hours, price_cents), '
-          'rooms(label)',
+          'rooms(label), room_type_photos(id, kind, storage_path)',
         )
         .eq('lodging_id', lodgingId)
         .order('created_at', ascending: true);
-    return rows.map(RoomType.fromJson).toList();
+    return [
+      for (final row in rows) RoomType.fromJson(row, photoUrl: _photoUrl),
+    ];
   });
 
   @override
@@ -222,6 +240,83 @@ class SupabaseBusinessRepository implements BusinessRepository {
         .select('id')
         .single();
   });
+
+  static const _bucket = 'lodging-photos';
+
+  String _photoUrl(String path) =>
+      _client.storage.from(_bucket).getPublicUrl(path);
+
+  /// Sube el archivo a la carpeta del hostal y devuelve su ruta.
+  Future<String> _upload(String lodgingId, PickedPhoto photo) async {
+    final name =
+        '${DateTime.now().microsecondsSinceEpoch}-${photo.bytes.length}'
+        '.${photo.extension}';
+    final path = '$lodgingId/$name';
+    await _client.storage
+        .from(_bucket)
+        .uploadBinary(
+          path,
+          Uint8List.fromList(photo.bytes),
+          fileOptions: sb.FileOptions(contentType: photo.mimeType),
+        );
+    return path;
+  }
+
+  @override
+  Future<List<Photo>> lodgingPhotos(String lodgingId) =>
+      guardBusiness(() async {
+        final rows = await _client
+            .from('lodging_photos')
+            .select('id, storage_path')
+            .eq('lodging_id', lodgingId)
+            .order('created_at', ascending: true);
+        return [
+          for (final r in rows)
+            Photo(
+              id: r['id'] as String,
+              storagePath: r['storage_path'] as String,
+              url: _photoUrl(r['storage_path'] as String),
+            ),
+        ];
+      });
+
+  @override
+  Future<void> addLodgingPhoto(String lodgingId, PickedPhoto photo) =>
+      guardBusiness(() async {
+        final path = await _upload(lodgingId, photo);
+        await _client.from('lodging_photos').insert({
+          'lodging_id': lodgingId,
+          'storage_path': path,
+        });
+      });
+
+  @override
+  Future<void> addRoomTypePhoto(
+    String lodgingId,
+    String roomTypeId,
+    PhotoKind kind,
+    PickedPhoto photo,
+  ) => guardBusiness(() async {
+    final path = await _upload(lodgingId, photo);
+    await _client.from('room_type_photos').insert({
+      'room_type_id': roomTypeId,
+      'lodging_id': lodgingId,
+      'kind': kind.db,
+      'storage_path': path,
+    });
+  });
+
+  @override
+  Future<void> deletePhoto(Photo photo, {required bool roomType}) =>
+      guardBusiness(() async {
+        await _client
+            .from(roomType ? 'room_type_photos' : 'lodging_photos')
+            .delete()
+            .eq('id', photo.id)
+            .select('id')
+            .single();
+        await _client.storage.from(_bucket).remove([photo.storagePath]);
+      });
 }
 
 /// Convierte los errores del cliente de Supabase en [BusinessFailure].
@@ -234,6 +329,17 @@ Future<T> guardBusiness<T>(Future<T> Function() action) async {
     throw BusinessFailure(
       businessReasonFromServer(error.message, error.code),
       '${error.code}: ${error.message}',
+      switch (error.details) {
+        final String details when details.isNotEmpty => details.split(','),
+        _ => const [],
+      },
+    );
+  } on sb.StorageException catch (error) {
+    throw BusinessFailure(
+      error.statusCode == '403'
+          ? BusinessFailureReason.notOwner
+          : BusinessFailureReason.network,
+      'storage ${error.statusCode}: ${error.message}',
     );
   } on Exception catch (error) {
     throw BusinessFailure(BusinessFailureReason.network, '$error');

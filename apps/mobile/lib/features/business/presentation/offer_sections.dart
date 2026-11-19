@@ -54,6 +54,12 @@ class RoomTypesSection extends ConsumerWidget {
                       l10n.roomTypeNoRooms
                     else
                       l10n.roomTypeRooms(type.draft.rooms.join(', ')),
+                    if (type.missingPhotos.isNotEmpty)
+                      l10n.roomTypeMissingPhotos(
+                        type.missingPhotos
+                            .map((k) => photoKindLabel(l10n, k))
+                            .join(', '),
+                      ),
                   ].join('\n'),
                 ),
                 trailing: Icon(

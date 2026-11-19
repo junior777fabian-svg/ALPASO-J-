@@ -1,11 +1,14 @@
 @Tags(['server'])
 library;
 
+import 'dart:io';
+
 import 'package:alpaso/features/auth/data/auth_repository.dart';
 import 'package:alpaso/features/business/data/business_repository.dart';
 import 'package:alpaso/features/business/domain/business_failure.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
+import 'package:alpaso/features/business/domain/photo.dart';
 import 'package:alpaso/features/profile/data/profile_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,6 +24,18 @@ SupabaseClient _phone() => SupabaseClient(
     authFlowType: AuthFlowType.implicit,
   ),
 );
+
+/// Código HTTP de una descarga, sin pasar por el cliente de Supabase.
+Future<int> _status(String url) async {
+  final client = HttpClient();
+  try {
+    final response = await (await client.getUrl(Uri.parse(url))).close();
+    await response.drain<void>();
+    return response.statusCode;
+  } finally {
+    client.close();
+  }
+}
 
 Matcher _failsWith(BusinessFailureReason reason) =>
     throwsA(isA<BusinessFailure>().having((f) => f.reason, 'reason', reason));
@@ -151,7 +166,12 @@ void main() {
         expect(types.single.id, suiteId);
         expect(types.single.draft.rates, {4: 4500, 12: 9050});
         expect(types.single.draft.rooms, ['201', '202']);
-        expect(types.single.isReady, isTrue);
+        expect(types.single.missingPhotos, [
+          PhotoKind.room,
+          PhotoKind.bathroom,
+          PhotoKind.jacuzzi,
+        ]);
+        expect(types.single.isReady, isFalse, reason: 'faltan sus fotos');
       });
 
       test('edita tarifas y cuartos de una sola vez', () async {
@@ -253,6 +273,117 @@ void main() {
           _failsWith(BusinessFailureReason.notOwner),
         );
         expect(await other.roomTypes(lodgingId), isEmpty);
+      });
+
+      // Un JPEG mínimo válido de 1×1.
+      final jpeg = PickedPhoto(
+        mimeType: 'image/jpeg',
+        bytes: [
+          0xFF,
+          0xD8,
+          0xFF,
+          0xDB,
+          0x00,
+          0x43,
+          0x00,
+          ...List.filled(64, 1),
+          0xFF,
+          0xC0,
+          0x00,
+          0x0B,
+          0x08,
+          0x00,
+          0x01,
+          0x00,
+          0x01,
+          0x01,
+          0x01,
+          0x11,
+          0x00,
+          0xFF,
+          0xC4,
+          0x00,
+          0x14,
+          0x00,
+          0x01,
+          ...List.filled(15, 0),
+          0x03,
+          0xFF,
+          0xDA,
+          0x00,
+          0x08,
+          0x01,
+          0x01,
+          0x00,
+          0x00,
+          0x3F,
+          0x00,
+          0x37,
+          0xFF,
+          0xD9,
+        ],
+      );
+
+      test('sin fotos no se envía a revisión, y dice cuáles faltan', () async {
+        await expectLater(
+          business.submitLodging(lodgingId),
+          throwsA(
+            isA<BusinessFailure>().having((f) => f.missing, 'missing', [
+              'lodging_photo',
+              'room_type_photos',
+            ]),
+          ),
+        );
+      });
+
+      test('sube fotos al almacenamiento y las registra', () async {
+        await business.addLodgingPhoto(lodgingId, jpeg);
+        for (final kind in [
+          PhotoKind.room,
+          PhotoKind.bathroom,
+          PhotoKind.jacuzzi,
+        ]) {
+          await business.addRoomTypePhoto(lodgingId, suiteId, kind, jpeg);
+        }
+        final photos = await business.lodgingPhotos(lodgingId);
+        expect(photos, hasLength(1));
+        expect(photos.single.storagePath, startsWith('$lodgingId/'));
+        expect(
+          photos.single.url,
+          contains('/storage/v1/object/public/lodging-photos/'),
+        );
+
+        final type = (await business.roomTypes(lodgingId)).single;
+        expect(type.missingPhotos, isEmpty);
+        expect(type.isReady, isTrue);
+      });
+
+      test('borra una foto: la fila y el archivo', () async {
+        await business.addLodgingPhoto(lodgingId, jpeg);
+        var photos = await business.lodgingPhotos(lodgingId);
+        expect(photos, hasLength(2));
+        final removed = photos.last;
+        expect(await _status(removed.url), 200, reason: 'se puede descargar');
+
+        await business.deletePhoto(removed, roomType: false);
+        photos = await business.lodgingPhotos(lodgingId);
+        expect(photos, hasLength(1));
+        expect(await _status(removed.url), isNot(200), reason: 'ya no existe');
+        expect(await _status(photos.single.url), 200);
+      });
+
+      test('otra cuenta no sube fotos al hostal ajeno', () async {
+        final luis = _phone();
+        addTearDown(luis.dispose);
+        await SupabaseAuthRepository(luis.auth).signIn(
+          email: 'otro.$run@example.test',
+          password: 'Clave-de-prueba-1',
+        );
+        await expectLater(
+          SupabaseBusinessRepository(luis).addLodgingPhoto(lodgingId, jpeg),
+          throwsA(isA<BusinessFailure>()),
+        );
+        expect(await business.lodgingPhotos(lodgingId), hasLength(1));
       });
 
       test('completo, se envía a revisión', () async {

@@ -76,6 +76,18 @@ select throws_ok($$
     false, false, false, true, '{"4": 10}', array['301'])
 $$, '23514', null, 'un precio menor a S/ 1.00 se rechaza');
 
+reset role;
+insert into storage.objects (bucket_id, name)
+select 'lodging-photos', (select id from ids where name = 'sol')::text || '/' || f
+  from unnest(array['fachada.jpg', 'c.jpg', 'b.jpg', 'j.jpg']) f;
+insert into public.lodging_photos (lodging_id, storage_path)
+values ((select id from ids where name = 'sol'), (select id from ids where name = 'sol')::text || '/fachada.jpg');
+insert into public.room_type_photos (room_type_id, lodging_id, kind, storage_path)
+select (select id from ids where name = 'suite'), (select id from ids where name = 'sol'), k,
+       (select id from ids where name = 'sol')::text || '/' || f
+  from (values ('room', 'c.jpg'), ('bathroom', 'b.jpg'), ('jacuzzi', 'j.jpg')) v(k, f);
+select pg_temp.act_as('11111111-1111-1111-1111-111111111111');
+set local role authenticated;
 select is(public.submit_lodging((select id from ids where name = 'sol')), 'pending_review',
   'con un tipo de cuarto guardado así, el hostal se puede enviar a revisión');
 reset role;
