@@ -84,10 +84,17 @@ class Lodging {
     required this.districtName,
     required this.status,
     this.reviewNote = '',
+    this.isOwner = true,
   });
 
   factory Lodging.fromJson(Map<String, dynamic> json) => Lodging(
     id: json['id'] as String,
+    // En "mis hostales" llega el rol de la cuenta; si no, se asume dueño
+    // (la ficha la abre quien la administra).
+    isOwner: switch (json['lodging_members']) {
+      [{'role': final String role}, ...] => role == 'owner',
+      _ => true,
+    },
     districtName: switch (json['districts']) {
       {'name': final String name} => name,
       _ => '',
@@ -115,6 +122,9 @@ class Lodging {
 
   /// Motivo del último rechazo, si lo hubo.
   final String reviewNote;
+
+  /// La cuenta es dueña; si no, es recepcionista.
+  final bool isOwner;
 
   String get name => draft.name;
 }

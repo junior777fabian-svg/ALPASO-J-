@@ -4,6 +4,8 @@ import 'package:alpaso/features/business/presentation/business_home_screen.dart'
 import 'package:alpaso/features/business/presentation/lodging_detail_screen.dart';
 import 'package:alpaso/features/business/presentation/lodging_form_screen.dart';
 import 'package:alpaso/features/business/presentation/product_form_screen.dart';
+import 'package:alpaso/features/business/presentation/reception_screen.dart';
+import 'package:alpaso/features/business/presentation/staff_screen.dart';
 import 'package:alpaso/features/business/presentation/room_type_form_screen.dart';
 import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
@@ -35,6 +37,9 @@ abstract final class AppRoutes {
   static const newLodging = '/negocio/hostal/nuevo';
   static String lodging(String id) => '/negocio/hostal/$id';
   static String editLodging(String id) => '/negocio/hostal/$id/editar';
+  static String reception(String id) => '/negocio/hostal/$id/hoy';
+  static String staff(String id) => '/negocio/hostal/$id/personal';
+  static String hostBookings(String id) => '/negocio/hostal/$id/reservas';
   static String newRoomType(String id) => '/negocio/hostal/$id/cuarto/nuevo';
   static String editRoomType(String id, String typeId) =>
       '/negocio/hostal/$id/cuarto/$typeId';
@@ -141,6 +146,21 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
                 path: 'editar',
                 builder: (context, state) =>
                     LodgingFormScreen(lodgingId: state.pathParameters['id']),
+              ),
+              GoRoute(
+                path: 'hoy',
+                builder: (context, state) =>
+                    ReceptionScreen(lodgingId: state.pathParameters['id']!),
+              ),
+              GoRoute(
+                path: 'personal',
+                builder: (context, state) =>
+                    StaffScreen(lodgingId: state.pathParameters['id']!),
+              ),
+              GoRoute(
+                path: 'reservas',
+                builder: (context, state) =>
+                    HostBookingsScreen(lodgingId: state.pathParameters['id']!),
               ),
               GoRoute(
                 path: 'cuarto/nuevo',

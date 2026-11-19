@@ -1,11 +1,13 @@
 import 'package:alpaso/app/router/app_router.dart';
 import 'package:alpaso/app/theme/app_spacing.dart';
 import 'package:alpaso/design/widgets/empty_state.dart';
+import 'package:alpaso/design/widgets/text_prompt_dialog.dart';
 import 'package:alpaso/features/auth/data/auth_providers.dart';
 import 'package:alpaso/features/business/data/business_providers.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/presentation/business_messages.dart';
 import 'package:alpaso/features/business/presentation/lodging_status_chip.dart';
+import 'package:alpaso/features/business/presentation/reception_messages.dart';
 import 'package:alpaso/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -89,6 +91,8 @@ class _LodgingList extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               register,
+              const SizedBox(height: AppSpacing.sm),
+              const _JoinButton(),
               const SizedBox(height: AppSpacing.md),
               backButton,
             ],
@@ -109,12 +113,21 @@ class _LodgingList extends ConsumerWidget {
                       lodging.draft.address,
                     ].where((s) => s.isNotEmpty).join(' · '),
                   ),
-                  trailing: LodgingStatusChip(status: lodging.status),
-                  onTap: () => context.push(AppRoutes.lodging(lodging.id)),
+                  trailing: lodging.isOwner
+                      ? LodgingStatusChip(status: lodging.status)
+                      : Text(l10n.staffReceptionist),
+                  // El recepcionista va directo a recepción.
+                  onTap: () => context.push(
+                    lodging.isOwner
+                        ? AppRoutes.lodging(lodging.id)
+                        : AppRoutes.reception(lodging.id),
+                  ),
                 ),
               ),
             const SizedBox(height: AppSpacing.md),
             register,
+            const SizedBox(height: AppSpacing.sm),
+            const _JoinButton(),
             const SizedBox(height: AppSpacing.sm),
             backButton,
           ],
@@ -131,5 +144,52 @@ class _LodgingList extends ConsumerWidget {
       ),
       _ => const Center(child: CircularProgressIndicator()),
     };
+  }
+}
+
+/// Unirse como recepcionista con el código que dio el dueño.
+class _JoinButton extends ConsumerWidget {
+  const _JoinButton();
+
+  Future<void> _join(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final code = await showTextPrompt(
+      context,
+      title: l10n.joinTitle,
+      label: l10n.joinCodeLabel,
+      confirmLabel: l10n.joinAction,
+      cancelLabel: l10n.profileCancelAction,
+      fieldKey: const Key('join-code'),
+      confirmKey: const Key('join-submit'),
+      maxLength: 8,
+      uppercase: true,
+    );
+    if (code == null || code.trim().isEmpty) return;
+    try {
+      final name = await ref
+          .read(receptionRepositoryProvider)!
+          .acceptInvite(code);
+      ref.invalidate(myLodgingsProvider);
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.joinDone(name))));
+    } on Object catch (error) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(receptionFailureMessage(l10n, error))),
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return TextButton.icon(
+      key: const Key('join-lodging'),
+      onPressed: () => _join(context, ref),
+      icon: const Icon(Icons.vpn_key_outlined),
+      label: Text(AppLocalizations.of(context).joinAction),
+    );
   }
 }

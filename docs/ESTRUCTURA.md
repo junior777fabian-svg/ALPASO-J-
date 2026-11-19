@@ -1,6 +1,6 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapas 2, 3 y 4 implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
+**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapas 2 a 5 implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
 **Última actualización:** 18 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
@@ -529,9 +529,9 @@ Decisiones de la parte 4A (implementadas):
 
 | Parte | Entrega | Cómo se comprueba | Estado |
 |---|---|---|---|
-| 5A | Servidor de recepción: tablero del día, ingreso con código, salida, limpieza, cliente directo, extras, cancelación del hostal, personal con invitaciones y tareas automáticas | Pruebas de reglas | Implementada. Verificado en la nube: 46 pruebas pgTAP nuevas (247 en total) |
-| 5B | Recepción en la app (N4 a N6): tablero Hoy, ingreso con código, salida, limpieza, cliente directo, extras; reservas del hostal; personal | Pruebas de pantalla y contra el servidor local | Pendiente |
-| 5C | Recorrido: cliente reserva, recepción lo hace ingresar con el código (una sola vez), marca la salida y la limpieza | Recorrido en navegador contra el servidor local | Pendiente |
+| 5A | Servidor de recepción: tablero del día, ingreso con código, salida, limpieza, cliente directo, extras, cancelación del hostal, personal con invitaciones y tareas automáticas | Pruebas de reglas | Implementada. Verificado en la nube: 48 pruebas pgTAP nuevas (249 en total), con la corrección de la salida antes de la hora reservada |
+| 5B | Recepción en la app (N4 a N6): tablero Hoy, ingreso con código, salida, limpieza, cliente directo, extras; reservas del hostal; personal | Pruebas de pantalla y contra el servidor local | Implementada. Verificado en la nube: 8 pruebas de pantalla y 9 contra el servidor local. El ingreso es escribiendo el código; leer el QR con la cámara queda pendiente |
+| 5C | Recorrido: cliente reserva, recepción lo hace ingresar con el código (una sola vez), marca la salida y la limpieza | Recorrido en navegador contra el servidor local | Implementada. Verificado en la nube: `e2e/business.cjs`, 22 de 22 pasos. Falta: emulador (agente local) |
 
 Decisiones de la parte 5A (implementadas):
 
@@ -541,6 +541,8 @@ Decisiones de la parte 5A (implementadas):
 - **Cliente directo y fuera de servicio:** `host_block_room` nunca pisa una reserva de la app (lo impide la restricción de exclusión) y la app se entera al instante porque escribe en `room_occupancy`.
 - **Extras:** un extra marcado "no disponible" se reembolsa. Los reembolsos de un cobro pueden ser varios pero nunca suman más que lo cobrado (lo vigila la base).
 - **Cancelación del hostal:** solo el dueño (o un administrador), con motivo, y con reembolso total.
+- **Salida antes de la hora reservada:** la limpieza empieza siempre en el momento de la salida (corrección en `20261119150000_fix_early_check_out.sql`).
+- **App de recepción:** el recepcionista entra directo a "Recepción" desde el modo negocio; el dueño la abre desde la ficha de un hostal publicado, junto a "Reservas" y "Personal". Se une con "Unirme a un hostal" y el código del dueño. Leer el QR con la cámara (`mobile_scanner`) queda pendiente; mientras tanto se escribe el código. Los avisos push quedan para la conexión de Firebase.
 - **Personal:** el dueño genera un código de 8 caracteres que vale 48 horas y una sola vez; quien lo usa queda como recepcionista. El dueño ve a su personal y puede retirar recepcionistas, nunca al dueño. El recepcionista ve del cliente solo el nombre y el código.
 
 ## 16. Lo que depende del dueño

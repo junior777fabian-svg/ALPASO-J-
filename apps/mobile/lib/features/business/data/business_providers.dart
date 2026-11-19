@@ -1,9 +1,11 @@
 import 'package:alpaso/features/auth/data/auth_providers.dart';
 import 'package:alpaso/features/business/data/business_repository.dart';
 import 'package:alpaso/features/business/data/photo_picker.dart';
+import 'package:alpaso/features/business/data/reception_repository.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/domain/offer.dart';
 import 'package:alpaso/features/business/domain/photo.dart';
+import 'package:alpaso/features/business/domain/reception.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Nulo cuando la app corre sin servidor.
@@ -58,4 +60,30 @@ final lodgingPhotosProvider = FutureProvider.family<List<Photo>, String>((
   lodgingId,
 ) {
   return ref.watch(businessRepositoryProvider)!.lodgingPhotos(lodgingId);
+});
+
+final receptionRepositoryProvider = Provider<ReceptionRepository?>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return client == null ? null : SupabaseReceptionRepository(client);
+});
+
+final todayBoardProvider = FutureProvider.family<TodayBoard, String>((
+  ref,
+  lodgingId,
+) {
+  return ref.watch(receptionRepositoryProvider)!.today(lodgingId);
+});
+
+final hostBookingsProvider = FutureProvider.family<List<HostBooking>, String>((
+  ref,
+  lodgingId,
+) {
+  return ref.watch(receptionRepositoryProvider)!.bookings(lodgingId);
+});
+
+final staffProvider = FutureProvider.family<List<StaffMember>, String>((
+  ref,
+  lodgingId,
+) {
+  return ref.watch(receptionRepositoryProvider)!.staff(lodgingId);
 });

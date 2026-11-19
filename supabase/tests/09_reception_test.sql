@@ -1,7 +1,7 @@
 -- Recepción: ingreso con código una sola vez, salida, limpieza, cliente
 -- directo, extras, cancelación del hostal, personal y tareas automáticas.
 begin;
-select plan(46);
+select plan(48);
 
 -- ana: dueña. rosa: será recepcionista. cli: cliente. luis: otra cuenta.
 insert into auth.users (id, email) values
@@ -226,6 +226,29 @@ set local role authenticated;
 select throws_ok($$ select public.host_today('aaaaaaaa-2000-0000-0000-000000000001') $$,
   '42501', 'not_staff', 'Rosa ya no ve el tablero');
 reset role;
+
+-- ── salida antes de la hora reservada ──────────────────────────────────────
+-- Carla ingresa 10 minutos antes y sale enseguida: el cuarto queda en
+-- limpieza desde ya, no "libre" hasta la hora reservada.
+select pg_temp.act_as('22222222-2222-2222-2222-222222222222');
+set local role authenticated;
+insert into ids (name, id, code)
+select 'b3', (r ->> 'booking_id')::uuid, r ->> 'code'
+  from public.create_booking('bbbbbbbb-2000-0000-0000-000000000001',
+    now() + interval '10 minutes', 4, '[]', gen_random_uuid()) r;
+select public.demo_gateway_complete((public.start_payment((select id from ids where name = 'b3')) ->> 'payment_id')::uuid, true);
+reset role;
+select pg_temp.act_as('11111111-1111-1111-1111-111111111111');
+set local role authenticated;
+select public.host_check_in('aaaaaaaa-2000-0000-0000-000000000001', (select code from ids where name = 'b3'));
+select public.host_check_out((select id from ids where name = 'b3'));
+select is(
+  (select r ->> 'state' from jsonb_array_elements(public.host_today('aaaaaaaa-2000-0000-0000-000000000001') -> 'rooms') r
+    where r ->> 'room_id' = (select room_id::text from public.bookings where id = (select id from ids where name = 'b3'))),
+  'cleaning', 'si sale antes de la hora reservada, el cuarto queda en limpieza desde ya');
+reset role;
+select is_empty($$ select 1 from public.room_occupancy where booking_id = (select id from ids where name = 'b3') $$,
+  'y la ocupación de una estadía que no llegó a empezar se quita');
 
 -- ── tareas automáticas ─────────────────────────────────────────────────────
 -- Una reserva confirmada cuya hora pasó hace 31 minutos: no llegó.

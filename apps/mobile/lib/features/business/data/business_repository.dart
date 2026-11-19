@@ -92,7 +92,7 @@ class SupabaseBusinessRepository implements BusinessRepository {
   Future<List<Lodging>> myLodgings() => guardBusiness(() async {
     final rows = await _client
         .from('lodgings')
-        .select('$_lodgingColumns, lodging_members!inner(user_id)')
+        .select('$_lodgingColumns, lodging_members!inner(user_id, role)')
         .eq('lodging_members.user_id', _userId)
         .order('created_at', ascending: true);
     return rows.map(Lodging.fromJson).toList();

@@ -12,6 +12,7 @@ import 'fake_account.dart';
 import 'fake_booking.dart';
 import 'fake_business.dart';
 import 'fake_explore.dart';
+import 'fake_reception.dart';
 
 const demoConfig = AppConfig(env: AppEnv.demo);
 
@@ -41,6 +42,7 @@ extension PumpApp on WidgetTester {
     FakePhotoPicker? picker,
     FakeExploreServer? explore,
     FakeBookingServer? booking,
+    FakeReceptionServer? reception,
     FakeLocationService? location,
     String? initialLocation,
   }) async {
@@ -62,6 +64,9 @@ extension PumpApp on WidgetTester {
             ),
             bookingRepositoryProvider.overrideWithValue(
               booking ?? FakeBookingServer(),
+            ),
+            receptionRepositoryProvider.overrideWithValue(
+              reception ?? FakeReceptionServer(),
             ),
           ],
           locationServiceProvider.overrideWithValue(

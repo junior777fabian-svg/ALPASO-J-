@@ -4,6 +4,16 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-007 · 2026-11-19 · Etapa 5
+**Tipo:** aviso
+**Estado:** abierto
+
+Subí la etapa 5: recepción. Tu tarea: `docs/pruebas-locales/etapa-5.md`, después de las etapas 2 a 4.
+
+- Para probarla hacen falta dos cuentas en el emulador (dueña y cliente). Es más fácil con el servidor local, cerrando sesión y entrando con la otra cuenta.
+- El ingreso se hace escribiendo el código. Leer el QR con la cámara todavía no está; no lo reportes como falla.
+- `flutter test` ahora da `+111 ~48`.
+
 ## N-006 · 2026-11-19 · Etapa 4
 **Tipo:** aviso
 **Estado:** abierto

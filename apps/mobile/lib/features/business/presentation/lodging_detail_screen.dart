@@ -74,6 +74,36 @@ class _LodgingDetailScreenState extends ConsumerState<LodgingDetailScreen> {
             padding: const EdgeInsets.all(AppSpacing.md),
             children: [
               _StatusCard(lodging: value),
+              if (value.status == LodgingStatus.published) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: [
+                    FilledButton.tonalIcon(
+                      key: const Key('open-reception'),
+                      onPressed: () =>
+                          context.push(AppRoutes.reception(widget.lodgingId)),
+                      icon: const Icon(Icons.room_service_outlined),
+                      label: Text(l10n.receptionTitle),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => context.push(
+                        AppRoutes.hostBookings(widget.lodgingId),
+                      ),
+                      icon: const Icon(Icons.event_note_outlined),
+                      label: Text(l10n.hostBookingsTitle),
+                    ),
+                    OutlinedButton.icon(
+                      key: const Key('open-staff'),
+                      onPressed: () =>
+                          context.push(AppRoutes.staff(widget.lodgingId)),
+                      icon: const Icon(Icons.group_outlined),
+                      label: Text(l10n.staffTitle),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: AppSpacing.md),
               _DataCard(lodging: value),
               const SizedBox(height: AppSpacing.md),

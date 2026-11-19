@@ -245,6 +245,175 @@
     }
   },
   "cancelWindowClosedHelp": "Ya pasó el plazo para cancelar con reembolso desde la app. Si tienes un problema, escríbenos desde Ayuda.",
+  "receptionTitle": "Recepción",
+  "receptionCheckInTitle": "Ingreso con código",
+  "receptionCodeLabel": "Código de la reserva",
+  "receptionCheckInAction": "Registrar ingreso",
+  "receptionCheckedIn": "Ingresó {name}: cuarto {room}.",
+  "@receptionCheckedIn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionCheckedOut": "Salida registrada. El cuarto {room} pasa a limpieza.",
+  "@receptionCheckedOut": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionItemRefunded": "Se reembolsaron {amount} al cliente.",
+  "@receptionItemRefunded": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionRoomClean": "El cuarto {room} quedó libre.",
+  "@receptionRoomClean": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionRoomReleased": "El cuarto {room} quedó libre.",
+  "@receptionRoomReleased": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionWalkInTitle": "Cuarto {room}: cliente directo por",
+  "@receptionWalkInTitle": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionMaintenance": "Fuera de servicio (24 h, se puede liberar antes)",
+  "receptionArrivals": "Llegadas",
+  "receptionNoArrivals": "No hay llegadas en las próximas 24 horas.",
+  "receptionArrivalLine": "Llega {time} · cuarto {room} · {type}",
+  "@receptionArrivalLine": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "room": {
+        "type": "String"
+      },
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionInHouse": "En curso",
+  "receptionNoneInHouse": "Nadie en curso.",
+  "receptionRoom": "cuarto {room}",
+  "@receptionRoom": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionUntil": "hasta {time}",
+  "@receptionUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "receptionCheckOutAction": "Registrar salida",
+  "receptionItemReady": "Listo",
+  "receptionItemMissing": "No hay",
+  "receptionItemIsReady": "Listo en el cuarto",
+  "receptionItemIsMissing": "No disponible (reembolsado)",
+  "receptionRooms": "Cuartos",
+  "receptionOccupy": "Ocupar",
+  "receptionMarkClean": "Marcar limpio",
+  "receptionRelease": "Liberar",
+  "receptionErrorCodeNotFound": "Ese código no corresponde a una reserva de este hostal.",
+  "receptionErrorCodeUsed": "Ese código ya se usó.",
+  "receptionErrorTooEarly": "Todavía es temprano: el ingreso se abre 15 minutos antes de la hora reservada.",
+  "receptionErrorTooLate": "La reserva ya terminó.",
+  "receptionErrorNotConfirmed": "La reserva no está confirmada (cancelada, vencida o sin pagar).",
+  "receptionErrorRoomNotFree": "Ese cuarto tiene una reserva de la app en ese horario.",
+  "receptionErrorInvite": "El código de invitación no es válido o ya venció.",
+  "receptionErrorAlreadyMember": "Ya eres parte de ese hostal.",
+  "receptionErrorNotStaff": "No eres parte del personal de este hostal.",
+  "receptionErrorReason": "Escribe el motivo.",
+  "roomStateFree": "Libre",
+  "roomStateReserved": "Reservado",
+  "roomStateOccupied": "Ocupado",
+  "roomStateCleaning": "En limpieza",
+  "roomStateWalkIn": "Cliente directo",
+  "roomStateMaintenance": "Fuera de servicio",
+  "roomStateInactive": "Inactivo",
+  "staffTitle": "Personal",
+  "staffOwner": "Dueño",
+  "staffReceptionist": "Recepcionista",
+  "staffRevoke": "Retirar",
+  "staffInviteHelp": "Genera un código y compártelo con tu recepcionista. Vale 48 horas y una sola vez. Lo ingresa en Modo negocio → Unirme a un hostal.",
+  "staffInviteAction": "Invitar recepcionista",
+  "staffInviteExpires": "Vence el {when}",
+  "@staffInviteExpires": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "staffCopy": "Copiar código",
+  "hostBookingsTitle": "Reservas",
+  "hostBookingsEmpty": "Todavía no hay reservas.",
+  "hostBookingStatus": "{status, select, confirmed{Confirmada} checked_in{En curso} completed{Terminada} cancelled{Cancelada} no_show{No llegó} expired{Vencida} other{Pendiente}}",
+  "@hostBookingStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "hostCancelTitle": "Cancelar la reserva {code}",
+  "@hostCancelTitle": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "hostCancelReason": "Motivo (lo verá el cliente)",
+  "hostCancelDone": "Reserva cancelada. Se reembolsaron {amount} al cliente.",
+  "@hostCancelDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "joinTitle": "Unirme a un hostal",
+  "joinCodeLabel": "Código que te dio el dueño",
+  "joinAction": "Unirme a un hostal",
+  "joinDone": "Ya eres recepcionista de {name}.",
+  "@joinDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "profileTitle": "Perfil",
   "profileEmptyTitle": "Tu cuenta",
   "profileSignedOutBody": "Inicia sesión o crea tu cuenta para reservar y ver tus reservas.",

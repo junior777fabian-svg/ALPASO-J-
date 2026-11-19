@@ -314,6 +314,57 @@ function adminReview(args) {
     await shot('14-cancelada');
   });
 
+  // ── Etapa 5: recepción ──────────────────────────────────────────────────
+  let bookingCode = '';
+  await step('el cliente vuelve a reservar y paga', async () => {
+    await tab('Explorar').click();
+    await tap(page.getByRole('button', { name: lodgingName }).first());
+    await tap(page.getByRole('button', { name: 'Matrimonial' }).first());
+    await tap(button('Reservar'));
+    await shows('Total').waitFor({ timeout: 20000 });
+    await tap(button('Confirmar y pagar'));
+    await tap(button('Aprobar pago (demo)'));
+    await shows('Confirmada').waitFor({ timeout: 20000 });
+    const code = page.getByText(/^[ACDEFGHJKMNPQRTUVWXY34679]{6}$/).first();
+    await code.waitFor({ timeout: 10000 });
+    bookingCode = (await code.textContent()).trim();
+    if (!/^[A-Z0-9]{6}$/.test(bookingCode)) throw new Error(`código: ${bookingCode}`);
+  });
+
+  const clientPage = page;
+  page = owner;
+
+  await step('la dueña lo recibe en recepción con el código', async () => {
+    await page.goto(baseUrl.replace(/#.*$/, ''));
+    await page.reload();
+    await tab('Explorar').waitFor({ timeout: 60000 });
+    await tab('Perfil').click();
+    await tap(button('Ir al modo negocio'));
+    await tap(page.getByRole('button', { name: lodgingName }).first());
+    await tap(button('Recepción'));
+    await shows(bookingCode).waitFor({ timeout: 20000 });
+    await shot('15-recepcion');
+    await fill('Código de la reserva', bookingCode.toLowerCase());
+    await tap(button('Registrar ingreso'));
+    await shows('Ingresó Cliente Recorrido').waitFor({ timeout: 20000 });
+  });
+
+  await step('el mismo código no sirve dos veces', async () => {
+    await fill('Código de la reserva', bookingCode);
+    await tap(button('Registrar ingreso'));
+    await shows('Ese código ya se usó.').waitFor({ timeout: 20000 });
+  });
+
+  await step('registra la salida y marca el cuarto limpio', async () => {
+    await tap(button('Registrar salida'));
+    await shows('pasa a limpieza').waitFor({ timeout: 20000 });
+    await tap(button('Marcar limpio'));
+    await shows('quedó libre').waitFor({ timeout: 20000 });
+    await shot('16-limpio');
+  });
+
+  page = clientPage;
+
   await step('con todos sus cuartos ocupados, desaparece de la búsqueda', async () => {
     const config = JSON.parse(
       fs.readFileSync(path.join(root, 'apps', 'mobile', 'config', 'server.local.json'), 'utf8'),
@@ -335,7 +386,8 @@ function adminReview(args) {
       return response.status === 201 ? null : response.json();
     };
     const rooms = await rest('GET', `rooms?lodging_id=eq.${lodgingId}&select=id`);
-    const from = new Date(Date.now() - 30 * 60000).toISOString();
+    // Desde dentro de un minuto: antes hubo una estadía real en estos cuartos.
+    const from = new Date(Date.now() + 60000).toISOString();
     const to = new Date(Date.now() + 6 * 3600000).toISOString();
     await rest(
       'POST',
