@@ -486,6 +486,22 @@ Decisiones de la etapa 2 (implementadas en 2A y 2B):
 
 ---
 
+### Partes de la etapa 3
+
+| Parte | Entrega | Cómo se comprueba | Estado |
+|---|---|---|---|
+| 3A | Disponibilidad en el servidor: `room_occupancy` con restricción de exclusión, `search_lodgings` y `get_lodging_offer` | Pruebas de reglas con cruces, limpieza y retenciones | Implementada. Verificado en la nube: 28 pruebas pgTAP nuevas (149 en total); quitar la limpieza a propósito las hace fallar |
+| 3B | Explorar en la app: lista y mapa con precios, duración, llegada, filtros y búsqueda por distrito, sin cuenta | Pruebas de pantalla y contra el servidor local | Pendiente |
+| 3C | Ficha del hostal y del cuarto: fotos, servicios, ubicación y tipos de cuarto con precio y disponibilidad | Ídem | Pendiente |
+| 3D | Recorrido: lo publicado en la etapa 2 aparece en la búsqueda y desaparece cuando todo está ocupado | Recorrido en navegador contra el servidor local | Pendiente |
+
+Decisiones de la parte 3A (implementadas):
+
+- **`room_occupancy` es la única fuente de verdad.** Una restricción de exclusión de la base impide que dos ocupaciones del mismo cuarto se crucen. Los rangos incluyen el inicio y no el fin, así que una ocupación puede empezar justo cuando termina otra.
+- **Un cuarto está libre** si nada lo ocupa desde la llegada hasta la salida más el tiempo de limpieza del hostal. Una reserva guardará en su ocupación la estadía más la limpieza.
+- **Las retenciones vencidas no ocupan.** La tarea que las borra llega con las reservas (etapa 4).
+- **Búsqueda:** hasta 7 días adelante (`max_advance_days`), radio de 5 km por omisión y 30 km como máximo, o por distrito. Devuelve el precio más bajo del bloque pedido entre los tipos de cuarto con uno libre. Nadie ve las ocupaciones salvo el personal del hostal.
+
 ## 16. Lo que depende del dueño
 
 | Qué | Cuándo | Costo |

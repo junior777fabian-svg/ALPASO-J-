@@ -56,6 +56,7 @@ select results_eq(
             ('public.products:DELETE'), ('public.products:SELECT'),
             ('public.profiles:SELECT'),
             ('public.rates:DELETE'), ('public.rates:SELECT'),
+            ('public.room_occupancy:SELECT'),
             ('public.room_type_photos:DELETE'), ('public.room_type_photos:SELECT'),
             ('public.room_types:DELETE'), ('public.room_types:SELECT'),
             ('public.rooms:DELETE'), ('public.rooms:SELECT') $$,
@@ -110,8 +111,9 @@ select results_eq(
       where n.nspname in ('public', 'private')
         and has_function_privilege('anon', p.oid, 'execute')
       order by 1 $$,
-  $$ values ('get_public_settings'), ('is_lodging_published') $$,
-  'sin sesión solo se ejecutan get_public_settings e is_lodging_published'
+  $$ values ('get_lodging_offer'), ('get_public_settings'),
+            ('is_lodging_published'), ('search_lodgings') $$,
+  'sin sesión solo se ejecutan las funciones de consulta previstas'
 );
 
 select results_eq(
@@ -125,8 +127,10 @@ select results_eq(
             ('private.is_lodging_owner'), ('private.is_lodging_published'),
             ('private.lodging_role'), ('private.try_uuid'),
             ('public.admin_review_lodging'), ('public.confirm_adult'),
-            ('public.create_lodging'), ('public.get_public_settings'),
-            ('public.save_room_type'), ('public.submit_lodging') $$,
+            ('public.create_lodging'), ('public.get_lodging_offer'),
+            ('public.get_public_settings'),
+            ('public.save_room_type'), ('public.search_lodgings'),
+            ('public.submit_lodging') $$,
   'una cuenta solo puede ejecutar las funciones previstas'
 );
 
