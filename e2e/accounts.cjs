@@ -82,7 +82,7 @@ async function step(name, fn) {
   await page.goto(baseUrl);
 
   await step('el perfil sin sesión ofrece entrar o crear cuenta', async () => {
-    await text('Aquí verás los hostales cercanos').waitFor({ timeout: 60000 });
+    await tab('Explorar').waitFor({ timeout: 60000 });
     await tab('Perfil').click();
     await text('Entorno: demo · Servidor configurado').waitFor({ timeout: 15000 });
     await button('Crear cuenta').waitFor({ timeout: 5000 });

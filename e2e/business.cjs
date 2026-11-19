@@ -128,7 +128,7 @@ function adminReview(args) {
   await page.goto(baseUrl);
 
   await step('una dueña crea su cuenta', async () => {
-    await text('Aquí verás los hostales cercanos').waitFor({ timeout: 60000 });
+    await tab('Explorar').waitFor({ timeout: 60000 });
     await tab('Perfil').click();
     await button('Crear cuenta').click();
     await fill('Nombre', 'Dueña Recorrido');
@@ -213,7 +213,7 @@ function adminReview(args) {
     // Abre la app desde el inicio, con la sesión guardada.
     await page.goto(baseUrl.replace(/#.*$/, ''));
     await page.reload();
-    await text('Aquí verás los hostales cercanos').waitFor({ timeout: 60000 });
+    await tab('Explorar').waitFor({ timeout: 60000 });
     await tab('Perfil').click();
     await tap(button('Ir al modo negocio'));
     await shows(lodgingName).waitFor({ timeout: 20000 });
@@ -240,6 +240,82 @@ function adminReview(args) {
       throw new Error('los números de cuarto no deben ser públicos');
     }
   });
+
+  // ── Etapa 3: el cliente lo encuentra ───────────────────────────────────
+  // Otro navegador, sin sesión: como un cliente que recién instala la app.
+  const client = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 2,
+    locale: 'es-PE',
+  });
+  const owner = page;
+  page = await client.newPage();
+  page.on('pageerror', (error) => consoleErrors.push(String(error)));
+
+  await step('un cliente sin cuenta lo encuentra en Explorar', async () => {
+    await page.goto(baseUrl.replace(/#.*$/, ''));
+    await tab('Explorar').waitFor({ timeout: 60000 });
+    await shows(lodgingName).waitFor({ timeout: 20000 });
+    await shows('Desde S/ 45.00 · 4 h').waitFor({ timeout: 5000 });
+    await shot('07-explorar');
+  });
+
+  await step('abre la ficha del hostal y la del cuarto', async () => {
+    // La tarjeta es un botón cuyo nombre incluye el del hostal.
+    await tap(page.getByRole('button', { name: lodgingName }).first());
+    await shows('Para 4 horas · Ahora').waitFor({ timeout: 20000 });
+    await shows('S/ 45.00').waitFor({ timeout: 5000 });
+    await shot('08-ficha-hostal');
+    await tap(page.getByRole('button', { name: 'Matrimonial' }).first());
+    await shows('S/ 90.50').waitFor({ timeout: 20000 });
+    await shot('09-ficha-cuarto');
+  });
+
+  await step('con todos sus cuartos ocupados, desaparece de la búsqueda', async () => {
+    const config = JSON.parse(
+      fs.readFileSync(path.join(root, 'apps', 'mobile', 'config', 'server.local.json'), 'utf8'),
+    );
+    const { SUPABASE_SECRET_KEY: secret } = JSON.parse(
+      fs.readFileSync(path.join(root, 'apps', 'mobile', 'config', 'server.admin.local.json'), 'utf8'),
+    );
+    const rest = async (method, p, body) => {
+      const response = await fetch(`${config.SUPABASE_URL}/rest/v1/${p}`, {
+        method,
+        headers: {
+          apikey: secret,
+          Authorization: `Bearer ${secret}`,
+          'Content-Type': 'application/json',
+        },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      });
+      if (!response.ok) throw new Error(`${response.status} ${await response.text()}`);
+      return response.status === 201 ? null : response.json();
+    };
+    const rooms = await rest('GET', `rooms?lodging_id=eq.${lodgingId}&select=id`);
+    const from = new Date(Date.now() - 30 * 60000).toISOString();
+    const to = new Date(Date.now() + 6 * 3600000).toISOString();
+    await rest(
+      'POST',
+      'room_occupancy',
+      rooms.map((r) => ({
+        room_id: r.id,
+        lodging_id: lodgingId,
+        kind: 'walk_in',
+        period: `[${from},${to})`,
+      })),
+    );
+    await page.goto(baseUrl.replace(/#.*$/, ''));
+    await page.reload();
+    await tab('Explorar').waitFor({ timeout: 60000 });
+    await page.waitForTimeout(3000);
+    if ((await shows(lodgingName).count()) > 0) {
+      throw new Error('sigue apareciendo con todos sus cuartos ocupados');
+    }
+    await shot('10-ocupado');
+  });
+
+  await client.close();
+  page = owner;
 
   await step('sin errores en la consola del navegador', async () => {
     // El aviso de envío incompleto llega como respuesta 400 del servidor, y

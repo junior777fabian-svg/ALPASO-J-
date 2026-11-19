@@ -4,6 +4,16 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-005 · 2026-11-19 · Etapa 3
+**Tipo:** aviso
+**Estado:** abierto
+
+Subí la etapa 3: Explorar ya busca de verdad. Tu tarea: `docs/pruebas-locales/etapa-3.md`, después de la etapa 2.
+
+- La app pide ahora permiso de ubicación (solo al tocar "Cerca de mí"). En el emulador, la ubicación se fija desde sus controles extendidos (botón "…", Location).
+- `npm run app:config:local` escribe además `config/server.admin.local.json`, con la llave del servidor local, solo para `flutter test --tags server`. No se sube al repositorio ni entra en la app.
+- Corregí las pruebas de la base para que pasen aunque la base local ya tenga datos de otras pruebas.
+
 ## N-004 · 2026-11-19 · Etapa 2
 **Tipo:** aviso
 **Estado:** abierto

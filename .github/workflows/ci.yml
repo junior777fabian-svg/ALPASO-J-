@@ -112,7 +112,7 @@ jobs:
         working-directory: apps/mobile
         run: |
           flutter pub get
-          flutter test --tags server --dart-define-from-file=config/server.local.json
+          flutter test --tags server --dart-define-from-file=config/server.local.json --dart-define-from-file=config/server.admin.local.json
 
   e2e:
     name: Recorridos en navegador (cuentas y negocio)

@@ -3,7 +3,7 @@
 **Para:** la IA que trabaja en la laptop del dueño del proyecto.
 **De:** el agente de la nube, que escribe el código y lo sube a GitHub.
 **Actualizado:** 19 de noviembre de 2026.
-**Estado del repositorio:** rama `main`, con la etapa 2 o posterior (el commit dice "Agregar el recorrido completo del hostal (parte 2E)").
+**Estado del repositorio:** rama `main`, con la etapa 2 o posterior (el commit dice "Agregar Explorar y las fichas públicas (etapa 3)").
 
 Este archivo te dice qué se hizo, cómo traerlo a la laptop y qué tienes que hacer tú. Léelo completo antes de ejecutar nada.
 
@@ -35,6 +35,7 @@ Al Paso es una app móvil para Android y iPhone, hecha en Flutter, con servidor 
 | Parte 1B | Base del servidor en `supabase/` | 41 pruebas de reglas y recorrido por la API | `reportes/etapa-1b.md` ✔ (Docker apagado) |
 | **Parte 1C** | **Cuentas en la app: registro, inicio de sesión, mayoría de edad y perfil** | 54 pruebas de pantalla, 10 de la app contra el servidor local, recorrido de cuentas en navegador 9 de 9 | `reportes/etapa-1c.md` ✔ |
 | **Etapa 2** | **Modo negocio: registrar el hostal con mapa, fotos, tipos de cuarto, precios, cuartos y extras; enviarlo a revisión; aprobarlo y publicarlo** | 121 pruebas del servidor, 78 de pantalla, 28 contra el servidor local, recorrido completo en navegador 11 de 11 | **Pendiente: tarea 1** |
+| **Etapa 3** | **Explorar: buscar sin cuenta hostales con cuarto libre, en lista o mapa, por duración, llegada, cercanía, distrito y filtros; ficha del hostal y del cuarto** | 149 pruebas del servidor, 90 de pantalla, 33 contra el servidor local, recorrido en navegador 14 de 14 | **Pendiente: tarea 2** |
 | **Parte 1D** | **Entorno demo en la nube: automatización que publica el APK "Al Paso DEMO" conectado al servidor demo, y compilación de iPhone** | Revisión de las automatizaciones; comprobación del servidor contra el local | `reportes/etapa-1d.md`: esperando al dueño. **Rehacer cuando exista "Al Paso DEMO" en Releases** |
 
 Lo que corregí de tus reportes anteriores:
@@ -71,7 +72,7 @@ En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni e
 
 ## 5. Qué tienes que hacer
 
-Lee primero el mensaje N-004 en `MENSAJES-NUBE.md`.
+Lee primero los mensajes N-004 y N-005 en `MENSAJES-NUBE.md`.
 
 ### Tarea 1: probar la etapa 2
 
@@ -89,12 +90,16 @@ flutter test integration_test -d <id-del-dispositivo>
 | Comando | Resultado esperado |
 |---|---|
 | `flutter analyze` | `No issues found!` |
-| `flutter test` | `All tests passed!`, con `+78 ~28` |
+| `flutter test` | `All tests passed!`, con `+90 ~33` |
 | `flutter test integration_test` | `All tests passed!`, 1 aprobada y 1 saltada |
 
 Si Docker responde, el archivo de detalle explica cómo registrar y publicar un hostal completo en el emulador contra el servidor local.
 
-### Tarea 2: probar la parte 1D, solo si ya existe "Al Paso DEMO" en Releases
+### Tarea 2: probar la etapa 3
+
+Detalle: `docs/pruebas-locales/etapa-3.md`. Reporte: `reportes/etapa-3.md`, capturas en `reportes/etapa-3/`. Puedes hacerla en la misma sesión que la etapa 2: comparten la compilación.
+
+### Tarea 3: probar la parte 1D, solo si ya existe "Al Paso DEMO" en Releases
 
 Detalle: `docs/pruebas-locales/etapa-1d.md`. Si no existe, recuérdale al dueño `docs/ENTORNO-DEMO.md` y no la hagas.
 

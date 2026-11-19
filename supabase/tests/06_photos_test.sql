@@ -98,13 +98,13 @@ reset role;
 
 select pg_temp.act_as('22222222-2222-2222-2222-222222222222');
 set local role authenticated;
-select is_empty($$ select 1 from public.lodging_photos $$, 'otra cuenta no ve las fotos de un borrador');
-delete from public.room_type_photos;
+select is_empty($$ select 1 from public.lodging_photos where lodging_id = (select id from ids where name = 'sol') $$, 'otra cuenta no ve las fotos de un borrador');
+delete from public.room_type_photos where lodging_id = (select id from ids where name = 'sol');
 reset role;
-select is((select count(*)::int from public.room_type_photos), 3, 'ni las borra');
+select is((select count(*)::int from public.room_type_photos where lodging_id = (select id from ids where name = 'sol')), 3, 'ni las borra');
 
 set local role anon;
-select is_empty($$ select 1 from public.room_type_photos $$, 'sin sesión no se ven fotos sin publicar');
+select is_empty($$ select 1 from public.room_type_photos where lodging_id = (select id from ids where name = 'sol') $$, 'sin sesión no se ven fotos sin publicar');
 reset role;
 
 insert into private.admins (user_id) values ('22222222-2222-2222-2222-222222222222');
@@ -115,8 +115,8 @@ select is(public.admin_review_lodging((select id from ids where name = 'sol'), t
 reset role;
 
 set local role anon;
-select is((select count(*)::int from public.room_type_photos), 3, 'publicado, sin sesión se ven sus fotos');
-select is((select count(*)::int from public.lodging_photos), 1, 'y la del hostal');
+select is((select count(*)::int from public.room_type_photos where lodging_id = (select id from ids where name = 'sol')), 3, 'publicado, sin sesión se ven sus fotos');
+select is((select count(*)::int from public.lodging_photos where lodging_id = (select id from ids where name = 'sol')), 1, 'y la del hostal');
 reset role;
 
 select * from finish();

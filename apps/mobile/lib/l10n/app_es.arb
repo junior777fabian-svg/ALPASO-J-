@@ -8,7 +8,119 @@
   "tabProfile": "Perfil",
   "exploreTitle": "Explorar",
   "exploreEmptyTitle": "Aquí verás los hostales cercanos",
-  "exploreEmptyBody": "El mapa con precios y cuartos disponibles llega en la etapa 3.",
+  "exploreNoServerBody": "Esta versión de la app no está conectada a un servidor. La búsqueda funciona en el APK demo con servidor.",
+  "exploreNearMe": "Cerca de mí",
+  "exploreNoLocation": "No pudimos obtener tu ubicación. Revisa el permiso y el GPS, o elige un distrito en Filtros.",
+  "exploreShowMap": "Ver mapa",
+  "exploreShowList": "Ver lista",
+  "exploreNoResultsTitle": "No hay cuartos libres",
+  "exploreNoResultsBody": "Prueba con otra hora, otra duración o menos filtros.",
+  "exploreErrorTitle": "No pudimos buscar",
+  "exploreErrorArrival": "Elige una llegada entre ahora y los próximos 7 días.",
+  "exploreErrorNotFound": "Este hostal ya no está disponible.",
+  "hoursShort": "{hours} h",
+  "@hoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "arrivalLabel": "Llegada: {when}",
+  "@arrivalLabel": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "arrivalNow": "Ahora",
+  "arrivalLaterToday": "Más tarde hoy",
+  "arrivalOtherDay": "Otro día",
+  "arrivalToday": "Hoy {time}",
+  "@arrivalToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "arrivalTomorrow": "Mañana {time}",
+  "@arrivalTomorrow": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "filtersAction": "Filtros",
+  "filtersActive": "Filtros ({count})",
+  "@filtersActive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filtersTitle": "Filtros",
+  "filterNearby": "Cerca de la ubicación actual",
+  "filterMaxPrice": "Precio máximo",
+  "filtersClear": "Limpiar",
+  "filtersApply": "Aplicar",
+  "priceFrom": "Desde {price} · {hours} h",
+  "@priceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "photoCounter": "{current} de {total}",
+  "@photoCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "offerTitle": "Cuartos",
+  "offerFor": "Para {hours} horas · {when}",
+  "@offerFor": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "offerNotSold": "No vende {hours} h",
+  "@offerNotSold": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "offerTaken": "Ocupado a esa hora",
+  "roomGuests": "Hasta {count} personas",
+  "@roomGuests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ratesTitle": "Precios",
+  "bookComingSoon": "Reservar",
+  "bookComingSoonHelp": "La reserva y el pago llegan en la siguiente etapa.",
   "bookingsTitle": "Mis reservas",
   "bookingsEmptyTitle": "Aún no tienes reservas",
   "bookingsEmptyBody": "Tus reservas y su código de ingreso aparecerán aquí.",

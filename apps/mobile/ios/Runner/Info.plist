@@ -70,5 +70,7 @@
 	<string>Al Paso usa tus fotos para mostrar tu hostal y sus cuartos a los clientes.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Al Paso usa la cámara para fotografiar tu hostal y sus cuartos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Al Paso usa tu ubicación para mostrarte los hostales más cercanos.</string>
 </dict>
 </plist>

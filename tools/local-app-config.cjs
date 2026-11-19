@@ -36,6 +36,15 @@ const config = {
   SUPABASE_PUBLISHABLE_KEY: status.PUBLISHABLE_KEY ?? status.ANON_KEY,
 };
 
-const file = path.join(__dirname, '..', 'apps', 'mobile', 'config', 'server.local.json');
-fs.writeFileSync(file, `${JSON.stringify(config, null, 2)}\n`);
+const dir = path.join(__dirname, '..', 'apps', 'mobile', 'config');
+fs.writeFileSync(path.join(dir, 'server.local.json'), `${JSON.stringify(config, null, 2)}\n`);
 console.log(`Escrito apps/mobile/config/server.local.json → ${config.SUPABASE_URL}`);
+
+// Solo para las pruebas de test/server: la llave de servidor local, que
+// permite publicar hostales y simular ocupaciones. Nunca se compila en la
+// app: va en un archivo aparte que solo usa `flutter test`.
+fs.writeFileSync(
+  path.join(dir, 'server.admin.local.json'),
+  `${JSON.stringify({ SUPABASE_SECRET_KEY: status.SECRET_KEY ?? status.SERVICE_ROLE_KEY }, null, 2)}\n`,
+);
+console.log('Escrito apps/mobile/config/server.admin.local.json (solo pruebas)');

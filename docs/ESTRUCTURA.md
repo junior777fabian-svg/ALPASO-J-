@@ -1,6 +1,6 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapa 2: partes 2A a 2E implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
+**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapas 2 y 3 implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
 **Última actualización:** 18 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
@@ -491,15 +491,17 @@ Decisiones de la etapa 2 (implementadas en 2A y 2B):
 | Parte | Entrega | Cómo se comprueba | Estado |
 |---|---|---|---|
 | 3A | Disponibilidad en el servidor: `room_occupancy` con restricción de exclusión, `search_lodgings` y `get_lodging_offer` | Pruebas de reglas con cruces, limpieza y retenciones | Implementada. Verificado en la nube: 28 pruebas pgTAP nuevas (149 en total); quitar la limpieza a propósito las hace fallar |
-| 3B | Explorar en la app: lista y mapa con precios, duración, llegada, filtros y búsqueda por distrito, sin cuenta | Pruebas de pantalla y contra el servidor local | Pendiente |
-| 3C | Ficha del hostal y del cuarto: fotos, servicios, ubicación y tipos de cuarto con precio y disponibilidad | Ídem | Pendiente |
-| 3D | Recorrido: lo publicado en la etapa 2 aparece en la búsqueda y desaparece cuando todo está ocupado | Recorrido en navegador contra el servidor local | Pendiente |
+| 3B | Explorar en la app: lista y mapa con precios, duración, llegada, filtros y búsqueda por distrito, sin cuenta | Pruebas de pantalla y contra el servidor local | Implementada. Verificado en la nube: 12 pruebas de pantalla y 5 contra el servidor local |
+| 3C | Ficha del hostal y del cuarto: fotos, servicios, ubicación y tipos de cuarto con precio y disponibilidad | Ídem | Implementada. Verificado en la nube, con las pruebas de 3B |
+| 3D | Recorrido: lo publicado en la etapa 2 aparece en la búsqueda y desaparece cuando todo está ocupado | Recorrido en navegador contra el servidor local | Implementada. Verificado en la nube: `e2e/business.cjs`, 14 de 14 pasos. Falta: emulador y GPS real (agente local) |
 
 Decisiones de la parte 3A (implementadas):
 
 - **`room_occupancy` es la única fuente de verdad.** Una restricción de exclusión de la base impide que dos ocupaciones del mismo cuarto se crucen. Los rangos incluyen el inicio y no el fin, así que una ocupación puede empezar justo cuando termina otra.
 - **Un cuarto está libre** si nada lo ocupa desde la llegada hasta la salida más el tiempo de limpieza del hostal. Una reserva guardará en su ocupación la estadía más la limpieza.
 - **Las retenciones vencidas no ocupan.** La tarea que las borra llega con las reservas (etapa 4).
+- **Explorar** se usa sin cuenta. Sin la ubicación del teléfono busca en toda Lima (30 km desde el centro); con "Cerca de mí", en 5 km. La llegada es "ahora", "más tarde hoy" u "otro día" hasta 7 días. Los filtros son distrito, precio máximo, jacuzzi y cochera.
+- **Pruebas de base de datos:** cada una mira solo sus propios datos, para pasar también en una base con datos de otras pruebas.
 - **Búsqueda:** hasta 7 días adelante (`max_advance_days`), radio de 5 km por omisión y 30 km como máximo, o por distrito. Devuelve el precio más bajo del bloque pedido entre los tipos de cuarto con uno libre. Nadie ve las ocupaciones salvo el personal del hostal.
 
 ## 16. Lo que depende del dueño

@@ -7,6 +7,8 @@ import 'package:alpaso/features/business/presentation/product_form_screen.dart';
 import 'package:alpaso/features/business/presentation/room_type_form_screen.dart';
 import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
+import 'package:alpaso/features/lodging/presentation/public_lodging_screen.dart';
+import 'package:alpaso/features/lodging/presentation/public_room_type_screen.dart';
 import 'package:alpaso/features/my_bookings/presentation/my_bookings_screen.dart';
 import 'package:alpaso/features/profile/presentation/profile_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +22,9 @@ abstract final class AppRoutes {
   static const business = '/negocio';
   static const signIn = '/ingresar';
   static const signUp = '/registro';
+  static String publicLodging(String id) => '/hostal/$id';
+  static String publicRoomType(String id, String typeId) =>
+      '/hostal/$id/cuarto/$typeId';
   static const newLodging = '/negocio/hostal/nuevo';
   static String lodging(String id) => '/negocio/hostal/$id';
   static String editLodging(String id) => '/negocio/hostal/$id/editar';
@@ -63,6 +68,21 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
                 builder: (context, state) => const ProfileScreen(),
               ),
             ],
+          ),
+        ],
+      ),
+      // Ficha pública de un hostal y de sus cuartos (C3 y C4).
+      GoRoute(
+        path: '/hostal/:id',
+        builder: (context, state) =>
+            PublicLodgingScreen(lodgingId: state.pathParameters['id']!),
+        routes: [
+          GoRoute(
+            path: 'cuarto/:typeId',
+            builder: (context, state) => PublicRoomTypeScreen(
+              lodgingId: state.pathParameters['id']!,
+              roomTypeId: state.pathParameters['typeId']!,
+            ),
           ),
         ],
       ),

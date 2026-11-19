@@ -85,12 +85,14 @@ values ((select id from ids where name = 'sol'), '44444444-4444-4444-4444-444444
 
 -- ── visibilidad del borrador ───────────────────────────────────────────────
 set local role anon;
-select is_empty($$ select 1 from public.lodgings $$, 'sin sesión no se ven borradores');
+-- Las consultas miran solo los hostales de esta prueba: la base puede tener
+-- otros, por ejemplo de los recorridos.
+select is_empty($$ select 1 from public.lodgings where created_by = '11111111-1111-1111-1111-111111111111' $$, 'sin sesión no se ven borradores');
 reset role;
 
 select pg_temp.act_as('22222222-2222-2222-2222-222222222222');
 set local role authenticated;
-select is_empty($$ select 1 from public.lodgings $$, 'otra cuenta no ve el borrador ajeno');
+select is_empty($$ select 1 from public.lodgings where created_by = '11111111-1111-1111-1111-111111111111' $$, 'otra cuenta no ve el borrador ajeno');
 select is_empty($$ select 1 from public.lodging_members $$, 'ni su personal');
 select throws_ok(
   $$ insert into public.lodging_members (lodging_id, user_id, role)
@@ -240,7 +242,7 @@ reset role;
 -- ── revisión del administrador ─────────────────────────────────────────────
 select pg_temp.act_as('33333333-3333-3333-3333-333333333333');
 set local role authenticated;
-select is((select count(*)::int from public.lodgings), 3, 'el administrador ve todos los hostales');
+select is((select count(*)::int from public.lodgings where created_by = '11111111-1111-1111-1111-111111111111'), 3, 'el administrador ve todos los hostales');
 select throws_ok(
   $$ select public.admin_review_lodging((select id from ids where name = 'sol'), false, '  ') $$,
   '23514', 'review_note_required', 'rechazar exige un motivo');
@@ -278,12 +280,12 @@ update public.room_types set is_active = false where id = (select id from ids wh
 
 -- ── lo publicado, sin sesión ───────────────────────────────────────────────
 set local role anon;
-select results_eq($$ select name from public.lodgings $$, $$ values ('Hostal Sol') $$,
+select results_eq($$ select name from public.lodgings where created_by = '11111111-1111-1111-1111-111111111111' $$, $$ values ('Hostal Sol') $$,
   'sin sesión se ve solo el hostal publicado');
-select results_eq($$ select name from public.room_types $$, $$ values ('Suite con jacuzzi') $$,
+select results_eq($$ select t.name from public.room_types t join public.lodgings l on l.id = t.lodging_id where l.created_by = '11111111-1111-1111-1111-111111111111' $$, $$ values ('Suite con jacuzzi') $$,
   'y solo sus tipos de cuarto activos');
-select is((select count(*)::int from public.rates), 2, 'y sus tarifas');
-select results_eq($$ select name from public.products $$, $$ values ('Gaseosa') $$, 'y su carta de extras');
+select is((select count(*)::int from public.rates where lodging_id = (select id from ids where name = 'sol')), 2, 'y sus tarifas');
+select results_eq($$ select name from public.products where lodging_id = (select id from ids where name = 'sol') $$, $$ values ('Gaseosa') $$, 'y su carta de extras');
 select throws_ok($$ select 1 from public.rooms $$, '42501', null,
   'sin sesión no se ven los números de cuarto');
 select throws_ok($$ select 1 from public.lodging_members $$, '42501', null,

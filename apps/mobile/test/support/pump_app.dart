@@ -3,11 +3,13 @@ import 'package:alpaso/app/env/app_config.dart';
 import 'package:alpaso/app/providers.dart';
 import 'package:alpaso/features/auth/data/auth_providers.dart';
 import 'package:alpaso/features/business/data/business_providers.dart';
+import 'package:alpaso/features/explore/data/explore_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_account.dart';
 import 'fake_business.dart';
+import 'fake_explore.dart';
 
 const demoConfig = AppConfig(env: AppEnv.demo);
 
@@ -35,6 +37,8 @@ extension PumpApp on WidgetTester {
     FakeAccountServer? server,
     FakeBusinessServer? business,
     FakePhotoPicker? picker,
+    FakeExploreServer? explore,
+    FakeLocationService? location,
     String? initialLocation,
   }) async {
     if (config.hasServer) server ??= FakeAccountServer();
@@ -50,7 +54,15 @@ extension PumpApp on WidgetTester {
               server.profileRepository,
             ),
             businessRepositoryProvider.overrideWithValue(business),
+            exploreRepositoryProvider.overrideWithValue(
+              explore ?? FakeExploreServer(),
+            ),
           ],
+          locationServiceProvider.overrideWithValue(
+            location ?? FakeLocationService(),
+          ),
+          // Martes 19 de noviembre de 2026, 20:00 en Lima.
+          clockProvider.overrideWithValue(() => DateTime(2026, 11, 19, 20)),
           mapTilesEnabledProvider.overrideWithValue(false),
           photoPickerProvider.overrideWithValue(picker ?? FakePhotoPicker()),
         ],

@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- La app habla con el servidor (cuentas, y luego reservas y pagos). -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- "Cerca de mí" en Explorar. Solo mientras la app está abierta. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:label="Al Paso"
         android:name="${applicationName}"

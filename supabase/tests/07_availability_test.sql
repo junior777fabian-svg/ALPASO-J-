@@ -52,7 +52,9 @@ returns table (name text, min_price_cents int, available_room_types int)
 language sql as $$
   select s.name, s.min_price_cents, s.available_room_types
     from public.search_lodgings(-12.1219, -77.0300, (select arrival from t0), p_hours,
-                                3000, null, p_max, p_jacuzzi, p_parking) s;
+                                3000, null, p_max, p_jacuzzi, p_parking) s
+   -- Solo los hostales de esta prueba: la base puede tener otros.
+   where s.lodging_id::text like 'aaaaaaaa-%';
 $$;
 grant execute on function pg_temp.found(int, bool, bool, int) to anon;
 
@@ -94,7 +96,8 @@ select results_eq($$ select * from pg_temp.found(4, false, true) $$,
   $$ values ('Hostal Sol', 3000, 2) $$, 'el filtro de cochera funciona');
 select results_eq(
   $$ select name from public.search_lodgings(-12.1219, -77.0300, (select arrival from t0), 4,
-                                              3000, 44::smallint) $$,
+                                              3000, 44::smallint)
+      where lodging_id::text like 'aaaaaaaa-%' $$,
   $$ values ('Hostal Callao') $$, 'buscar por distrito ignora la distancia');
 select throws_ok($$ select 1 from public.room_occupancy $$, '42501', null,
   'sin sesión no se ve la ocupación');
@@ -186,10 +189,12 @@ values ('lodging-photos', 'aaaaaaaa-0000-0000-0000-000000000003/portada.jpg');
 insert into public.lodging_photos (lodging_id, storage_path)
 values ('aaaaaaaa-0000-0000-0000-000000000003', 'aaaaaaaa-0000-0000-0000-000000000003/portada.jpg');
 select is(
-  (select cover_photo_path from public.search_lodgings(-12.0566, -77.1181, (select arrival from t0), 4)),
+  (select cover_photo_path from public.search_lodgings(-12.0566, -77.1181, (select arrival from t0), 4)
+    where lodging_id = 'aaaaaaaa-0000-0000-0000-000000000003'),
   'aaaaaaaa-0000-0000-0000-000000000003/portada.jpg', 'con su foto de portada');
 select cmp_ok(
-  (select distance_m from public.search_lodgings(-12.0566, -77.1181, (select arrival from t0), 4)),
+  (select distance_m from public.search_lodgings(-12.0566, -77.1181, (select arrival from t0), 4)
+    where lodging_id = 'aaaaaaaa-0000-0000-0000-000000000003'),
   '<', 50, 'y su distancia en metros');
 
 select * from finish();
