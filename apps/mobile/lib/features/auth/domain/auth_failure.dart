@@ -30,6 +30,12 @@ enum AuthFailureReason {
   /// La cuenta está bloqueada por la plataforma.
   blocked,
 
+  /// No se elimina la cuenta: tiene reservas activas.
+  activeBookings,
+
+  /// No se elimina la cuenta: es dueña de un hostal.
+  ownsLodgings,
+
   /// Cualquier otro error.
   unknown,
 }

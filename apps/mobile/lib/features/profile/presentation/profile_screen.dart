@@ -269,12 +269,25 @@ class _SignedInState extends ConsumerState<_SignedIn> {
             ),
             title: Text(l10n.profileAdultConfirmedLabel),
           ),
+        ListTile(
+          leading: const Icon(Icons.help_outline),
+          title: Text(l10n.supportTitle),
+          onTap: () => context.push(AppRoutes.support),
+        ),
         const SizedBox(height: AppSpacing.lg),
         const _BusinessModeButton(),
         const SizedBox(height: AppSpacing.sm),
         TextButton(
           onPressed: _busy ? null : _signOut,
           child: Text(l10n.profileSignOutAction),
+        ),
+        TextButton(
+          key: const Key('profile-delete-account'),
+          onPressed: _busy ? null : () => context.push(AppRoutes.deleteAccount),
+          child: Text(
+            l10n.deleteTitle,
+            style: TextStyle(color: theme.colorScheme.error),
+          ),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:alpaso/features/auth/data/auth_providers.dart';
 import 'package:alpaso/features/business/data/business_repository.dart';
+import 'package:alpaso/features/business/data/earnings_repository.dart';
 import 'package:alpaso/features/business/data/photo_picker.dart';
 import 'package:alpaso/features/business/data/reception_repository.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
@@ -86,4 +87,20 @@ final staffProvider = FutureProvider.family<List<StaffMember>, String>((
   lodgingId,
 ) {
   return ref.watch(receptionRepositoryProvider)!.staff(lodgingId);
+});
+
+final earningsRepositoryProvider = Provider<EarningsRepository?>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return client == null ? null : SupabaseEarningsRepository(client);
+});
+
+final earningsProvider = FutureProvider.family<Earnings, String>((ref, id) {
+  return ref.watch(earningsRepositoryProvider)!.earnings(id);
+});
+
+final payoutAccountProvider = FutureProvider.family<PayoutAccount?, String>((
+  ref,
+  id,
+) {
+  return ref.watch(earningsRepositoryProvider)!.payoutAccount(id);
 });

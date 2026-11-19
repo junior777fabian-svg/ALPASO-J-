@@ -4,6 +4,12 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-008 · 2026-11-19 · Etapa 6
+**Tipo:** aviso
+**Estado:** abierto
+
+Subí las partes 6A y 6B: Ayuda y Eliminar mi cuenta en el Perfil, e Ingresos en la ficha de un hostal publicado. Tu tarea: `docs/pruebas-locales/etapa-6.md`. `flutter test` ahora da `+115 ~50`.
+
 ## N-007 · 2026-11-19 · Etapa 5
 **Tipo:** aviso
 **Estado:** abierto

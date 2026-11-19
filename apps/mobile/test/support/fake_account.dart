@@ -19,6 +19,12 @@ class FakeAccountServer {
   /// Si es verdadero, `confirmAdult` falla siempre.
   bool failConfirmAdult = false;
 
+  final supportCases = <String>[];
+  final deleted = <String>{};
+
+  /// Si no es nulo, eliminar la cuenta falla con este motivo.
+  AuthFailureReason? deleteFailure;
+
   int _ids = 0;
 
   /// Crea una cuenta ya existente en el servidor.
@@ -106,6 +112,9 @@ class _FakeAuth implements AuthRepository {
 
   @override
   Future<void> signOut() async => server._setUser(null);
+
+  @override
+  Future<void> signOutLocally() async => server._setUser(null);
 }
 
 class _FakeProfiles implements ProfileRepository {
@@ -127,6 +136,19 @@ class _FakeProfiles implements ProfileRepository {
     return server.profiles[_id] = server.profiles[_id]!.copyWith(
       fullName: fullName.trim(),
     );
+  }
+
+  @override
+  Future<void> createSupportCase(String subject, String message) async {
+    server._maybeFail();
+    server.supportCases.add('$subject: $message');
+  }
+
+  @override
+  Future<void> deleteMyAccount() async {
+    final reason = server.deleteFailure;
+    if (reason != null) throw AuthFailure(reason);
+    server.deleted.add(_id);
   }
 
   @override

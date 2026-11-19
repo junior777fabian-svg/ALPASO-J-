@@ -28,6 +28,10 @@ abstract interface class AuthRepository {
   Future<AppUser> signIn({required String email, required String password});
 
   Future<void> signOut();
+
+  /// Cierra la sesión solo en este teléfono, sin avisar al servidor. Se usa
+  /// cuando la cuenta ya no existe allá.
+  Future<void> signOutLocally();
 }
 
 /// Implementación sobre el servicio de cuentas de Supabase.
@@ -83,6 +87,10 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() => _guard(_auth.signOut);
+
+  @override
+  Future<void> signOutLocally() =>
+      _guard(() => _auth.signOut(scope: sb.SignOutScope.local));
 
   static AppUser? _toUser(sb.User? user) =>
       user == null ? null : AppUser(id: user.id, email: user.email ?? '');

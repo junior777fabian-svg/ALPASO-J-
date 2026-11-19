@@ -1,6 +1,7 @@
 import 'package:alpaso/features/auth/presentation/sign_in_screen.dart';
 import 'package:alpaso/features/auth/presentation/sign_up_screen.dart';
 import 'package:alpaso/features/business/presentation/business_home_screen.dart';
+import 'package:alpaso/features/business/presentation/earnings_screen.dart';
 import 'package:alpaso/features/business/presentation/lodging_detail_screen.dart';
 import 'package:alpaso/features/business/presentation/lodging_form_screen.dart';
 import 'package:alpaso/features/business/presentation/product_form_screen.dart';
@@ -10,6 +11,7 @@ import 'package:alpaso/features/business/presentation/room_type_form_screen.dart
 import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
 import 'package:alpaso/features/lodging/presentation/public_lodging_screen.dart';
+import 'package:alpaso/features/profile/presentation/account_actions.dart';
 import 'package:alpaso/features/lodging/presentation/public_room_type_screen.dart';
 import 'package:alpaso/features/booking/presentation/booking_screen.dart';
 import 'package:alpaso/features/booking/presentation/demo_checkout_screen.dart';
@@ -27,6 +29,8 @@ abstract final class AppRoutes {
   static const business = '/negocio';
   static const signIn = '/ingresar';
   static const signUp = '/registro';
+  static const support = '/ayuda';
+  static const deleteAccount = '/eliminar-cuenta';
   static String publicLodging(String id) => '/hostal/$id';
   static String book(String lodgingId, String typeId) =>
       '/reservar/$lodgingId/$typeId';
@@ -39,6 +43,7 @@ abstract final class AppRoutes {
   static String editLodging(String id) => '/negocio/hostal/$id/editar';
   static String reception(String id) => '/negocio/hostal/$id/hoy';
   static String staff(String id) => '/negocio/hostal/$id/personal';
+  static String earnings(String id) => '/negocio/hostal/$id/ingresos';
   static String hostBookings(String id) => '/negocio/hostal/$id/reservas';
   static String newRoomType(String id) => '/negocio/hostal/$id/cuarto/nuevo';
   static String editRoomType(String id, String typeId) =>
@@ -119,6 +124,14 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
         builder: (context, state) =>
             PaymentScreen(bookingId: state.pathParameters['id']!),
       ),
+      GoRoute(
+        path: AppRoutes.support,
+        builder: (context, state) => const SupportScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.deleteAccount,
+        builder: (context, state) => const DeleteAccountScreen(),
+      ),
       // Cuenta: se abren encima de las pestañas.
       GoRoute(
         path: AppRoutes.signIn,
@@ -151,6 +164,11 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
                 path: 'hoy',
                 builder: (context, state) =>
                     ReceptionScreen(lodgingId: state.pathParameters['id']!),
+              ),
+              GoRoute(
+                path: 'ingresos',
+                builder: (context, state) =>
+                    EarningsScreen(lodgingId: state.pathParameters['id']!),
               ),
               GoRoute(
                 path: 'personal',

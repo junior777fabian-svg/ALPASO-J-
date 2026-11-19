@@ -554,7 +554,7 @@
   "lodgingSubmitHelp": "Para enviarlo a revisión necesitas al menos una foto del hostal y un tipo de cuarto con precio, un cuarto activo y fotos de la habitación y del baño (y del jacuzzi si lo tiene).",
   "lodgingSubmitAction": "Enviar a revisión",
   "lodgingSubmitted": "Enviado a revisión.",
-  "deleteAction": "Eliminar",
+  "deleteAction": "Eliminar mi cuenta para siempre",
   "roomTypesTitle": "Tipos de cuarto",
   "roomTypesEmpty": "Todavía no hay tipos de cuarto. Agrega al menos uno con su precio y sus números de cuarto.",
   "roomTypeAddAction": "Agregar tipo de cuarto",
@@ -658,5 +658,82 @@
       }
     }
   },
-  "businessBackToClientAction": "Volver al modo cliente"
+  "businessBackToClientAction": "Volver al modo cliente",
+  "supportTitle": "Ayuda",
+  "supportHelp": "Cuéntanos qué pasó. Si es sobre una reserva, incluye su código.",
+  "supportSubject": "Asunto",
+  "supportMessage": "Mensaje",
+  "supportSend": "Enviar",
+  "supportSent": "Recibimos tu mensaje. Te responderemos pronto.",
+  "deleteTitle": "Eliminar mi cuenta",
+  "deleteBody": "Se borran tu nombre, tu correo y tu acceso. No podrás volver a entrar con esta cuenta.",
+  "deleteKeeps": "Las reservas pagadas se conservan como registro de cobro, sin tus datos personales, como exige la ley.",
+  "deleteConfirmWord": "ELIMINAR",
+  "deleteTypeWord": "Escribe {word} para confirmar",
+  "@deleteTypeWord": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteDone": "Tu cuenta fue eliminada.",
+  "deleteErrorActiveBookings": "Tienes reservas activas. Espera a que terminen o cancélalas antes de eliminar tu cuenta.",
+  "deleteErrorOwnsLodgings": "Eres dueño de un hostal. Escríbenos desde Ayuda para cerrarlo antes de eliminar tu cuenta.",
+  "earningsTitle": "Ingresos",
+  "earningsPending": "Pendiente de liquidar ({count} reservas)",
+  "@earningsPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "earningsGross": "Ventas",
+  "earningsCommission": "Comisión Al Paso ({percent} %)",
+  "@earningsCommission": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "earningsNet": "Para tu hostal",
+  "earningsHelp": "Cuenta una reserva cuando el cliente ya no puede cancelarla con reembolso: en curso, terminada o si no llegó. Lo reembolsado se descuenta.",
+  "payoutsTitle": "Liquidaciones",
+  "payoutsEmpty": "Todavía no hay liquidaciones.",
+  "payoutBookings": "{count} reservas",
+  "@payoutBookings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "payoutPaid": "Pagada · corte {date} · operación {reference}",
+  "@payoutPaid": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "payoutPending": "Por transferir · corte {date}",
+  "@payoutPending": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "payoutAccountTitle": "Cuenta para tus liquidaciones",
+  "payoutAccountHelp": "Solo la ven tú y el equipo de Al Paso.",
+  "payoutHolder": "Titular",
+  "payoutBank": "Banco",
+  "payoutCci": "CCI (20 dígitos)",
+  "payoutCciError": "El CCI tiene 20 dígitos.",
+  "payoutAccountSaved": "Cuenta guardada."
 }

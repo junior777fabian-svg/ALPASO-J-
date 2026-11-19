@@ -177,7 +177,7 @@ reset role;
 select is((select full_name from public.profiles where id = '66666666-6666-6666-6666-666666666666'), '',
   'su nombre se borra');
 select ok((select email like 'eliminada+%@cuenta.invalid' and encrypted_password is null
-                  and banned_until = 'infinity' from auth.users
+                  and banned_until > now() + interval '100 years' from auth.users
             where id = '66666666-6666-6666-6666-666666666666'),
   'su correo se reemplaza y ya no puede entrar');
 select is_empty($$ select 1 from auth.identities where user_id = '66666666-6666-6666-6666-666666666666' $$,

@@ -95,6 +95,13 @@ class _LodgingDetailScreenState extends ConsumerState<LodgingDetailScreen> {
                       label: Text(l10n.hostBookingsTitle),
                     ),
                     OutlinedButton.icon(
+                      key: const Key('open-earnings'),
+                      onPressed: () =>
+                          context.push(AppRoutes.earnings(widget.lodgingId)),
+                      icon: const Icon(Icons.payments_outlined),
+                      label: Text(l10n.earningsTitle),
+                    ),
+                    OutlinedButton.icon(
                       key: const Key('open-staff'),
                       onPressed: () =>
                           context.push(AppRoutes.staff(widget.lodgingId)),

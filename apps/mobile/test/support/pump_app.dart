@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_account.dart';
 import 'fake_booking.dart';
+import 'fake_earnings.dart';
 import 'fake_business.dart';
 import 'fake_explore.dart';
 import 'fake_reception.dart';
@@ -43,6 +44,7 @@ extension PumpApp on WidgetTester {
     FakeExploreServer? explore,
     FakeBookingServer? booking,
     FakeReceptionServer? reception,
+    FakeEarningsServer? earnings,
     FakeLocationService? location,
     String? initialLocation,
   }) async {
@@ -67,6 +69,9 @@ extension PumpApp on WidgetTester {
             ),
             receptionRepositoryProvider.overrideWithValue(
               reception ?? FakeReceptionServer(),
+            ),
+            earningsRepositoryProvider.overrideWithValue(
+              earnings ?? FakeEarningsServer(),
             ),
           ],
           locationServiceProvider.overrideWithValue(

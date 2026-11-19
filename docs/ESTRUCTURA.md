@@ -550,13 +550,13 @@ Decisiones de la parte 5A (implementadas):
 | Parte | Entrega | Cómo se comprueba | Estado |
 |---|---|---|---|
 | 6A | Servidor: eliminar cuenta, soporte, ingresos con comisión, cuenta de destino, liquidaciones, acciones del admin con registro | Pruebas de reglas | Implementada. Verificado en la nube: 35 pruebas pgTAP nuevas (284 en total) |
-| 6B | App: eliminar cuenta y ayuda (C7), ingresos y cuenta de destino (N7) | Pruebas de pantalla y contra el servidor local | Pendiente |
+| 6B | App: eliminar cuenta y ayuda (C7), ingresos y cuenta de destino (N7) | Pruebas de pantalla y contra el servidor local | Implementada. Verificado en la nube: 4 pruebas de pantalla y 2 contra el servidor local (tras eliminarla, la cuenta no entra y el correo se puede volver a usar) |
 | 6C | Panel de administración web (A1 a A6) | Pruebas y recorrido en navegador | Pendiente |
 | 6D | Páginas legales: términos, privacidad, eliminación de cuenta y libro de reclamaciones | Revisión; validación legal del dueño | Pendiente |
 
 Decisiones de la parte 6A (implementadas):
 
-- **Eliminar la cuenta** (`delete_my_account`): borra el nombre, reemplaza el correo, quita la contraseña y las identidades de acceso, cierra las sesiones y bloquea la cuenta. Las reservas pagadas quedan como registro de dinero, sin datos personales. Antes hay que terminar o cancelar las reservas activas, y quien es dueño de un hostal lo resuelve con soporte. **Por verificar en el entorno demo:** que el proyecto de Supabase en la nube permita a la función escribir en `auth.users`; si no, se hará con una función del servidor con la llave de servicio.
+- **Eliminar la cuenta** (`delete_my_account`): borra el nombre, reemplaza el correo, quita la contraseña y las identidades de acceso, cierra las sesiones y bloquea la cuenta. Las reservas pagadas quedan como registro de dinero, sin datos personales. Antes hay que terminar o cancelar las reservas activas, y quien es dueño de un hostal lo resuelve con soporte. **Por verificar en el entorno demo:** que el proyecto de Supabase en la nube permita a la función escribir en `auth.users`; si no, se hará con una función del servidor con la llave de servicio. El bloqueo usa una fecha lejana y no `infinity`, que el servicio de cuentas no sabe leer (corrección en `20261119170000_fix_deleted_account_ban.sql`). Tras eliminar, la app cierra la sesión solo en el teléfono.
 - **Comisión:** 10 % por omisión (`commission_percent`, no pública). Es una decisión abierta de la sección 17.
 - **Ventas y liquidaciones:** una reserva cuenta para el hostal cuando ya no se cancela con reembolso (en curso, terminada o "no llegó"). La venta es lo cobrado menos lo reembolsado. `admin_create_payout` toma todas las reservas sin liquidar, descuenta la comisión, y cada reserva entra a una sola liquidación. `admin_mark_payout_paid` exige la referencia de la transferencia.
 - **Cuenta de destino:** titular, banco y CCI de 20 dígitos. Solo la ven el dueño y el admin.

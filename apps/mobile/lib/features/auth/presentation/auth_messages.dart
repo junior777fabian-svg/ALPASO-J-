@@ -16,6 +16,8 @@ String authFailureMessage(AppLocalizations l10n, Object error) {
     AuthFailureReason.signupDisabled => l10n.authErrorSignupDisabled,
     AuthFailureReason.network => l10n.authErrorNetwork,
     AuthFailureReason.blocked => l10n.authErrorBlocked,
+    AuthFailureReason.activeBookings => l10n.deleteErrorActiveBookings,
+    AuthFailureReason.ownsLodgings => l10n.deleteErrorOwnsLodgings,
     AuthFailureReason.unknown => l10n.authErrorUnknown,
   };
 }

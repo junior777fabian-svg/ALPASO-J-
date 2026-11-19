@@ -13,6 +13,13 @@ abstract interface class ProfileRepository {
   /// La cuenta declara ser mayor de 18. El servidor guarda la fecha; repetir
   /// la llamada no la cambia.
   Future<DateTime> confirmAdult();
+
+  /// Abre una incidencia de soporte.
+  Future<void> createSupportCase(String subject, String message);
+
+  /// Elimina la cuenta y sus datos personales. Después hay que cerrar la
+  /// sesión local.
+  Future<void> deleteMyAccount();
 }
 
 class SupabaseProfileRepository implements ProfileRepository {
@@ -57,16 +64,32 @@ class SupabaseProfileRepository implements ProfileRepository {
     return DateTime.parse(value);
   });
 
+  @override
+  Future<void> createSupportCase(String subject, String message) =>
+      _guard(() async {
+        await _client.rpc<String>(
+          'create_support_case',
+          params: {'p_subject': subject.trim(), 'p_message': message.trim()},
+        );
+      });
+
+  @override
+  Future<void> deleteMyAccount() => _guard(() async {
+    await _client.rpc<void>('delete_my_account');
+  });
+
   static Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();
     } on AuthFailure {
       rethrow;
     } on sb.PostgrestException catch (error) {
-      throw AuthFailure(
-        AuthFailureReason.unknown,
-        '${error.code}: ${error.message}',
-      );
+      throw AuthFailure(switch (error.message) {
+        'active_bookings' => AuthFailureReason.activeBookings,
+        'owns_lodgings' => AuthFailureReason.ownsLodgings,
+        'too_many_cases' => AuthFailureReason.rateLimited,
+        _ => AuthFailureReason.unknown,
+      }, '${error.code}: ${error.message}');
     } on Exception catch (error) {
       throw AuthFailure(AuthFailureReason.network, '$error');
     }
