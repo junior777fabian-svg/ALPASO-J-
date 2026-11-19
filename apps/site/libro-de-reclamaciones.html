@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Libro de Reclamaciones · Al Paso</title>
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<header>
+  <a href="index.html">Al Paso</a>
+  <nav>
+    <a href="terminos.html">Términos</a>
+    <a href="privacidad.html">Privacidad</a>
+    <a href="eliminar-cuenta.html">Eliminar cuenta</a>
+    <a href="libro-de-reclamaciones.html">Libro de Reclamaciones</a>
+  </nav>
+</header>
+<main>
+<h1>Libro de Reclamaciones</h1>
+<p class="nota">Conforme al Código de Protección y Defensa del Consumidor, este establecimiento cuenta con un Libro de Reclamaciones a tu disposición. <strong>Reclamo:</strong> disconformidad con el servicio. <strong>Queja:</strong> malestar con la atención, sin relación directa con el servicio.</p>
+<form id="libro" novalidate>
+  <label for="kind">Tipo</label>
+  <select id="kind" name="kind" required>
+    <option value="reclamo">Reclamo</option>
+    <option value="queja">Queja</option>
+  </select>
+  <label for="consumer_name">Nombre completo</label>
+  <input id="consumer_name" name="consumer_name" required minlength="3" maxlength="120">
+  <label for="consumer_document">DNI o carné de extranjería</label>
+  <input id="consumer_document" name="consumer_document" required minlength="6" maxlength="20">
+  <label for="consumer_email">Correo</label>
+  <input id="consumer_email" name="consumer_email" type="email" required>
+  <label for="consumer_phone">Celular (opcional)</label>
+  <input id="consumer_phone" name="consumer_phone" maxlength="20">
+  <label for="consumer_address">Domicilio (opcional)</label>
+  <input id="consumer_address" name="consumer_address" maxlength="200">
+  <label for="booking_code">Código de la reserva (opcional)</label>
+  <input id="booking_code" name="booking_code" maxlength="6">
+  <label for="amount">Monto reclamado en soles (opcional)</label>
+  <input id="amount" name="amount" inputmode="decimal">
+  <label for="detail">Detalle</label>
+  <textarea id="detail" name="detail" rows="5" required minlength="10" maxlength="3000"></textarea>
+  <label for="consumer_request">Tu pedido</label>
+  <textarea id="consumer_request" name="consumer_request" rows="3" required minlength="5" maxlength="2000"></textarea>
+  <button type="submit">Registrar</button>
+</form>
+<div id="resultado" role="status" aria-live="polite"></div>
+<p class="nota">Te responderemos al correo indicado dentro del plazo legal. Presentar un reclamo no impide acudir a otras vías de solución ni denunciar ante el INDECOPI.</p>
+<script src="config.js"></script>
+<script>
+  const form = document.getElementById('libro');
+  const out = document.getElementById('resultado');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    out.className = ''; out.textContent = '';
+    if (!form.checkValidity()) {
+      out.className = 'error';
+      out.textContent = 'Revisa los campos obligatorios.';
+      return;
+    }
+    const cfg = window.ALPASO_SITE || {};
+    if (!cfg.supabaseUrl || !cfg.publishableKey) {
+      out.className = 'error';
+      out.textContent = 'El libro todavía no está conectado al servidor.';
+      return;
+    }
+    const data = Object.fromEntries(new FormData(form));
+    const amount = (data.amount || '').replace(',', '.').trim();
+    delete data.amount;
+    if (amount) data.amount_cents = String(Math.round(parseFloat(amount) * 100));
+    try {
+      const response = await fetch(`${cfg.supabaseUrl}/rest/v1/rpc/submit_complaint`, {
+        method: 'POST',
+        headers: { apikey: cfg.publishableKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_data: data }),
+      });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.message || 'error');
+      out.className = 'ok';
+      out.textContent = `Registrado con el número ${body}. Guárdalo: te responderemos a tu correo.`;
+      form.reset();
+    } catch (error) {
+      out.className = 'error';
+      out.textContent = 'No se pudo registrar. Revisa los datos e intenta de nuevo.';
+    }
+  });
+</script>
+</main></body></html>

@@ -83,7 +83,7 @@ No compite con Booking ni Airbnb. Apunta a hospedajes de precio accesible, por h
 | App móvil | Una sola app con dos modos: Cliente y Negocio. Quien tiene un hostal o trabaja en uno cambia de modo desde su perfil | 1 a 5 |
 | Servidor | Base de datos, cuentas, fotos y las reglas del negocio | 1 a 5 |
 | Panel admin | Aprobar hostales, cuentas, reservas, liquidaciones e incidencias | 6 |
-| Web pública | Términos, privacidad, eliminación de cuenta y libro de reclamaciones | 6 |
+| Web pública | Términos, privacidad, eliminación de cuenta y libro de reclamaciones. Implementada en `apps/site` (borradores legales) | 6 |
 
 ---
 
@@ -552,7 +552,7 @@ Decisiones de la parte 5A (implementadas):
 | 6A | Servidor: eliminar cuenta, soporte, ingresos con comisión, cuenta de destino, liquidaciones, acciones del admin con registro | Pruebas de reglas | Implementada. Verificado en la nube: 35 pruebas pgTAP nuevas (284 en total) |
 | 6B | App: eliminar cuenta y ayuda (C7), ingresos y cuenta de destino (N7) | Pruebas de pantalla y contra el servidor local | Implementada. Verificado en la nube: 4 pruebas de pantalla y 2 contra el servidor local (tras eliminarla, la cuenta no entra y el correo se puede volver a usar) |
 | 6C | Panel de administración web (A1 a A6) | Pruebas y recorrido en navegador | Pendiente |
-| 6D | Páginas legales: términos, privacidad, eliminación de cuenta y libro de reclamaciones | Revisión; validación legal del dueño | Pendiente |
+| 6D | Páginas legales: términos, privacidad, eliminación de cuenta y libro de reclamaciones | Revisión; validación legal del dueño | Implementada en `apps/site`. Verificado en la nube: `e2e/site.cjs` 10 de 10 y 9 pruebas pgTAP del Libro de Reclamaciones (293 en total). Falta: revisión de un abogado, datos de la empresa y publicar en un dominio |
 
 Decisiones de la parte 6A (implementadas):
 
@@ -561,6 +561,8 @@ Decisiones de la parte 6A (implementadas):
 - **Ventas y liquidaciones:** una reserva cuenta para el hostal cuando ya no se cancela con reembolso (en curso, terminada o "no llegó"). La venta es lo cobrado menos lo reembolsado. `admin_create_payout` toma todas las reservas sin liquidar, descuenta la comisión, y cada reserva entra a una sola liquidación. `admin_mark_payout_paid` exige la referencia de la transferencia.
 - **Cuenta de destino:** titular, banco y CCI de 20 dígitos. Solo la ven el dueño y el admin.
 - **Admin:** bloquear o desbloquear cuentas (nunca a un admin), reembolsar por soporte (con motivo, nunca más que lo cobrado, no si ya se liquidó al hostal), suspender o reponer hostales, y resolver incidencias. Todo queda en `private.audit_log`, igual que aprobar o rechazar hostales.
+- **Libro de Reclamaciones (6D):** `submit_complaint` registra reclamos y quejas con o sin cuenta, con número correlativo por año (2026-000001). Los datos del consumidor viven en `private.complaints`; solo el admin los lee y responde, con registro.
+- **Páginas públicas (6D):** `apps/site`, HTML estático sin compilar. Términos y privacidad son **borradores rotulados** para revisión legal.
 - **Soporte:** cualquier cuenta abre incidencias (hasta 5 por hora), opcionalmente sobre una reserva suya; solo ella y el admin las ven.
 
 ## 16. Lo que depende del dueño

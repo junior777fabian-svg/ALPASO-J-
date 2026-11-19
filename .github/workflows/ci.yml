@@ -115,7 +115,7 @@ jobs:
           flutter test --tags server --dart-define-from-file=config/server.local.json --dart-define-from-file=config/server.admin.local.json
 
   e2e:
-    name: Recorridos en navegador (cuentas y negocio)
+    name: Recorridos en navegador (cuentas, negocio y sitio)
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -156,6 +156,7 @@ jobs:
           sleep 2
           node e2e/accounts.cjs http://127.0.0.1:8788/ e2e/capturas/cuentas
           node e2e/business.cjs http://127.0.0.1:8788/ e2e/capturas/negocio
+          node e2e/site.cjs e2e/capturas/sitio
 
       - uses: actions/upload-artifact@v7
         if: always()

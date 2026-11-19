@@ -118,7 +118,7 @@ select results_eq(
         and has_function_privilege('anon', p.oid, 'execute')
       order by 1 $$,
   $$ values ('get_lodging_offer'), ('get_public_settings'), ('get_quote'),
-            ('is_lodging_published'), ('search_lodgings') $$,
+            ('is_lodging_published'), ('search_lodgings'), ('submit_complaint') $$,
   'sin sesión solo se ejecutan las funciones de consulta previstas'
 );
 
@@ -133,7 +133,8 @@ select results_eq(
             ('private.is_booking_customer'), ('private.is_lodging_member'),
             ('private.is_lodging_owner'), ('private.is_lodging_published'),
             ('private.lodging_role'), ('private.try_uuid'),
-            ('public.accept_invite'), ('public.admin_create_payout'),
+            ('public.accept_invite'), ('public.admin_answer_complaint'),
+            ('public.admin_create_payout'), ('public.admin_list_complaints'),
             ('public.admin_mark_payout_paid'), ('public.admin_refund_booking'),
             ('public.admin_resolve_support_case'),
             ('public.admin_review_lodging'), ('public.admin_set_blocked'),
@@ -152,7 +153,8 @@ select results_eq(
             ('public.revoke_staff'),
             ('public.save_room_type'), ('public.search_lodgings'),
             ('public.set_payout_account'),
-            ('public.start_payment'), ('public.submit_lodging') $$,
+            ('public.start_payment'), ('public.submit_complaint'),
+            ('public.submit_lodging') $$,
   'una cuenta solo puede ejecutar las funciones previstas'
 );
 
