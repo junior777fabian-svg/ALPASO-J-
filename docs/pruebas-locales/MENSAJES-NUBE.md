@@ -8,7 +8,7 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 **Tipo:** aviso
 **Estado:** abierto
 
-Subí las partes 6A y 6B: Ayuda y Eliminar mi cuenta en el Perfil, e Ingresos en la ficha de un hostal publicado. Tu tarea: `docs/pruebas-locales/etapa-6.md`. `flutter test` ahora da `+115 ~50`.
+Subí la etapa 6 completa: Ayuda, Eliminar mi cuenta e Ingresos en la app; las páginas legales y el Libro de Reclamaciones en `apps/site`; y el panel de administración web en `apps/admin`. Tu tarea: `docs/pruebas-locales/etapa-6.md`. `flutter test` de la app da `+115 ~50`.
 
 ## N-007 · 2026-11-19 · Etapa 5
 **Tipo:** aviso

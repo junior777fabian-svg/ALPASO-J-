@@ -3,7 +3,7 @@
 **Para:** la IA que trabaja en la laptop del dueño del proyecto.
 **De:** el agente de la nube, que escribe el código y lo sube a GitHub.
 **Actualizado:** 19 de noviembre de 2026.
-**Estado del repositorio:** rama `main`, con la etapa 2 o posterior (el commit dice "Agregar ayuda, eliminar cuenta e ingresos (parte 6B)").
+**Estado del repositorio:** rama `main`, con la etapa 2 o posterior (el commit dice "Agregar el panel de administración web (parte 6C)").
 
 Este archivo te dice qué se hizo, cómo traerlo a la laptop y qué tienes que hacer tú. Léelo completo antes de ejecutar nada.
 
@@ -38,7 +38,7 @@ Al Paso es una app móvil para Android y iPhone, hecha en Flutter, con servidor 
 | **Etapa 3** | **Explorar: buscar sin cuenta hostales con cuarto libre, en lista o mapa, por duración, llegada, cercanía, distrito y filtros; ficha del hostal y del cuarto** | 149 pruebas del servidor, 90 de pantalla, 33 contra el servidor local, recorrido en navegador 14 de 14 | **Pendiente: tarea 2** |
 | **Etapa 4** | **Reservar con extras, pagar en la pasarela demo, ver el código y el QR, cancelar con reembolso; mis reservas, también sin conexión** | 201 pruebas del servidor, 103 de pantalla, 39 contra el servidor local, recorrido en navegador 18 de 18 | **Pendiente: tarea 3** |
 | **Etapa 5** | **Recepción: tablero Hoy, ingreso con código una sola vez, salida, limpieza, cliente directo, extras listos o reembolsados; reservas del hostal con cancelación; personal con invitaciones** | 249 pruebas del servidor, 111 de pantalla, 48 contra el servidor local, recorrido en navegador 22 de 22 | **Pendiente: tarea 4** |
-| **Etapa 6 (6A y 6B)** | **Ayuda, eliminar la cuenta, ingresos del hostal con comisión y cuenta de destino; en el servidor, liquidaciones y acciones del admin con registro** | 284 pruebas del servidor, 115 de pantalla, 50 contra el servidor local | **Pendiente: tarea 5** (el panel web y las páginas legales vienen después) |
+| **Etapa 6** | **Ayuda, eliminar la cuenta, ingresos del hostal; páginas legales y Libro de Reclamaciones (`apps/site`); panel de administración web (`apps/admin`)** | 301 pruebas del servidor, 115 de pantalla de la app, 7 del panel, 50 contra el servidor local; recorridos del sitio (10 de 10) y del panel (7 de 7) | **Pendiente: tarea 5** |
 | **Parte 1D** | **Entorno demo en la nube: automatización que publica el APK "Al Paso DEMO" conectado al servidor demo, y compilación de iPhone** | Revisión de las automatizaciones; comprobación del servidor contra el local | `reportes/etapa-1d.md`: esperando al dueño. **Rehacer cuando exista "Al Paso DEMO" en Releases** |
 
 Lo que corregí de tus reportes anteriores:

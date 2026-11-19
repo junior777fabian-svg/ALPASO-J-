@@ -1,4 +1,4 @@
-# Pruebas locales — Etapa 6 (partes 6A y 6B): cuenta, ayuda e ingresos
+# Pruebas locales — Etapa 6: cuenta, ayuda, ingresos, páginas legales y panel
 
 **Para:** el agente que trabaja en la laptop del dueño.
 **De:** el agente de la nube.
@@ -35,6 +35,11 @@ Con el servidor local y la app en el emulador:
 3. Con la cuenta de la dueña: el hostal → **Ingresos**. Anota las cifras. Escribe un CCI de menos de 20 dígitos: debe avisar. Escribe uno de 20 y guarda.
 4. Con la dueña, Perfil → Eliminar mi cuenta: debe explicar que primero hay que cerrar el hostal con soporte.
 
-### 3. Reporte
+### 3. Páginas legales y panel (no necesitan Docker para abrirse)
+
+1. Abre en el navegador de la laptop `apps/site/index.html` (doble clic). Recorre los enlaces: deben abrir Términos, Privacidad, Eliminar cuenta y Libro de Reclamaciones. Términos y Privacidad dicen "Borrador para revisión legal". Sin servidor, el formulario del libro debe decir que no está conectado.
+2. Solo si Docker responde: compila el panel con `cd apps/admin`, `flutter pub get` y `flutter run -d chrome --dart-define-from-file=../mobile/config/server.local.json`. Entra con una cuenta común: debe decir "Esta cuenta no es administradora.". Para entrar como admin hace falta nombrar una cuenta en la base local: `docker exec supabase_db_alpaso psql -U postgres -c "insert into private.admins (user_id) select id from auth.users where email = '<correo>@example.test'"`. Anota qué secciones abren.
+
+### 4. Reporte
 
 `reportes/etapa-6.md`, con una tabla de los 4 puntos (Pasó / Falló / No se corrió y notas), errores y observaciones. Súbelo como siempre (`AGENTE_LOCAL.md`).

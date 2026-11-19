@@ -1,6 +1,6 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapas 2 a 5 implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
+**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapas 2 a 6 implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
 **Última actualización:** 18 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
@@ -82,7 +82,7 @@ No compite con Booking ni Airbnb. Apunta a hospedajes de precio accesible, por h
 |---|---|---|
 | App móvil | Una sola app con dos modos: Cliente y Negocio. Quien tiene un hostal o trabaja en uno cambia de modo desde su perfil | 1 a 5 |
 | Servidor | Base de datos, cuentas, fotos y las reglas del negocio | 1 a 5 |
-| Panel admin | Aprobar hostales, cuentas, reservas, liquidaciones e incidencias | 6 |
+| Panel admin | Aprobar hostales, cuentas, reservas, liquidaciones e incidencias. Implementado en `apps/admin` (Flutter web) | 6 |
 | Web pública | Términos, privacidad, eliminación de cuenta y libro de reclamaciones. Implementada en `apps/site` (borradores legales) | 6 |
 
 ---
@@ -551,7 +551,7 @@ Decisiones de la parte 5A (implementadas):
 |---|---|---|---|
 | 6A | Servidor: eliminar cuenta, soporte, ingresos con comisión, cuenta de destino, liquidaciones, acciones del admin con registro | Pruebas de reglas | Implementada. Verificado en la nube: 35 pruebas pgTAP nuevas (284 en total) |
 | 6B | App: eliminar cuenta y ayuda (C7), ingresos y cuenta de destino (N7) | Pruebas de pantalla y contra el servidor local | Implementada. Verificado en la nube: 4 pruebas de pantalla y 2 contra el servidor local (tras eliminarla, la cuenta no entra y el correo se puede volver a usar) |
-| 6C | Panel de administración web (A1 a A6) | Pruebas y recorrido en navegador | Pendiente |
+| 6C | Panel de administración web (A1 a A6) | Pruebas y recorrido en navegador | Implementada en `apps/admin`. Verificado en la nube: 7 pruebas de pantalla, 8 pgTAP de sus consultas (301 en total) y `e2e/admin.cjs` 7 de 7 contra el servidor local. A6 es de solo lectura: la configuración se cambia con migraciones |
 | 6D | Páginas legales: términos, privacidad, eliminación de cuenta y libro de reclamaciones | Revisión; validación legal del dueño | Implementada en `apps/site`. Verificado en la nube: `e2e/site.cjs` 10 de 10 y 9 pruebas pgTAP del Libro de Reclamaciones (293 en total). Falta: revisión de un abogado, datos de la empresa y publicar en un dominio |
 
 Decisiones de la parte 6A (implementadas):
