@@ -88,6 +88,35 @@ void main() {
       expect(server.currentUser, isNull);
     });
 
+    testWidgets('en un teléfono chico valida también los campos de arriba', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(320, 480);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final server = FakeAccountServer();
+      await openProfile(tester, server);
+      await tester.ensureVisible(find.text('Crear cuenta'));
+      await tester.tap(find.text('Crear cuenta'));
+      await tester.pumpAndSettle();
+
+      // Llena todo menos el nombre, con el botón al fondo de la pantalla.
+      await tester.enterText(find.byKey(const Key('auth-email')), 'a@b.pe');
+      await tester.enterText(
+        find.byKey(const Key('auth-password')),
+        'clave-segura',
+      );
+      await tester.ensureVisible(find.byKey(const Key('auth-adult')));
+      await tester.tap(find.byKey(const Key('auth-adult')));
+      await submit(tester);
+
+      expect(server.currentUser, isNull);
+      await tester.ensureVisible(find.byKey(const Key('auth-name')));
+      await tester.pumpAndSettle();
+      expect(find.text('Escribe tu nombre (hasta 80 caracteres).'), findsOne);
+    });
+
     testWidgets('exige declarar la mayoría de edad', (tester) async {
       final server = FakeAccountServer();
       await openProfile(tester, server);

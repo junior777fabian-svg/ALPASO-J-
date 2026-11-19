@@ -83,6 +83,74 @@
   "profileEnvironmentDemo": "Entorno: demo",
   "businessTitle": "Modo negocio",
   "businessEmptyTitle": "Panel del hostal",
-  "businessEmptyBody": "El registro del hostal, los cuartos y las tarifas llegan en la etapa 2.",
+  "businessNoServerBody": "Esta versión de la app no está conectada a un servidor. El modo negocio funciona en el APK demo con servidor.",
+  "businessSignInBody": "Inicia sesión para registrar tu hostal o administrar el que ya tienes.",
+  "businessNoLodgingsBody": "Registra tu hostal: datos, ubicación, cuartos y precios. Lo revisamos antes de publicarlo.",
+  "businessRegisterAction": "Registrar mi hostal",
+  "businessErrorNotAdult": "Confirma en tu perfil que eres mayor de edad antes de registrar un hostal.",
+  "businessErrorTooMany": "Ya tienes 3 hostales sin publicar. Termina alguno antes de registrar otro.",
+  "businessErrorIncomplete": "Falta información: agrega al menos un tipo de cuarto con precio y con un cuarto activo.",
+  "businessErrorInvalidStatus": "Este hostal ya no está en un estado que permita esa acción. Actualiza la pantalla.",
+  "businessErrorNotOwner": "Solo el dueño del hostal puede hacer esto.",
+  "businessErrorAlcohol": "La venta de licores no está habilitada en Al Paso.",
+  "businessErrorRoomLabel": "Ese número de cuarto ya existe en tu hostal.",
+  "businessErrorInvalidData": "El servidor no aceptó algún dato. Revisa los campos.",
+  "lodgingStatusDraft": "Borrador",
+  "lodgingStatusPending": "En revisión",
+  "lodgingStatusPublished": "Publicado",
+  "lodgingStatusRejected": "Rechazado",
+  "lodgingStatusSuspended": "Suspendido",
+  "lodgingStatusDraftHelp": "Todavía no lo ven los clientes. Completa los datos y envíalo a revisión.",
+  "lodgingStatusPendingHelp": "Lo estamos revisando. Te avisaremos cuando esté publicado.",
+  "lodgingStatusPublishedHelp": "Los clientes ya pueden verlo en Al Paso.",
+  "lodgingStatusRejectedHelp": "No se publicó. Corrige lo indicado y envíalo otra vez.",
+  "lodgingStatusSuspendedHelp": "Está oculto para los clientes. Escríbenos desde Ayuda.",
+  "lodgingReviewNote": "Motivo: {note}",
+  "@lodgingReviewNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "lodgingNewTitle": "Registrar hostal",
+  "lodgingEditTitle": "Editar datos",
+  "lodgingNameLabel": "Nombre del hostal",
+  "lodgingDistrictLabel": "Distrito",
+  "lodgingAddressLabel": "Dirección",
+  "lodgingAddressHint": "Av. o calle, número",
+  "lodgingReferenceLabel": "Referencia (opcional)",
+  "lodgingReferenceHint": "Por ejemplo: frente al parque",
+  "lodgingMapTitle": "Ubicación en el mapa",
+  "lodgingMapHelp": "Mueve el mapa hasta que el pin quede sobre la puerta del hostal.",
+  "lodgingMapSemantics": "Mapa para marcar la ubicación del hostal",
+  "lodgingDescriptionLabel": "Descripción (opcional)",
+  "lodgingParkingLabel": "Cochera",
+  "lodgingWifiLabel": "Wifi",
+  "lodgingCleaningLabel": "Tiempo de limpieza entre clientes",
+  "lodgingMinutes": "{minutes} min",
+  "@lodgingMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "lodgingCreateAction": "Registrar hostal",
+  "lodgingErrorLength": "Escribe entre {min} y {max} caracteres.",
+  "@lodgingErrorLength": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "lodgingErrorDistrict": "Elige el distrito.",
+  "lodgingSubmitHelp": "Para enviarlo a revisión necesitas al menos un tipo de cuarto con precio y un cuarto activo.",
+  "lodgingSubmitAction": "Enviar a revisión",
+  "lodgingSubmitted": "Enviado a revisión.",
   "businessBackToClientAction": "Volver al modo cliente"
 }

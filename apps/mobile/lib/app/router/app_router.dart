@@ -1,6 +1,8 @@
 import 'package:alpaso/features/auth/presentation/sign_in_screen.dart';
 import 'package:alpaso/features/auth/presentation/sign_up_screen.dart';
 import 'package:alpaso/features/business/presentation/business_home_screen.dart';
+import 'package:alpaso/features/business/presentation/lodging_detail_screen.dart';
+import 'package:alpaso/features/business/presentation/lodging_form_screen.dart';
 import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
 import 'package:alpaso/features/my_bookings/presentation/my_bookings_screen.dart';
@@ -16,6 +18,9 @@ abstract final class AppRoutes {
   static const business = '/negocio';
   static const signIn = '/ingresar';
   static const signUp = '/registro';
+  static const newLodging = '/negocio/hostal/nuevo';
+  static String lodging(String id) => '/negocio/hostal/$id';
+  static String editLodging(String id) => '/negocio/hostal/$id/editar';
 }
 
 GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
@@ -66,6 +71,24 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
       GoRoute(
         path: AppRoutes.business,
         builder: (context, state) => const BusinessHomeScreen(),
+        routes: [
+          GoRoute(
+            path: 'hostal/nuevo',
+            builder: (context, state) => const LodgingFormScreen(),
+          ),
+          GoRoute(
+            path: 'hostal/:id',
+            builder: (context, state) =>
+                LodgingDetailScreen(lodgingId: state.pathParameters['id']!),
+            routes: [
+              GoRoute(
+                path: 'editar',
+                builder: (context, state) =>
+                    LodgingFormScreen(lodgingId: state.pathParameters['id']),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );

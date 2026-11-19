@@ -461,6 +461,25 @@ Cada etapa se divide en partes al empezarla. Estas son las de la etapa 1:
 
 La parte 1B original incluía también las cuentas en la app. Se dividió en 1B y 1C para que cada parte sea corta.
 
+### Partes de la etapa 2
+
+| Parte | Entrega | Cómo se comprueba | Estado |
+|---|---|---|---|
+| 2A | Servidor de la oferta: distritos, hostales con ubicación, personal, tipos de cuarto, cuartos, tarifas, extras; registrar, enviar a revisión y publicar | Pruebas de reglas y permisos | Implementada. Verificado en la nube: 50 pruebas pgTAP nuevas (91 en total) |
+| 2B | Modo negocio en la app: mis hostales, registrar con ubicación en el mapa, editar, estado de revisión y envío | Pruebas de pantalla y de la app contra el servidor local | Implementada. Verificado en la nube: 12 pruebas de pantalla y 7 contra el servidor local |
+| 2C | Tipos de cuarto con tarifas y cuartos, y carta de extras, en la app | Ídem | Pendiente |
+| 2D | Fotos del hostal y de cada tipo de cuarto (habitación, baño, jacuzzi), exigidas para publicar | Ídem, con el almacenamiento de fotos local | Pendiente |
+| 2E | Recorrido completo: un hostal de prueba queda publicado desde la app | Recorrido en navegador contra el servidor local; agente local en el emulador | Pendiente |
+
+Decisiones de la etapa 2 (implementadas en 2A y 2B):
+
+- **El estado del hostal solo lo cambia el servidor:** `create_lodging` lo crea en borrador, `submit_lodging` lo pasa a revisión y `admin_review_lodging` lo publica o lo rechaza con motivo.
+- **Para enviar a revisión** hace falta al menos un tipo de cuarto activo con una tarifa y un cuarto activo. Las fotos se exigirán desde la parte 2D.
+- **Una cuenta puede tener hasta 3 hostales sin publicar a la vez** (configuración `max_open_lodgings_per_account`). Para registrar un hostal hay que haber confirmado la mayoría de edad.
+- **La ubicación debe caer en Lima Metropolitana o Callao.** Se marca moviendo el mapa de OpenStreetMap bajo un pin fijo.
+- **Hasta que exista el panel de administración (etapa 6)**, los hostales se aprueban con `npm run admin:review`, que usa la llave de servidor.
+- **Sin sesión** solo se ve lo publicado. Los números de cuarto y el personal nunca son públicos.
+
 ---
 
 ## 16. Lo que depende del dueño

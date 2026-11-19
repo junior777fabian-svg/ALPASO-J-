@@ -63,49 +63,55 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         child: Form(
           key: _formKey,
           child: AutofillGroup(
-            child: ListView(
+            // No es un ListView: construiría solo lo visible y el formulario
+            // validaría solo esos campos.
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(AppSpacing.lg),
-              children: [
-                TextFormField(
-                  key: const Key('auth-email'),
-                  controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
-                  autofillHints: const [AutofillHints.email],
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(labelText: l10n.authEmailLabel),
-                  validator: (value) => AuthValidators.isValidEmail(value ?? '')
-                      ? null
-                      : l10n.authErrorEmailInvalid,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                PasswordField(
-                  controller: _password,
-                  onSubmitted: _submit,
-                  // Al entrar no se exige el largo mínimo: la cuenta pudo
-                  // crearse con otra regla. Solo que no esté vacía.
-                  validator: (value) => (value ?? '').isEmpty
-                      ? l10n.authErrorPasswordRequired
-                      : null,
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                if (_error != null) ...[
-                  FormErrorBox(message: _error!),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextFormField(
+                    key: const Key('auth-email'),
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    autofillHints: const [AutofillHints.email],
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(labelText: l10n.authEmailLabel),
+                    validator: (value) =>
+                        AuthValidators.isValidEmail(value ?? '')
+                        ? null
+                        : l10n.authErrorEmailInvalid,
+                  ),
                   const SizedBox(height: AppSpacing.md),
+                  PasswordField(
+                    controller: _password,
+                    onSubmitted: _submit,
+                    // Al entrar no se exige el largo mínimo: la cuenta pudo
+                    // crearse con otra regla. Solo que no esté vacía.
+                    validator: (value) => (value ?? '').isEmpty
+                        ? l10n.authErrorPasswordRequired
+                        : null,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  if (_error != null) ...[
+                    FormErrorBox(message: _error!),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  SubmitButton(
+                    label: l10n.authSignInSubmit,
+                    busy: _busy,
+                    onPressed: _submit,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  TextButton(
+                    onPressed: _busy
+                        ? null
+                        : () => context.pushReplacement(AppRoutes.signUp),
+                    child: Text(l10n.authGoToSignUp),
+                  ),
                 ],
-                SubmitButton(
-                  label: l10n.authSignInSubmit,
-                  busy: _busy,
-                  onPressed: _submit,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                TextButton(
-                  onPressed: _busy
-                      ? null
-                      : () => context.pushReplacement(AppRoutes.signUp),
-                  child: Text(l10n.authGoToSignUp),
-                ),
-              ],
+              ),
             ),
           ),
         ),
