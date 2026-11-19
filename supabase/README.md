@@ -21,6 +21,8 @@ Desde la raíz del repositorio. Hace falta Node 22 y Docker.
 | Rehacer la base desde cero | `npm run db:reset` |
 | Levantar base, cuentas y API (lo que usa la app) | `npm run server:start` |
 | Recorrer la API con cuentas reales | `npm run api:smoke` |
+| Aprobar o rechazar hostales en revisión | `npm run admin:review` |
+| Correr las pruebas sin la imagen `pg_prove` | `tools/pgtap.sh` |
 | Apagar todo | `npm run server:stop` |
 
 Si la base ya está levantada con `db:start`, hay que apagarla antes de usar `server:start`; de lo contrario no arrancan los demás servicios.
@@ -59,5 +61,12 @@ Sin sesión se usa `set local role anon`.
 | `private.app_settings` | Configuración de la plataforma, por ejemplo qué conectores están en demo |
 | `public.confirm_adult()` | La cuenta en sesión declara ser mayor de 18 |
 | `public.get_public_settings()` | Configuración que la app puede leer sin sesión |
+| `public.districts` | Distritos de Lima Metropolitana y Callao |
+| `public.lodgings`, `public.lodging_members` | Hostales con su ubicación y estado de revisión; dueños y recepcionistas |
+| `public.room_types`, `public.rooms`, `public.rates` | Tipos de cuarto, cuartos físicos y precio por bloque de horas |
+| `public.products` | Carta de extras de cada hostal |
+| `public.lodging_photos`, `public.room_type_photos` | Fotos; los archivos van en el almacenamiento `lodging-photos` |
+| `public.create_lodging()`, `public.submit_lodging()`, `public.admin_review_lodging()` | Registrar, enviar a revisión y publicar o rechazar |
+| `public.save_room_type()` | Guardar un tipo de cuarto con sus tarifas y cuartos, todo o nada |
 
 Para nombrar al primer administrador se inserta su cuenta en `private.admins` desde el panel de Supabase o con la llave de servicio. No existe forma de hacerlo desde la app.

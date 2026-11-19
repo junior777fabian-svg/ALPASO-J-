@@ -113,3 +113,53 @@ jobs:
         run: |
           flutter pub get
           flutter test --tags server --dart-define-from-file=config/server.local.json
+
+  e2e:
+    name: Recorridos en navegador (cuentas y negocio)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.50.0'
+          cache: true
+
+      - name: Herramientas
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Servidor local
+        run: |
+          npm run server:start
+          npm run app:config:local
+
+      - name: App web conectada al servidor local
+        working-directory: apps/mobile
+        run: |
+          flutter pub get
+          flutter build web --no-web-resources-cdn \
+            --dart-define-from-file=config/server.local.json \
+            --dart-define=FORCE_SEMANTICS=true -o build/web-server
+
+      - name: Recorridos
+        run: |
+          python3 -m http.server 8788 --bind 127.0.0.1 --directory apps/mobile/build/web-server &
+          sleep 2
+          node e2e/accounts.cjs http://127.0.0.1:8788/ e2e/capturas/cuentas
+          node e2e/business.cjs http://127.0.0.1:8788/ e2e/capturas/negocio
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: capturas-recorridos
+          path: e2e/capturas
+          retention-days: 14

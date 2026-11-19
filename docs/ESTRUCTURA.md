@@ -1,6 +1,6 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 1 en curso: partes 1A, 1B y 1C implementadas; 1D preparada, a la espera del proyecto demo. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
+**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapa 2: partes 2A a 2E implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
 **Última actualización:** 18 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
@@ -227,7 +227,7 @@ Tablas previstas, agrupadas por tema. Las columnas se definen en cada etapa, den
 | Operación | `notifications`, `device_tokens`, `support_cases`, `audit_log` | Avisos, teléfonos registrados para push, incidencias, registro de acciones sensibles |
 | Configuración | `app_settings`, `districts` | Comisión, tiempos, duraciones, conectores activos; distritos de Lima y Callao |
 
-Implementado en la parte 1B: `profiles`, `admins` y `app_settings`, con las funciones `confirm_adult` y `get_public_settings`. El resto sigue propuesto.
+Implementado en la parte 1B: `profiles`, `admins` y `app_settings`, con las funciones `confirm_adult` y `get_public_settings`. En la etapa 2: `districts`, `lodgings`, `lodging_members`, `room_types`, `rooms`, `rates`, `products`, `lodging_photos` y `room_type_photos`, con `create_lodging`, `submit_lodging`, `admin_review_lodging` y `save_room_type`. El resto sigue propuesto.
 
 Las tablas que la app nunca debe leer ni escribir directamente, como `admins` y `app_settings`, viven en un esquema `private` que la API no expone. Las reglas para escribir migraciones están en `supabase/README.md`.
 
@@ -469,7 +469,7 @@ La parte 1B original incluía también las cuentas en la app. Se dividió en 1B 
 | 2B | Modo negocio en la app: mis hostales, registrar con ubicación en el mapa, editar, estado de revisión y envío | Pruebas de pantalla y de la app contra el servidor local | Implementada. Verificado en la nube: 12 pruebas de pantalla y 7 contra el servidor local |
 | 2C | Tipos de cuarto con tarifas y cuartos, y carta de extras, en la app | Ídem | Implementada. Verificado en la nube: `save_room_type` con 14 pruebas pgTAP (105 en total), 76 pruebas de pantalla en total y 24 de la app contra el servidor local |
 | 2D | Fotos del hostal y de cada tipo de cuarto (habitación, baño, jacuzzi), exigidas para publicar | Ídem, con el almacenamiento de fotos local | Implementada. Verificado en la nube: 16 pruebas pgTAP nuevas (121 en total), 78 pruebas de pantalla y 28 de la app contra el servidor local con almacenamiento real |
-| 2E | Recorrido completo: un hostal de prueba queda publicado desde la app | Recorrido en navegador contra el servidor local; agente local en el emulador | Pendiente |
+| 2E | Recorrido completo: un hostal de prueba queda publicado desde la app | Recorrido en navegador contra el servidor local; agente local en el emulador | Implementada. Verificado en la nube: `e2e/business.cjs`, 11 de 11 pasos en tres corridas seguidas (registro, hostal, fotos reales, cuarto, envío, aprobación, publicado y visible sin sesión). Corre también en GitHub. Falta: emulador (agente local) |
 
 Decisiones de la etapa 2 (implementadas en 2A y 2B):
 

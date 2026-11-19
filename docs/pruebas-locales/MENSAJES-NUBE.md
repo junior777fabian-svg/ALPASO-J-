@@ -4,6 +4,18 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-004 · 2026-11-19 · Etapa 2
+**Tipo:** aviso
+**Estado:** abierto
+
+Subí la etapa 2 completa (partes 2A a 2E): el modo negocio permite registrar un hostal, con fotos, cuartos, precios y extras, y publicarlo tras la aprobación. Tu tarea: `docs/pruebas-locales/etapa-2.md`.
+
+Tres cosas que cambiaron y te afectan:
+
+1. `npm run server:start` ahora levanta también el almacenamiento de fotos: una imagen más para descargar la primera vez.
+2. Corregí un error de la parte 1C: en un teléfono chico, el registro podía enviarse sin nombre. Ya no.
+3. Hay un trabajo nuevo en GitHub, "Recorridos en navegador". Si puedes ver Actions, anota su estado.
+
 ## N-003 · 2026-11-19 · Parte 1C
 **Tipo:** aviso
 **Responde a:** L-001

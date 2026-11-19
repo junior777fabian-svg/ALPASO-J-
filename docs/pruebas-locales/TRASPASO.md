@@ -2,8 +2,8 @@
 
 **Para:** la IA que trabaja en la laptop del dueño del proyecto.
 **De:** el agente de la nube, que escribe el código y lo sube a GitHub.
-**Actualizado:** 18 de noviembre de 2026.
-**Estado del repositorio:** rama `main`, con la parte 1C o posterior (el commit dice "Agregar cuentas en la app (parte 1C)").
+**Actualizado:** 19 de noviembre de 2026.
+**Estado del repositorio:** rama `main`, con la etapa 2 o posterior (el commit dice "Agregar el recorrido completo del hostal (parte 2E)").
 
 Este archivo te dice qué se hizo, cómo traerlo a la laptop y qué tienes que hacer tú. Léelo completo antes de ejecutar nada.
 
@@ -34,6 +34,7 @@ Al Paso es una app móvil para Android y iPhone, hecha en Flutter, con servidor 
 | Parte 1A | Esqueleto de la app en `apps/mobile` | Análisis, pruebas, recorrido en navegador y APK en GitHub | `reportes/etapa-1a.md` ✔ |
 | Parte 1B | Base del servidor en `supabase/` | 41 pruebas de reglas y recorrido por la API | `reportes/etapa-1b.md` ✔ (Docker apagado) |
 | **Parte 1C** | **Cuentas en la app: registro, inicio de sesión, mayoría de edad y perfil** | 54 pruebas de pantalla, 10 de la app contra el servidor local, recorrido de cuentas en navegador 9 de 9 | `reportes/etapa-1c.md` ✔ |
+| **Etapa 2** | **Modo negocio: registrar el hostal con mapa, fotos, tipos de cuarto, precios, cuartos y extras; enviarlo a revisión; aprobarlo y publicarlo** | 121 pruebas del servidor, 78 de pantalla, 28 contra el servidor local, recorrido completo en navegador 11 de 11 | **Pendiente: tarea 1** |
 | **Parte 1D** | **Entorno demo en la nube: automatización que publica el APK "Al Paso DEMO" conectado al servidor demo, y compilación de iPhone** | Revisión de las automatizaciones; comprobación del servidor contra el local | `reportes/etapa-1d.md`: esperando al dueño. **Rehacer cuando exista "Al Paso DEMO" en Releases** |
 
 Lo que corregí de tus reportes anteriores:
@@ -70,13 +71,11 @@ En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni e
 
 ## 5. Qué tienes que hacer
 
-**La 1C ya está reportada. Queda solo la tarea 2 (1D), cuando el dueño configure el entorno demo.** Lee también el mensaje N-003 en `MENSAJES-NUBE.md`.
+Lee primero el mensaje N-004 en `MENSAJES-NUBE.md`.
 
-Dos tareas, en orden. La segunda depende de que el dueño haya configurado el entorno demo (`docs/ENTORNO-DEMO.md`). Si en la página de descargas (Releases) del repositorio no existe "Al Paso DEMO", la tarea 2 queda para otra sesión: anótalo y recuérdaselo al dueño.
+### Tarea 1: probar la etapa 2
 
-### Tarea 1: probar la parte 1C El detalle paso a paso y el formato del reporte están en `docs/pruebas-locales/etapa-1c.md`. **Si algo de este resumen difiere de ese archivo, manda ese archivo.**
-
-Resumen:
+Detalle: `docs/pruebas-locales/etapa-2.md`. Reporte: `reportes/etapa-2.md`, capturas en `reportes/etapa-2/`.
 
 ```
 cd apps/mobile
@@ -90,27 +89,24 @@ flutter test integration_test -d <id-del-dispositivo>
 | Comando | Resultado esperado |
 |---|---|
 | `flutter analyze` | `No issues found!` |
-| `flutter test` | `All tests passed!`, con `+54 ~10` (54 aprobadas, 10 saltadas) |
-| `flutter build apk` | `Built build\app\outputs\flutter-apk\app-debug.apk` |
+| `flutter test` | `All tests passed!`, con `+78 ~28` |
 | `flutter test integration_test` | `All tests passed!`, 1 aprobada y 1 saltada |
 
-Luego instala el APK demo, abre Perfil y guarda la captura. Si `docker info` responde, sigue también el paso 6 del archivo de detalle: pruebas de la app contra el servidor local y registro real en el emulador. Si Docker está apagado, no lo enciendas: anótalo.
+Si Docker responde, el archivo de detalle explica cómo registrar y publicar un hostal completo en el emulador contra el servidor local.
 
-Reporte: `reportes/etapa-1c.md`, capturas en `reportes/etapa-1c/`.
+### Tarea 2: probar la parte 1D, solo si ya existe "Al Paso DEMO" en Releases
 
-### Tarea 2: probar la parte 1D
-
-Detalle: `docs/pruebas-locales/etapa-1d.md`. Revisa en GitHub el resultado de la automatización "Entorno demo", instala el APK demo y crea una cuenta real contra el servidor demo. Reporte: `reportes/etapa-1d.md`, capturas en `reportes/etapa-1d/`.
+Detalle: `docs/pruebas-locales/etapa-1d.md`. Si no existe, recuérdale al dueño `docs/ENTORNO-DEMO.md` y no la hagas.
 
 ## 6. Cómo reportar
 
 Escribe un reporte por tarea, con el formato que trae cada archivo de detalle. En cada uno anota qué pasó, cuánto tardó y, si algo falló, el mensaje exacto y el comando que lo produjo.
 
-Sube cada reporte desde la raíz del repositorio. Ejemplo para la parte 1C:
+Sube cada reporte desde la raíz del repositorio. Ejemplo para la etapa 2:
 
 ```
-git add reportes/etapa-1c.md reportes/etapa-1c
-git commit -m "Reporte local: parte 1C"
+git add reportes/etapa-2.md reportes/etapa-2
+git commit -m "Reporte local: etapa 2"
 git pull --rebase origin main
 git push origin main
 ```
