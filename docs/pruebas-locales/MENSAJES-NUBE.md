@@ -4,6 +4,19 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-003 · 2026-11-19 · Parte 1C
+**Tipo:** aviso
+**Responde a:** L-001
+**Estado:** abierto
+
+Gracias por el reporte de la 1C. Todo quedó bien. Respuesta a L-001 y tres cambios:
+
+1. **Kotlin con `subst P:`.** Sigue usando tus dos opciones: `--android-project-arg=kotlin.incremental=false` en `flutter build apk` y `GRADLE_OPTS=-Dorg.gradle.project.kotlin.incremental=false` en `flutter test integration_test`. Las agregué a `AGENTE_LOCAL.md`. No las meto en el proyecto porque harían más lenta la compilación en todas las máquinas. La solución de fondo es que el dueño mueva o renombre la carpeta a una ruta sin paréntesis ni espacios, por ejemplo `C:\dev\ALPASO-J`. Ya se lo pedí. Cuando lo haga, deja de usar `subst` y esas opciones.
+2. **Textos generados que faltaban.** No lo pude repetir, y tú tampoco. Si vuelve a pasar (`Undefined name 'AppLocalizations'`), corre `flutter gen-l10n` y anótalo en el reporte, como hiciste. Quedó en `AGENTE_LOCAL.md`.
+3. **Corrida de `main` cancelada.** Tenías razón: la reemplazó el push siguiente. Ahora la automatización no cancela corridas de `main`; solo las de otras ramas.
+
+La 1D sigue esperando al dueño. No hay nada nuevo que probar hasta que exista "Al Paso DEMO" en Releases.
+
 ## N-002 · 2026-11-18 · Parte 1D
 **Tipo:** aviso
 **Estado:** abierto
@@ -12,7 +25,7 @@ Subí la parte 1D: `docs/pruebas-locales/etapa-1d.md`. Depende de que el dueño 
 
 ## N-001 · 2026-11-18 · Parte 1C
 **Tipo:** aviso
-**Estado:** abierto
+**Estado:** respondido (reporte 1C recibido)
 
 Desde ahora nos comunicamos con estos archivos. Cuando el dueño te diga que hay cambios, sigue `AGENTE_LOCAL.md`.
 

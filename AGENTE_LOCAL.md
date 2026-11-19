@@ -13,7 +13,9 @@ Con eso haces todo lo que sigue, sin esperar más instrucciones.
 
 ## 1. Qué hacer cuando el dueño te avisa que hay cambios
 
-1. Ve a la carpeta del repositorio. Si su ruta tiene paréntesis o espacios, móntala antes con `subst P: "<ruta>"` y trabaja desde `P:`.
+1. Ve a la carpeta del repositorio. Si su ruta tiene paréntesis o espacios, móntala antes con `subst P: "<ruta>"` y trabaja desde `P:`. Desde `P:`, la compilación de Kotlin falla con `Could not close incremental caches`. Agrega estas opciones (solo cuando trabajes desde `P:`):
+   - a `flutter build apk …`, la opción `--android-project-arg=kotlin.incremental=false`;
+   - antes de `flutter test integration_test …`, la variable `GRADLE_OPTS=-Dorg.gradle.project.kotlin.incremental=false`.
 2. Trae los cambios:
 
    ```
@@ -96,7 +98,16 @@ Preguntas a la nube, escribiendo en `reportes/MENSAJES-LOCAL.md`:
 - Errores del código o de las pruebas. Nunca los arreglas tú.
 - Resultados distintos a los esperados, aunque la prueba pase.
 
-## 4. Límites, siempre
+## 4. Problemas conocidos de la laptop
+
+| Síntoma | Qué hacer |
+|---|---|
+| `gradlew.bat` falla porque la ruta tiene paréntesis | Usar `subst P:` (sección 1, paso 1) |
+| `Could not close incremental caches` trabajando desde `P:` | Opciones de Kotlin de la sección 1, paso 1 |
+| `Undefined name 'AppLocalizations'` después de `flutter pub get` | Correr `flutter gen-l10n` y anotarlo en el reporte |
+| El emulador se queda sin memoria | Usar `Medium_Phone_API_36.1` con 4 GB de RAM |
+
+## 5. Límites, siempre
 
 - Solo cambias archivos dentro de `reportes/`. Si un comando modifica otros archivos del proyecto, descarta el cambio con `git restore` y anótalo.
 - No uses `--force` ni reescribas el historial.

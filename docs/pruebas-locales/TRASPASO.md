@@ -33,8 +33,8 @@ Al Paso es una app móvil para Android y iPhone, hecha en Flutter, con servidor 
 | Etapa 0 | Estructura del proyecto y reglas de trabajo | No aplica; son documentos | `reportes/etapa-0.md` ✔ |
 | Parte 1A | Esqueleto de la app en `apps/mobile` | Análisis, pruebas, recorrido en navegador y APK en GitHub | `reportes/etapa-1a.md` ✔ |
 | Parte 1B | Base del servidor en `supabase/` | 41 pruebas de reglas y recorrido por la API | `reportes/etapa-1b.md` ✔ (Docker apagado) |
-| **Parte 1C** | **Cuentas en la app: registro, inicio de sesión, mayoría de edad y perfil** | 54 pruebas de pantalla, 10 de la app contra el servidor local, recorrido de cuentas en navegador 9 de 9 | **Pendiente: tarea 1** |
-| **Parte 1D** | **Entorno demo en la nube: automatización que publica el APK "Al Paso DEMO" conectado al servidor demo, y compilación de iPhone** | Revisión de las automatizaciones; comprobación del servidor contra el local | **Pendiente: tarea 2, solo si ya existe "Al Paso DEMO" en Releases** |
+| **Parte 1C** | **Cuentas en la app: registro, inicio de sesión, mayoría de edad y perfil** | 54 pruebas de pantalla, 10 de la app contra el servidor local, recorrido de cuentas en navegador 9 de 9 | `reportes/etapa-1c.md` ✔ |
+| **Parte 1D** | **Entorno demo en la nube: automatización que publica el APK "Al Paso DEMO" conectado al servidor demo, y compilación de iPhone** | Revisión de las automatizaciones; comprobación del servidor contra el local | `reportes/etapa-1d.md`: esperando al dueño. **Rehacer cuando exista "Al Paso DEMO" en Releases** |
 
 Lo que corregí de tus reportes anteriores:
 
@@ -66,9 +66,11 @@ git log --oneline -3
 
 Entre los últimos commits debe estar "Agregar cuentas en la app (parte 1C)". Después lee `AGENTS.md` completo.
 
-En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni espacios: la compilación de Android falla con un error de `gradlew.bat`. Si la carpeta actual los tiene y el dueño aún no la renombró, móntala como unidad temporal con `subst P: "<ruta de la carpeta>"` y trabaja desde `P:`.
+En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni espacios: la compilación de Android falla con un error de `gradlew.bat`. Si la carpeta actual los tiene y el dueño aún no la renombró, móntala como unidad temporal con `subst P: "<ruta de la carpeta>"` y trabaja desde `P:`. Desde `P:` hacen falta las opciones de Kotlin de `AGENTE_LOCAL.md`, sección 1.
 
 ## 5. Qué tienes que hacer
+
+**La 1C ya está reportada. Queda solo la tarea 2 (1D), cuando el dueño configure el entorno demo.** Lee también el mensaje N-003 en `MENSAJES-NUBE.md`.
 
 Dos tareas, en orden. La segunda depende de que el dueño haya configurado el entorno demo (`docs/ENTORNO-DEMO.md`). Si en la página de descargas (Releases) del repositorio no existe "Al Paso DEMO", la tarea 2 queda para otra sesión: anótalo y recuérdaselo al dueño.
 
