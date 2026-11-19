@@ -152,5 +152,84 @@
   "lodgingSubmitHelp": "Para enviarlo a revisión necesitas al menos un tipo de cuarto con precio y un cuarto activo.",
   "lodgingSubmitAction": "Enviar a revisión",
   "lodgingSubmitted": "Enviado a revisión.",
+  "deleteAction": "Eliminar",
+  "roomTypesTitle": "Tipos de cuarto",
+  "roomTypesEmpty": "Todavía no hay tipos de cuarto. Agrega al menos uno con su precio y sus números de cuarto.",
+  "roomTypeAddAction": "Agregar tipo de cuarto",
+  "roomTypeInactiveName": "{name} (oculto)",
+  "@roomTypeInactiveName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roomTypeNoRates": "Sin precios",
+  "roomTypeNoRooms": "Sin cuartos",
+  "roomTypeRooms": "Cuartos: {rooms}",
+  "@roomTypeRooms": {
+    "placeholders": {
+      "rooms": {
+        "type": "String"
+      }
+    }
+  },
+  "roomTypeReady": "Listo para publicar",
+  "roomTypeNotReady": "Falta precio o cuartos",
+  "rateLabel": "{hours} h {price}",
+  "@rateLabel": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "roomTypeNewTitle": "Nuevo tipo de cuarto",
+  "roomTypeEditTitle": "Editar tipo de cuarto",
+  "roomTypeNameLabel": "Nombre",
+  "roomTypeNameHint": "Por ejemplo: Matrimonial con jacuzzi",
+  "roomTypeGuestsLabel": "Personas como máximo",
+  "roomTypeJacuzzi": "Jacuzzi",
+  "roomTypeTv": "Televisor",
+  "roomTypeAirConditioning": "Aire acondicionado",
+  "roomTypeRatesTitle": "Precios por bloque",
+  "roomTypeRatesHelp": "Deja vacío el bloque que no vendes.",
+  "rateFieldLabel": "{hours} horas",
+  "@rateFieldLabel": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "roomTypeRoomsLabel": "Números de cuarto",
+  "roomTypeRoomsHelp": "Sepáralos con comas. Los clientes no los ven: el sistema asigna uno libre al reservar.",
+  "roomTypeActiveLabel": "Visible para los clientes",
+  "roomTypeActiveHelp": "Apágalo para ocultar este tipo de cuarto sin borrarlo.",
+  "roomTypeErrorNoRates": "Pon precio al menos a un bloque.",
+  "roomTypeErrorPrice": "Escribe un precio entre S/ 1 y S/ 5,000, con hasta dos decimales.",
+  "roomTypeErrorRooms": "Usa solo letras, números y guiones, hasta 10 por cuarto.",
+  "roomTypeDeleteTitle": "¿Eliminar este tipo de cuarto?",
+  "roomTypeDeleteBody": "Se borran también sus precios y sus cuartos.",
+  "productsTitle": "Carta de extras",
+  "productsEmpty": "Ofrece bebidas, snacks y otros productos para que el cliente los encuentre en el cuarto.",
+  "productAddAction": "Agregar extra",
+  "productSoldOut": "Agotado",
+  "productNewTitle": "Nuevo extra",
+  "productEditTitle": "Editar extra",
+  "productNameLabel": "Producto",
+  "productCategoryLabel": "Categoría",
+  "productPriceLabel": "Precio",
+  "productAvailableLabel": "Disponible",
+  "productErrorCategory": "Elige la categoría.",
+  "productErrorPrice": "Escribe un precio entre S/ 0.50 y S/ 1,000, con hasta dos decimales.",
+  "productCategoryDrinks": "Bebidas",
+  "productCategorySnacks": "Snacks",
+  "productCategoryPersonalCare": "Cuidado personal",
+  "productCategoryAlcohol": "Licores",
+  "productCategoryOther": "Otros",
   "businessBackToClientAction": "Volver al modo cliente"
 }

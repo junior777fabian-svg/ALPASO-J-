@@ -5,6 +5,7 @@ import 'package:alpaso/features/auth/data/auth_repository.dart';
 import 'package:alpaso/features/business/data/business_repository.dart';
 import 'package:alpaso/features/business/domain/business_failure.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
+import 'package:alpaso/features/business/domain/offer.dart';
 import 'package:alpaso/features/profile/data/profile_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -128,6 +129,104 @@ void main() {
         );
       });
 
+      test('las reglas de la plataforma llegan del servidor', () async {
+        final rules = await business.platformRules();
+        expect(rules.blockHours, [4, 6, 8, 12, 24]);
+        expect(rules.alcoholEnabled, isFalse);
+      });
+
+      late String suiteId;
+
+      test('guarda un tipo de cuarto con tarifas y cuartos', () async {
+        suiteId = await business.saveRoomType(
+          lodgingId,
+          const RoomTypeDraft(
+            name: 'Suite',
+            hasJacuzzi: true,
+            rates: {4: 4500, 12: 9050},
+            rooms: ['201', '202'],
+          ),
+        );
+        final types = await business.roomTypes(lodgingId);
+        expect(types.single.id, suiteId);
+        expect(types.single.draft.rates, {4: 4500, 12: 9050});
+        expect(types.single.draft.rooms, ['201', '202']);
+        expect(types.single.isReady, isTrue);
+      });
+
+      test('edita tarifas y cuartos de una sola vez', () async {
+        await business.saveRoomType(
+          lodgingId,
+          const RoomTypeDraft(
+            name: 'Suite',
+            hasJacuzzi: true,
+            rates: {6: 6000},
+            rooms: ['202', '203'],
+          ),
+          roomTypeId: suiteId,
+        );
+        final type = (await business.roomTypes(lodgingId)).single;
+        expect(type.draft.rates, {6: 6000});
+        expect(type.draft.rooms, ['202', '203']);
+      });
+
+      test('un número de cuarto repetido entre tipos se rechaza', () async {
+        await expectLater(
+          business.saveRoomType(
+            lodgingId,
+            const RoomTypeDraft(
+              name: 'Simple',
+              rates: {4: 3000},
+              rooms: ['203'],
+            ),
+          ),
+          _failsWith(BusinessFailureReason.roomLabelTaken),
+        );
+        expect(await business.roomTypes(lodgingId), hasLength(1));
+      });
+
+      test('la carta de extras: crear, editar, borrar y sin licores', () async {
+        await business.saveProduct(
+          lodgingId,
+          const ProductDraft(
+            name: 'Gaseosa',
+            category: ProductCategory.drinks,
+            priceCents: 450,
+          ),
+        );
+        var products = await business.products(lodgingId);
+        expect(products.single.draft.priceCents, 450);
+
+        await business.saveProduct(
+          lodgingId,
+          const ProductDraft(
+            name: 'Gaseosa 1 L',
+            category: ProductCategory.drinks,
+            priceCents: 700,
+            isAvailable: false,
+          ),
+          productId: products.single.id,
+        );
+        products = await business.products(lodgingId);
+        expect(products.single.draft.name, 'Gaseosa 1 L');
+        expect(products.single.draft.isAvailable, isFalse);
+
+        await expectLater(
+          business.saveProduct(
+            lodgingId,
+            const ProductDraft(
+              name: 'Cerveza',
+              category: ProductCategory.alcohol,
+              priceCents: 800,
+            ),
+          ),
+          _failsWith(BusinessFailureReason.alcoholDisabled),
+        );
+
+        await business.deleteProduct(products.single.id);
+        expect(await business.products(lodgingId), isEmpty);
+      });
+
       test('otra cuenta no ve ni edita el hostal', () async {
         final luis = _phone();
         addTearDown(luis.dispose);
@@ -146,6 +245,34 @@ void main() {
           other.submitLodging(lodgingId),
           _failsWith(BusinessFailureReason.notOwner),
         );
+        await expectLater(
+          other.saveRoomType(
+            lodgingId,
+            const RoomTypeDraft(name: 'Intruso', rates: {4: 100}),
+          ),
+          _failsWith(BusinessFailureReason.notOwner),
+        );
+        expect(await other.roomTypes(lodgingId), isEmpty);
+      });
+
+      test('completo, se envía a revisión', () async {
+        await business.submitLodging(lodgingId);
+        final lodging = await business.lodging(lodgingId);
+        expect(lodging.status, LodgingStatus.pendingReview);
+        await expectLater(
+          business.submitLodging(lodgingId),
+          _failsWith(BusinessFailureReason.invalidStatus),
+        );
+      });
+
+      test('sin sesión no se ve un hostal sin publicar', () async {
+        final anon = _phone();
+        addTearDown(anon.dispose);
+        final rows = await anon
+            .from('lodgings')
+            .select('id')
+            .eq('id', lodgingId);
+        expect(rows, isEmpty);
       });
     },
   );

@@ -23,4 +23,28 @@ void main() {
       expect(formatSoles(-5), '-S/ 0.05');
     });
   });
+
+  group('parseSolesToCents', () {
+    test('acepta las formas comunes de escribir soles', () {
+      expect(parseSolesToCents('45'), 4500);
+      expect(parseSolesToCents('45.5'), 4550);
+      expect(parseSolesToCents('45,50'), 4550);
+      expect(parseSolesToCents(' S/ 12.05 '), 1205);
+      expect(parseSolesToCents('0.5'), 50);
+    });
+
+    test('rechaza lo que no es un monto', () {
+      expect(parseSolesToCents(''), isNull);
+      expect(parseSolesToCents('abc'), isNull);
+      expect(parseSolesToCents('1.234'), isNull, reason: 'tres decimales');
+      expect(parseSolesToCents('-5'), isNull);
+      expect(parseSolesToCents('1,000.50'), isNull);
+    });
+
+    test('ida y vuelta con centsToInput', () {
+      for (final cents in [50, 100, 4500, 4550, 123405]) {
+        expect(parseSolesToCents(centsToInput(cents)), cents);
+      }
+    });
+  });
 }

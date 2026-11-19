@@ -1,5 +1,6 @@
 import 'package:alpaso/features/business/domain/business_failure.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
+import 'package:alpaso/features/business/domain/offer.dart';
 import 'package:alpaso/l10n/app_localizations.dart';
 
 String businessFailureMessage(AppLocalizations l10n, Object error) {
@@ -37,4 +38,13 @@ String lodgingStatusHelp(AppLocalizations l10n, LodgingStatus status) =>
       LodgingStatus.published => l10n.lodgingStatusPublishedHelp,
       LodgingStatus.rejected => l10n.lodgingStatusRejectedHelp,
       LodgingStatus.suspended => l10n.lodgingStatusSuspendedHelp,
+    };
+
+String productCategoryLabel(AppLocalizations l10n, ProductCategory category) =>
+    switch (category) {
+      ProductCategory.drinks => l10n.productCategoryDrinks,
+      ProductCategory.snacks => l10n.productCategorySnacks,
+      ProductCategory.personalCare => l10n.productCategoryPersonalCare,
+      ProductCategory.alcohol => l10n.productCategoryAlcohol,
+      ProductCategory.other => l10n.productCategoryOther,
     };

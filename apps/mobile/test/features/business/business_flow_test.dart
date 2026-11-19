@@ -28,7 +28,7 @@ Future<void> tapText(WidgetTester tester, String text) async {
     await tester.scrollUntilVisible(
       finder,
       300,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byType(Scrollable).hitTestable().first,
     );
   }
   await tester.ensureVisible(finder.last);
@@ -183,6 +183,11 @@ void main() {
     );
 
     await tapText(tester, 'Enviar a revisión');
+    await tester.drag(
+      find.byType(Scrollable).hitTestable().first,
+      const Offset(0, 3000),
+    );
+    await tester.pumpAndSettle();
     expect(find.text('En revisión'), findsOneWidget);
     expect(find.byKey(const Key('lodging-submit')), findsNothing);
     expect(business.lodgings[lodging.id]!.status, LodgingStatus.pendingReview);
@@ -210,6 +215,11 @@ void main() {
 
     expect(find.text('Rechazado'), findsOneWidget);
     expect(find.text('Motivo: Faltan fotos del baño'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('lodging-submit')),
+      300,
+      scrollable: find.byType(Scrollable).hitTestable().first,
+    );
     expect(find.byKey(const Key('lodging-submit')), findsOneWidget);
   });
 

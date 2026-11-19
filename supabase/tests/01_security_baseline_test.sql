@@ -116,7 +116,7 @@ select results_eq(
             ('private.lodging_role'),
             ('public.admin_review_lodging'), ('public.confirm_adult'),
             ('public.create_lodging'), ('public.get_public_settings'),
-            ('public.submit_lodging') $$,
+            ('public.save_room_type'), ('public.submit_lodging') $$,
   'una cuenta solo puede ejecutar las funciones previstas'
 );
 

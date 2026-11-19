@@ -5,6 +5,7 @@ import 'package:alpaso/features/business/data/business_providers.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
 import 'package:alpaso/features/business/presentation/business_messages.dart';
 import 'package:alpaso/features/business/presentation/lodging_status_chip.dart';
+import 'package:alpaso/features/business/presentation/offer_sections.dart';
 import 'package:alpaso/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -74,7 +75,10 @@ class _LodgingDetailScreenState extends ConsumerState<LodgingDetailScreen> {
               _StatusCard(lodging: value),
               const SizedBox(height: AppSpacing.md),
               _DataCard(lodging: value),
-              ...lodgingSections(widget.lodgingId),
+              const SizedBox(height: AppSpacing.md),
+              RoomTypesSection(lodgingId: widget.lodgingId),
+              const SizedBox(height: AppSpacing.md),
+              ProductsSection(lodgingId: widget.lodgingId),
               const SizedBox(height: AppSpacing.lg),
               if (value.status.canSubmit) ...[
                 Text(
@@ -105,9 +109,6 @@ class _LodgingDetailScreenState extends ConsumerState<LodgingDetailScreen> {
     );
   }
 }
-
-/// Secciones de cuartos y extras. Las agrega la parte 2C.
-List<Widget> lodgingSections(String lodgingId) => const [];
 
 class _StatusCard extends StatelessWidget {
   const _StatusCard({required this.lodging});

@@ -1,5 +1,6 @@
 import 'package:alpaso/features/business/domain/business_failure.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
+import 'package:alpaso/features/business/domain/offer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 /// Lo que el modo negocio pide al servidor.
@@ -18,6 +19,30 @@ abstract interface class BusinessRepository {
 
   /// Envía el hostal a revisión.
   Future<void> submitLodging(String id);
+
+  Future<PlatformRules> platformRules();
+
+  Future<List<RoomType>> roomTypes(String lodgingId);
+
+  /// Crea ([roomTypeId] nulo) o edita un tipo de cuarto con sus tarifas y
+  /// cuartos, todo o nada. Devuelve su id.
+  Future<String> saveRoomType(
+    String lodgingId,
+    RoomTypeDraft draft, {
+    String? roomTypeId,
+  });
+
+  Future<void> deleteRoomType(String roomTypeId);
+
+  Future<List<Product>> products(String lodgingId);
+
+  Future<void> saveProduct(
+    String lodgingId,
+    ProductDraft draft, {
+    String? productId,
+  });
+
+  Future<void> deleteProduct(String productId);
 }
 
 class SupabaseBusinessRepository implements BusinessRepository {
@@ -99,6 +124,103 @@ class SupabaseBusinessRepository implements BusinessRepository {
   @override
   Future<void> submitLodging(String id) => guardBusiness(() async {
     await _client.rpc<String>('submit_lodging', params: {'p_lodging_id': id});
+  });
+
+  @override
+  Future<PlatformRules> platformRules() => guardBusiness(() async {
+    final settings = await _client.rpc<Map<String, dynamic>>(
+      'get_public_settings',
+    );
+    return PlatformRules.fromSettings(settings);
+  });
+
+  @override
+  Future<List<RoomType>> roomTypes(String lodgingId) => guardBusiness(() async {
+    final rows = await _client
+        .from('room_types')
+        .select(
+          'id, name, description, max_guests, has_jacuzzi, has_tv, '
+          'has_air_conditioning, is_active, rates(block_hours, price_cents), '
+          'rooms(label)',
+        )
+        .eq('lodging_id', lodgingId)
+        .order('created_at', ascending: true);
+    return rows.map(RoomType.fromJson).toList();
+  });
+
+  @override
+  Future<String> saveRoomType(
+    String lodgingId,
+    RoomTypeDraft draft, {
+    String? roomTypeId,
+  }) => guardBusiness(
+    () => _client.rpc<String>(
+      'save_room_type',
+      params: {
+        'p_lodging_id': lodgingId,
+        'p_room_type_id': roomTypeId,
+        'p_name': draft.name.trim(),
+        'p_description': draft.description.trim(),
+        'p_max_guests': draft.maxGuests,
+        'p_has_jacuzzi': draft.hasJacuzzi,
+        'p_has_tv': draft.hasTv,
+        'p_has_air_conditioning': draft.hasAirConditioning,
+        'p_is_active': draft.isActive,
+        'p_rates': {for (final e in draft.rates.entries) '${e.key}': e.value},
+        'p_rooms': draft.rooms,
+      },
+    ),
+  );
+
+  @override
+  Future<void> deleteRoomType(String roomTypeId) => guardBusiness(() async {
+    await _client
+        .from('room_types')
+        .delete()
+        .eq('id', roomTypeId)
+        .select('id')
+        .single();
+  });
+
+  @override
+  Future<List<Product>> products(String lodgingId) => guardBusiness(() async {
+    final rows = await _client
+        .from('products')
+        .select('id, name, description, category, price_cents, is_available')
+        .eq('lodging_id', lodgingId)
+        .order('created_at', ascending: true);
+    return rows.map(Product.fromJson).toList();
+  });
+
+  @override
+  Future<void> saveProduct(
+    String lodgingId,
+    ProductDraft draft, {
+    String? productId,
+  }) => guardBusiness(() async {
+    if (productId == null) {
+      await _client.from('products').insert({
+        'lodging_id': lodgingId,
+        ...draft.toJson(),
+      });
+    } else {
+      await _client
+          .from('products')
+          .update(draft.toJson())
+          .eq('id', productId)
+          .select('id')
+          .single();
+    }
+  });
+
+  @override
+  Future<void> deleteProduct(String productId) => guardBusiness(() async {
+    await _client
+        .from('products')
+        .delete()
+        .eq('id', productId)
+        .select('id')
+        .single();
   });
 }
 

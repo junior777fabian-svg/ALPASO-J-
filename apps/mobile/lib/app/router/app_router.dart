@@ -3,6 +3,8 @@ import 'package:alpaso/features/auth/presentation/sign_up_screen.dart';
 import 'package:alpaso/features/business/presentation/business_home_screen.dart';
 import 'package:alpaso/features/business/presentation/lodging_detail_screen.dart';
 import 'package:alpaso/features/business/presentation/lodging_form_screen.dart';
+import 'package:alpaso/features/business/presentation/product_form_screen.dart';
+import 'package:alpaso/features/business/presentation/room_type_form_screen.dart';
 import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
 import 'package:alpaso/features/my_bookings/presentation/my_bookings_screen.dart';
@@ -21,6 +23,12 @@ abstract final class AppRoutes {
   static const newLodging = '/negocio/hostal/nuevo';
   static String lodging(String id) => '/negocio/hostal/$id';
   static String editLodging(String id) => '/negocio/hostal/$id/editar';
+  static String newRoomType(String id) => '/negocio/hostal/$id/cuarto/nuevo';
+  static String editRoomType(String id, String typeId) =>
+      '/negocio/hostal/$id/cuarto/$typeId';
+  static String newProduct(String id) => '/negocio/hostal/$id/extra/nuevo';
+  static String editProduct(String id, String productId) =>
+      '/negocio/hostal/$id/extra/$productId';
 }
 
 GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
@@ -85,6 +93,30 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
                 path: 'editar',
                 builder: (context, state) =>
                     LodgingFormScreen(lodgingId: state.pathParameters['id']),
+              ),
+              GoRoute(
+                path: 'cuarto/nuevo',
+                builder: (context, state) =>
+                    RoomTypeFormScreen(lodgingId: state.pathParameters['id']!),
+              ),
+              GoRoute(
+                path: 'cuarto/:typeId',
+                builder: (context, state) => RoomTypeFormScreen(
+                  lodgingId: state.pathParameters['id']!,
+                  roomTypeId: state.pathParameters['typeId'],
+                ),
+              ),
+              GoRoute(
+                path: 'extra/nuevo',
+                builder: (context, state) =>
+                    ProductFormScreen(lodgingId: state.pathParameters['id']!),
+              ),
+              GoRoute(
+                path: 'extra/:productId',
+                builder: (context, state) => ProductFormScreen(
+                  lodgingId: state.pathParameters['id']!,
+                  productId: state.pathParameters['productId'],
+                ),
               ),
             ],
           ),

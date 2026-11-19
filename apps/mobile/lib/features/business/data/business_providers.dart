@@ -1,6 +1,7 @@
 import 'package:alpaso/features/auth/data/auth_providers.dart';
 import 'package:alpaso/features/business/data/business_repository.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
+import 'package:alpaso/features/business/domain/offer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Nulo cuando la app corre sin servidor.
@@ -27,4 +28,22 @@ final myLodgingsProvider = FutureProvider<List<Lodging>>((ref) async {
 
 final lodgingProvider = FutureProvider.family<Lodging, String>((ref, id) {
   return ref.watch(businessRepositoryProvider)!.lodging(id);
+});
+
+final platformRulesProvider = FutureProvider<PlatformRules>((ref) {
+  return ref.watch(businessRepositoryProvider)!.platformRules();
+});
+
+final roomTypesProvider = FutureProvider.family<List<RoomType>, String>((
+  ref,
+  lodgingId,
+) {
+  return ref.watch(businessRepositoryProvider)!.roomTypes(lodgingId);
+});
+
+final productsProvider = FutureProvider.family<List<Product>, String>((
+  ref,
+  lodgingId,
+) {
+  return ref.watch(businessRepositoryProvider)!.products(lodgingId);
 });
