@@ -30,12 +30,16 @@ select is_empty(
   'toda función security definer fija su search_path'
 );
 
-select is_empty(
-  $$ select table_schema || '.' || table_name || ':' || privilege_type
+select results_eq(
+  $$ select (table_schema || '.' || table_name || ':' || privilege_type)::text collate "default"
        from information_schema.role_table_grants
       where grantee in ('anon', 'PUBLIC')
-        and table_schema in ('public', 'private') $$,
-  'sin sesión no hay permisos sobre ninguna tabla'
+        and table_schema in ('public', 'private')
+      order by 1 $$,
+  $$ values ('public.districts:SELECT'), ('public.lodgings:SELECT'),
+            ('public.products:SELECT'), ('public.rates:SELECT'),
+            ('public.room_types:SELECT') $$,
+  'sin sesión solo se lee la oferta (y RLS deja ver solo lo publicado)'
 );
 
 select results_eq(
@@ -44,8 +48,14 @@ select results_eq(
       where grantee = 'authenticated'
         and table_schema in ('public', 'private')
       order by 1 $$,
-  $$ values ('public.profiles:SELECT') $$,
-  'una cuenta solo tiene permiso de lectura sobre profiles'
+  $$ values ('public.districts:SELECT'),
+            ('public.lodging_members:SELECT'), ('public.lodgings:SELECT'),
+            ('public.products:DELETE'), ('public.products:SELECT'),
+            ('public.profiles:SELECT'),
+            ('public.rates:DELETE'), ('public.rates:SELECT'),
+            ('public.room_types:DELETE'), ('public.room_types:SELECT'),
+            ('public.rooms:DELETE'), ('public.rooms:SELECT') $$,
+  'una cuenta solo tiene los permisos de tabla previstos'
 );
 
 select results_eq(
@@ -55,8 +65,32 @@ select results_eq(
         and table_schema in ('public', 'private')
         and privilege_type in ('UPDATE', 'INSERT')
       order by 1 $$,
-  $$ values ('profiles.full_name') $$,
-  'la única columna que una cuenta puede escribir es su nombre'
+  $$ values
+    ('lodgings.address'), ('lodgings.address_reference'),
+    ('lodgings.cleaning_minutes'), ('lodgings.description'),
+    ('lodgings.district_id'), ('lodgings.has_parking'), ('lodgings.has_wifi'),
+    ('lodgings.latitude'), ('lodgings.longitude'), ('lodgings.name'),
+    ('products.category'), ('products.category'),
+    ('products.description'), ('products.description'),
+    ('products.is_available'), ('products.is_available'),
+    ('products.lodging_id'),
+    ('products.name'), ('products.name'),
+    ('products.price_cents'), ('products.price_cents'),
+    ('profiles.full_name'),
+    ('rates.block_hours'), ('rates.lodging_id'),
+    ('rates.price_cents'), ('rates.price_cents'), ('rates.room_type_id'),
+    ('room_types.description'), ('room_types.description'),
+    ('room_types.has_air_conditioning'), ('room_types.has_air_conditioning'),
+    ('room_types.has_jacuzzi'), ('room_types.has_jacuzzi'),
+    ('room_types.has_tv'), ('room_types.has_tv'),
+    ('room_types.is_active'), ('room_types.is_active'),
+    ('room_types.lodging_id'),
+    ('room_types.max_guests'), ('room_types.max_guests'),
+    ('room_types.name'), ('room_types.name'),
+    ('rooms.is_active'), ('rooms.is_active'), ('rooms.label'), ('rooms.label'),
+    ('rooms.lodging_id'), ('rooms.room_type_id'), ('rooms.room_type_id')
+  $$,
+  'las columnas que una cuenta puede escribir son solo las previstas (nunca estados, dueños ni hostal de una fila)'
 );
 
 select results_eq(
@@ -66,8 +100,8 @@ select results_eq(
       where n.nspname in ('public', 'private')
         and has_function_privilege('anon', p.oid, 'execute')
       order by 1 $$,
-  $$ values ('get_public_settings') $$,
-  'sin sesión solo se puede ejecutar get_public_settings'
+  $$ values ('get_public_settings'), ('is_lodging_published') $$,
+  'sin sesión solo se ejecutan get_public_settings e is_lodging_published'
 );
 
 select results_eq(
@@ -77,7 +111,12 @@ select results_eq(
       where n.nspname in ('public', 'private')
         and has_function_privilege('authenticated', p.oid, 'execute')
       order by 1 $$,
-  $$ values ('private.is_admin'), ('public.confirm_adult'), ('public.get_public_settings') $$,
+  $$ values ('private.is_admin'), ('private.is_lodging_member'),
+            ('private.is_lodging_owner'), ('private.is_lodging_published'),
+            ('private.lodging_role'),
+            ('public.admin_review_lodging'), ('public.confirm_adult'),
+            ('public.create_lodging'), ('public.get_public_settings'),
+            ('public.submit_lodging') $$,
   'una cuenta solo puede ejecutar las funciones previstas'
 );
 
