@@ -2,12 +2,14 @@ import 'package:alpaso/app/app.dart';
 import 'package:alpaso/app/env/app_config.dart';
 import 'package:alpaso/app/providers.dart';
 import 'package:alpaso/features/auth/data/auth_providers.dart';
+import 'package:alpaso/features/booking/data/booking_providers.dart';
 import 'package:alpaso/features/business/data/business_providers.dart';
 import 'package:alpaso/features/explore/data/explore_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_account.dart';
+import 'fake_booking.dart';
 import 'fake_business.dart';
 import 'fake_explore.dart';
 
@@ -38,6 +40,7 @@ extension PumpApp on WidgetTester {
     FakeBusinessServer? business,
     FakePhotoPicker? picker,
     FakeExploreServer? explore,
+    FakeBookingServer? booking,
     FakeLocationService? location,
     String? initialLocation,
   }) async {
@@ -56,6 +59,9 @@ extension PumpApp on WidgetTester {
             businessRepositoryProvider.overrideWithValue(business),
             exploreRepositoryProvider.overrideWithValue(
               explore ?? FakeExploreServer(),
+            ),
+            bookingRepositoryProvider.overrideWithValue(
+              booking ?? FakeBookingServer(),
             ),
           ],
           locationServiceProvider.overrideWithValue(

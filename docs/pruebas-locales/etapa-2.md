@@ -51,7 +51,7 @@ flutter test
 | Comando | Resultado esperado |
 |---|---|
 | `flutter analyze` | `No issues found!` |
-| `flutter test` | `All tests passed!`, con `+90 ~33` en la última línea (incluye la etapa 3) |
+| `flutter test` | `All tests passed!`, con `+103 ~39` en la última línea (incluye las etapas 3 y 4) |
 
 ### 2. APK demo y recorridos en el emulador
 
@@ -85,7 +85,7 @@ flutter test --tags server --dart-define-from-file=config/server.local.json --da
 cd ../..
 ```
 
-Resultado esperado: `All tests passed!` con 33 pruebas (incluye la etapa 3).
+Resultado esperado: `All tests passed!` con 39 pruebas (incluye las etapas 3 y 4).
 
 Ahora prueba a mano en el emulador, que llega a la laptop por `10.0.2.2`:
 

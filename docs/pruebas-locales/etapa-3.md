@@ -18,7 +18,7 @@
 |---|---|
 | Pruebas del servidor (pgTAP) | 149 aprobadas, en una base vacía y en una con datos |
 | Disponibilidad con limpieza quitada a propósito | Las pruebas fallan, como deben |
-| `flutter test` | 90 aprobadas, 33 saltadas |
+| `flutter test` | 90 aprobadas, 33 saltadas (al cerrar la etapa 3; con la 4 son 103 y 39) |
 | App contra el servidor local | 33 aprobadas |
 | Recorrido en navegador: publicar, encontrar sin cuenta, abrir las fichas y desaparecer al ocuparse | 14 de 14 |
 

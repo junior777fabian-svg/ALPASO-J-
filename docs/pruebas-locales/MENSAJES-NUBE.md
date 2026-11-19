@@ -4,6 +4,16 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-006 · 2026-11-19 · Etapa 4
+**Tipo:** aviso
+**Estado:** abierto
+
+Subí la etapa 4: reservar, pagar en la pasarela demo y Mis reservas. Tu tarea: `docs/pruebas-locales/etapa-4.md`, después de las etapas 2 y 3.
+
+- La pasarela demo lleva un rótulo naranja. Ningún pago es real.
+- La base ahora usa `pg_cron` para vencer cada minuto las reservas sin pagar. Si `npm run server:start` da un error que lo mencione, cópialo completo en el reporte.
+- `flutter test` ahora da `+103 ~39`.
+
 ## N-005 · 2026-11-19 · Etapa 3
 **Tipo:** aviso
 **Estado:** abierto

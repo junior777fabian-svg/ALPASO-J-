@@ -9,6 +9,9 @@ import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
 import 'package:alpaso/features/lodging/presentation/public_lodging_screen.dart';
 import 'package:alpaso/features/lodging/presentation/public_room_type_screen.dart';
+import 'package:alpaso/features/booking/presentation/booking_screen.dart';
+import 'package:alpaso/features/booking/presentation/demo_checkout_screen.dart';
+import 'package:alpaso/features/my_bookings/presentation/booking_detail_screen.dart';
 import 'package:alpaso/features/my_bookings/presentation/my_bookings_screen.dart';
 import 'package:alpaso/features/profile/presentation/profile_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -23,6 +26,10 @@ abstract final class AppRoutes {
   static const signIn = '/ingresar';
   static const signUp = '/registro';
   static String publicLodging(String id) => '/hostal/$id';
+  static String book(String lodgingId, String typeId) =>
+      '/reservar/$lodgingId/$typeId';
+  static String payment(String bookingId) => '/pago/$bookingId';
+  static String bookingDetail(String bookingId) => '/reservas/$bookingId';
   static String publicRoomType(String id, String typeId) =>
       '/hostal/$id/cuarto/$typeId';
   static const newLodging = '/negocio/hostal/nuevo';
@@ -58,6 +65,14 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
               GoRoute(
                 path: AppRoutes.bookings,
                 builder: (context, state) => const MyBookingsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) => BookingDetailScreen(
+                      bookingId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -85,6 +100,19 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
             ),
           ),
         ],
+      ),
+      // Reservar y pagar (C5).
+      GoRoute(
+        path: '/reservar/:lodgingId/:typeId',
+        builder: (context, state) => BookingScreen(
+          lodgingId: state.pathParameters['lodgingId']!,
+          roomTypeId: state.pathParameters['typeId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/pago/:id',
+        builder: (context, state) =>
+            PaymentScreen(bookingId: state.pathParameters['id']!),
       ),
       // Cuenta: se abren encima de las pestañas.
       GoRoute(

@@ -1,6 +1,6 @@
 # Al Paso — Estructura del proyecto
 
-**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapas 2 y 3 implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
+**Estado:** Etapa 1: partes 1A, 1B y 1C verificadas; 1D preparada, a la espera del proyecto demo. Etapas 2, 3 y 4 implementadas y verificadas en la nube. El dueño indicó avanzar por partes; las propuestas de este documento siguen abiertas a cambios. Lo implementado se marca en cada sección.
 **Última actualización:** 18 de noviembre de 2026.
 
 Este documento es el plano del proyecto: qué se construye, con qué, en qué orden y cómo se comprueba. Se escribe antes del código y se actualiza cada vez que cambia una decisión.
@@ -509,9 +509,9 @@ Decisiones de la parte 3A (implementadas):
 | Parte | Entrega | Cómo se comprueba | Estado |
 |---|---|---|---|
 | 4A | Servidor de reservas y pago demo: cotización, reserva con retención, pasarela demo, avisos idempotentes, vencimiento, cancelación y reembolso | Pruebas de reglas | Implementada. Verificado en la nube: 52 pruebas pgTAP nuevas (201 en total) |
-| 4B | Reservar en la app (C5): duración, llegada, extras, total del servidor, pago demo con rótulo y confirmación con código | Pruebas de pantalla y contra el servidor local | Pendiente |
-| 4C | Mis reservas (C6): reserva activa con código y QR, cómo llegar, tiempo restante, cancelación, historial | Ídem | Pendiente |
-| 4D | Recorrido: buscar, reservar, pagar en demo, ver el código y cancelar con reembolso | Recorrido en navegador contra el servidor local | Pendiente |
+| 4B | Reservar en la app (C5): duración, llegada, extras, total del servidor, pago demo con rótulo y confirmación con código | Pruebas de pantalla y contra el servidor local | Implementada. Verificado en la nube: pruebas de pantalla y 6 contra el servidor local, incluida la concurrencia (dos clientes, un cuarto: uno lo obtiene) |
+| 4C | Mis reservas (C6): reserva activa con código y QR, cómo llegar, tiempo restante, cancelación, historial | Ídem | Implementada. Verificado en la nube; el código se ve sin conexión (caché probada cortando la red) |
+| 4D | Recorrido: buscar, reservar, pagar en demo, ver el código y cancelar con reembolso | Recorrido en navegador contra el servidor local | Implementada. Verificado en la nube: `e2e/business.cjs`, 18 de 18 pasos. Falta: emulador (agente local) |
 
 Decisiones de la parte 4A (implementadas):
 
@@ -523,6 +523,7 @@ Decisiones de la parte 4A (implementadas):
 - **Vencimiento:** una tarea de `pg_cron` vence cada minuto las retenciones sin pagar. Reservar y pagar también las vencen antes de actuar.
 - **Permisos:** el cliente ve sus reservas y pagos; el personal del hostal ve las reservas de su hostal pero no los cobros. Nadie escribe estas tablas directamente.
 - **Pendiente:** la verificación del celular antes de la primera reserva (módulo C1, con su conector demo) queda para una parte posterior.
+- **App (4B y 4C):** reservar pide sesión; los extras se eligen con cantidades y el total se pide al servidor en cada cambio. La pasarela demo lleva un rótulo naranja "PASARELA DEMO · No se cobra dinero real". Tras un rechazo se reintenta con un cobro nuevo. "Mis reservas" guarda la última lista en el teléfono para mostrar el código sin conexión. El QR contiene `ALPASO:<código>`.
 
 ## 16. Lo que depende del dueño
 

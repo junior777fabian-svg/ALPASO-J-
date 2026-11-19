@@ -119,11 +119,132 @@
     }
   },
   "ratesTitle": "Precios",
-  "bookComingSoon": "Reservar",
-  "bookComingSoonHelp": "La reserva y el pago llegan en la siguiente etapa.",
   "bookingsTitle": "Mis reservas",
   "bookingsEmptyTitle": "Aún no tienes reservas",
   "bookingsEmptyBody": "Tus reservas y su código de ingreso aparecerán aquí.",
+  "bookAction": "Reservar",
+  "bookingsSignInBody": "Inicia sesión para ver tus reservas y su código de ingreso.",
+  "bookingsActive": "Activas",
+  "bookingsHistory": "Historial",
+  "bookingTitle": "Reservar",
+  "bookingSignInTitle": "Inicia sesión para reservar",
+  "bookingSignInBody": "Necesitas una cuenta con mayoría de edad confirmada.",
+  "bookingExtrasTitle": "Extras",
+  "bookingExtrasHelp": "Los encontrarás en el cuarto al llegar.",
+  "bookingNoExtras": "Este hostal todavía no ofrece extras.",
+  "bookingLess": "Quitar {name}",
+  "@bookingLess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingMore": "Agregar {name}",
+  "@bookingMore": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingRoomLine": "Cuarto por {hours} h",
+  "@bookingRoomLine": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingTotal": "Total",
+  "bookingHoldHelp": "Al confirmar, el cuarto queda separado 10 minutos mientras pagas.",
+  "bookingIdHelp": "Lleva tu DNI: el hostal registra a sus huéspedes.",
+  "bookingConfirmAction": "Confirmar y pagar",
+  "bookingErrorNoRoom": "Ese cuarto ya no está libre a esa hora. Elige otro o cambia la hora.",
+  "bookingErrorPending": "Tienes una reserva sin pagar. Págala o cancélala en Mis reservas.",
+  "bookingErrorProduct": "Uno de los extras ya no está disponible. Revisa tu pedido.",
+  "bookingErrorNotBookable": "Este cuarto ya no se vende para esa duración.",
+  "bookingErrorCancelWindow": "Ya pasó el plazo para cancelar con reembolso. Escríbenos desde Ayuda.",
+  "bookingErrorNotFound": "No encontramos esa reserva.",
+  "bookingStatusPending": "Pendiente de pago",
+  "bookingStatusConfirmed": "Confirmada",
+  "bookingStatusCheckedIn": "En curso",
+  "bookingStatusCompleted": "Terminada",
+  "bookingStatusCancelled": "Cancelada",
+  "bookingStatusExpired": "Vencida sin pagar",
+  "bookingStatusNoShow": "No llegó",
+  "paymentTitle": "Pago",
+  "paymentErrorTitle": "No se pudo abrir el pago",
+  "paymentGoToBookings": "Ir a Mis reservas",
+  "paymentDemoLabel": "PASARELA DEMO · No se cobra dinero real",
+  "paymentAmount": "Monto a pagar",
+  "paymentHoldRemaining": "El cuarto sigue separado {time} más",
+  "@paymentHoldRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentDemoApprove": "Aprobar pago (demo)",
+  "paymentDemoReject": "Rechazar pago (demo)",
+  "paymentRejected": "El pago fue rechazado. Puedes intentarlo otra vez mientras el cuarto siga separado.",
+  "paymentRetry": "Intentar otra vez",
+  "paymentLateRefunded": "El pago llegó cuando la reserva ya había vencido. Te devolvimos el monto completo.",
+  "paymentRealPending": "Completa el pago en la pasarela. Te avisaremos cuando se confirme.",
+  "bookingDetailTitle": "Tu reserva",
+  "bookingQrSemantics": "Código QR de la reserva para mostrar en recepción",
+  "bookingCodeHelp": "Muestra este código o el QR en recepción.",
+  "bookingArrival": "Llegada: {when}",
+  "@bookingArrival": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingDeparture": "Salida: {when}",
+  "@bookingDeparture": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingStartsIn": "Empieza en {time}",
+  "@bookingStartsIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingDirections": "Cómo llegar",
+  "bookingRefunded": "Reembolsado",
+  "bookingBringId": "El tiempo corre desde la hora reservada. Lleva tu DNI.",
+  "bookingPayAction": "Pagar",
+  "cancelTitle": "¿Cancelar la reserva?",
+  "cancelRefundBody": "Te devolvemos {amount} completos.",
+  "@cancelRefundBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelUnpaidBody": "El cuarto se libera para otra persona.",
+  "cancelKeep": "No, mantener",
+  "cancelAction": "Cancelar reserva",
+  "cancelDone": "Reserva cancelada.",
+  "cancelDoneRefund": "Reserva cancelada. Te devolvimos {amount}.",
+  "@cancelDoneRefund": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelWindowClosedHelp": "Ya pasó el plazo para cancelar con reembolso desde la app. Si tienes un problema, escríbenos desde Ayuda.",
   "profileTitle": "Perfil",
   "profileEmptyTitle": "Tu cuenta",
   "profileSignedOutBody": "Inicia sesión o crea tu cuenta para reservar y ver tus reservas.",

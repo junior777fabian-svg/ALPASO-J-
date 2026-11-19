@@ -271,6 +271,49 @@ function adminReview(args) {
     await shot('09-ficha-cuarto');
   });
 
+  // ── Etapa 4: el cliente reserva y paga ─────────────────────────────────
+  await step('el cliente crea su cuenta', async () => {
+    await page.goto(baseUrl.replace(/#.*$/, ''));
+    await tab('Explorar').waitFor({ timeout: 60000 });
+    await tab('Perfil').click();
+    await button('Crear cuenta').click();
+    await fill('Nombre', 'Cliente Recorrido');
+    await fill('Correo', `cliente.${run}@example.test`);
+    await fill('Contraseña', 'Clave-del-recorrido-1');
+    await tap(page.getByRole('checkbox').first());
+    await tap(button('Crear cuenta'));
+    await text('Mayoría de edad confirmada').waitFor({ timeout: 20000 });
+  });
+
+  await step('reserva el cuarto y ve el total del servidor', async () => {
+    await tab('Explorar').click();
+    await tap(page.getByRole('button', { name: lodgingName }).first());
+    await tap(page.getByRole('button', { name: 'Matrimonial' }).first());
+    await tap(button('Reservar'));
+    await shows('Total').waitFor({ timeout: 20000 });
+    await shows('S/ 45.00').waitFor({ timeout: 10000 });
+    await shot('11-reservar');
+    await tap(button('Confirmar y pagar'));
+  });
+
+  await step('paga en la pasarela demo, rotulada', async () => {
+    await shows('PASARELA DEMO').waitFor({ timeout: 20000 });
+    await shot('12-pasarela-demo');
+    await tap(button('Aprobar pago (demo)'));
+    await shows('Confirmada').waitFor({ timeout: 20000 });
+    await shows('Muestra este código o el QR en recepción.').waitFor({ timeout: 5000 });
+    await shot('13-codigo');
+  });
+
+  await step('cancela a tiempo y recibe el reembolso completo', async () => {
+    await tap(button('Cancelar reserva'));
+    await shows('Te devolvemos S/ 45.00 completos.').waitFor({ timeout: 10000 });
+    await tap(page.getByRole('button', { name: 'Cancelar reserva' }).last());
+    await shows('Te devolvimos S/ 45.00').waitFor({ timeout: 20000 });
+    await shows('Cancelada').waitFor({ timeout: 10000 });
+    await shot('14-cancelada');
+  });
+
   await step('con todos sus cuartos ocupados, desaparece de la búsqueda', async () => {
     const config = JSON.parse(
       fs.readFileSync(path.join(root, 'apps', 'mobile', 'config', 'server.local.json'), 'utf8'),

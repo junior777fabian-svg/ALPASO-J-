@@ -1,3 +1,4 @@
+import 'package:alpaso/app/router/app_router.dart';
 import 'package:alpaso/app/theme/app_spacing.dart';
 import 'package:alpaso/core/format/money.dart';
 import 'package:alpaso/features/business/domain/photo.dart';
@@ -6,6 +7,7 @@ import 'package:alpaso/features/explore/data/explore_providers.dart';
 import 'package:alpaso/features/lodging/presentation/photo_gallery.dart';
 import 'package:alpaso/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// C4. Un tipo de cuarto: galería etiquetada (habitación, baño, jacuzzi),
@@ -95,23 +97,16 @@ class PublicRoomTypeScreen extends ConsumerWidget {
                         ),
                       const SizedBox(height: AppSpacing.lg),
                       FilledButton(
-                        // Reservar llega en la etapa 4.
-                        onPressed: null,
+                        key: const Key('room-book'),
+                        onPressed: type.isBookable
+                            ? () => context.push(
+                                AppRoutes.book(lodgingId, roomTypeId),
+                              )
+                            : null,
                         child: Text(
-                          type.isBookable
-                              ? l10n.bookComingSoon
-                              : l10n.offerTaken,
+                          type.isBookable ? l10n.bookAction : l10n.offerTaken,
                         ),
                       ),
-                      if (type.isBookable)
-                        Padding(
-                          padding: const EdgeInsets.only(top: AppSpacing.xs),
-                          child: Text(
-                            l10n.bookComingSoonHelp,
-                            style: theme.textTheme.bodySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
                     ],
                   ),
                 ),
