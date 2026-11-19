@@ -525,6 +525,24 @@ Decisiones de la parte 4A (implementadas):
 - **Pendiente:** la verificación del celular antes de la primera reserva (módulo C1, con su conector demo) queda para una parte posterior.
 - **App (4B y 4C):** reservar pide sesión; los extras se eligen con cantidades y el total se pide al servidor en cada cambio. La pasarela demo lleva un rótulo naranja "PASARELA DEMO · No se cobra dinero real". Tras un rechazo se reintenta con un cobro nuevo. "Mis reservas" guarda la última lista en el teléfono para mostrar el código sin conexión. El QR contiene `ALPASO:<código>`.
 
+### Partes de la etapa 5
+
+| Parte | Entrega | Cómo se comprueba | Estado |
+|---|---|---|---|
+| 5A | Servidor de recepción: tablero del día, ingreso con código, salida, limpieza, cliente directo, extras, cancelación del hostal, personal con invitaciones y tareas automáticas | Pruebas de reglas | Implementada. Verificado en la nube: 46 pruebas pgTAP nuevas (247 en total) |
+| 5B | Recepción en la app (N4 a N6): tablero Hoy, ingreso con código, salida, limpieza, cliente directo, extras; reservas del hostal; personal | Pruebas de pantalla y contra el servidor local | Pendiente |
+| 5C | Recorrido: cliente reserva, recepción lo hace ingresar con el código (una sola vez), marca la salida y la limpieza | Recorrido en navegador contra el servidor local | Pendiente |
+
+Decisiones de la parte 5A (implementadas):
+
+- **Ingreso:** `host_check_in` acepta el código o el contenido del QR (`ALPASO:<código>`), sin importar mayúsculas ni espacios. Sirve solo en su hostal, desde 15 minutos antes de la llegada (`check_in_early_minutes`) hasta la hora de salida, y una sola vez. Un código de otro hostal responde igual que uno inexistente.
+- **Salida y limpieza:** la salida cierra la estadía y abre la limpieza del hostal; marcar limpio libera el cuarto desde ya. Sin salida manual, la estadía se cierra sola al terminar el tiempo y la limpieza ya estaba incluida.
+- **No llegó:** a los 30 minutos de la hora reservada (`no_show_minutes`) la reserva pasa a "no llegó", sin reembolso, y el cuarto se libera. Las dos transiciones las hace `pg_cron` cada minuto.
+- **Cliente directo y fuera de servicio:** `host_block_room` nunca pisa una reserva de la app (lo impide la restricción de exclusión) y la app se entera al instante porque escribe en `room_occupancy`.
+- **Extras:** un extra marcado "no disponible" se reembolsa. Los reembolsos de un cobro pueden ser varios pero nunca suman más que lo cobrado (lo vigila la base).
+- **Cancelación del hostal:** solo el dueño (o un administrador), con motivo, y con reembolso total.
+- **Personal:** el dueño genera un código de 8 caracteres que vale 48 horas y una sola vez; quien lo usa queda como recepcionista. El dueño ve a su personal y puede retirar recepcionistas, nunca al dueño. El recepcionista ve del cliente solo el nombre y el código.
+
 ## 16. Lo que depende del dueño
 
 | Qué | Cuándo | Costo |
