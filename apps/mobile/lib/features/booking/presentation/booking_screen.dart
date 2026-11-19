@@ -256,11 +256,21 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 FormErrorBox(message: _error!),
                 const SizedBox(height: AppSpacing.md),
               ],
-              SubmitButton(
-                label: l10n.bookingConfirmAction,
-                busy: _busy,
-                onPressed: _confirm,
-              ),
+              if (ref.watch(myProfileProvider).value?.isPhoneVerified ?? true)
+                SubmitButton(
+                  label: l10n.bookingConfirmAction,
+                  busy: _busy,
+                  onPressed: _confirm,
+                )
+              else ...[
+                Text(l10n.bookingPhoneNeeded),
+                const SizedBox(height: AppSpacing.sm),
+                FilledButton(
+                  key: const Key('booking-verify-phone'),
+                  onPressed: () => context.push(AppRoutes.verifyPhone),
+                  child: Text(l10n.phoneVerifyShort),
+                ),
+              ],
             ],
           ),
         ),

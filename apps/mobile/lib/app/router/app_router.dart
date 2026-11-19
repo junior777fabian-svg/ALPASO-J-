@@ -12,6 +12,7 @@ import 'package:alpaso/features/explore/presentation/explore_screen.dart';
 import 'package:alpaso/features/home/presentation/home_shell.dart';
 import 'package:alpaso/features/lodging/presentation/public_lodging_screen.dart';
 import 'package:alpaso/features/profile/presentation/account_actions.dart';
+import 'package:alpaso/features/profile/presentation/phone_verification_screen.dart';
 import 'package:alpaso/features/lodging/presentation/public_room_type_screen.dart';
 import 'package:alpaso/features/booking/presentation/booking_screen.dart';
 import 'package:alpaso/features/booking/presentation/demo_checkout_screen.dart';
@@ -30,6 +31,7 @@ abstract final class AppRoutes {
   static const signIn = '/ingresar';
   static const signUp = '/registro';
   static const support = '/ayuda';
+  static const verifyPhone = '/verificar-celular';
   static const deleteAccount = '/eliminar-cuenta';
   static String publicLodging(String id) => '/hostal/$id';
   static String book(String lodgingId, String typeId) =>
@@ -123,6 +125,10 @@ GoRouter buildRouter({String initialLocation = AppRoutes.explore}) {
         path: '/pago/:id',
         builder: (context, state) =>
             PaymentScreen(bookingId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: AppRoutes.verifyPhone,
+        builder: (context, state) => const PhoneVerificationScreen(),
       ),
       GoRoute(
         path: AppRoutes.support,

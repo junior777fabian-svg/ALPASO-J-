@@ -9,7 +9,7 @@ insert into auth.users (id, email) values
   ('22222222-2222-2222-2222-222222222222', 'cli@example.test'),
   ('33333333-3333-3333-3333-333333333333', 'otro@example.test'),
   ('55555555-5555-5555-5555-555555555555', 'menor@example.test');
-update public.profiles set adult_confirmed_at = now()
+update public.profiles set adult_confirmed_at = now(), phone_verified_at = now()
  where id <> '55555555-5555-5555-5555-555555555555';
 
 insert into public.lodgings (id, name, district_id, address, latitude, longitude,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:alpaso/features/auth/data/auth_repository.dart';
 import 'package:alpaso/features/business/data/business_repository.dart';
 import 'package:alpaso/features/business/domain/lodging.dart';
@@ -25,12 +27,22 @@ SupabaseClient phone([String key = publishableKey]) => SupabaseClient(
   ),
 );
 
-/// Crea una cuenta con mayoría de edad confirmada.
+/// Un celular de prueba distinto en cada llamada: 9 y 8 dígitos.
+String testPhone() {
+  final n = Random().nextInt(100000000);
+  return '9${n.toString().padLeft(8, '0')}';
+}
+
+/// Crea una cuenta con mayoría de edad confirmada y celular verificado con
+/// el código demo, lista para reservar.
 Future<SupabaseClient> adultAccount(String email) async {
   final client = phone();
   await SupabaseAuthRepository(client.auth)
       .signUp(email: email, password: 'Clave-de-prueba-1', fullName: 'Prueba');
-  await SupabaseProfileRepository(client).confirmAdult();
+  final profiles = SupabaseProfileRepository(client);
+  await profiles.confirmAdult();
+  final code = await profiles.requestPhoneCode(testPhone());
+  await profiles.verifyPhoneCode(code!);
   return client;
 }
 

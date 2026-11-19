@@ -75,7 +75,7 @@ En Windows, la ruta de la carpeta del repositorio no debe tener paréntesis ni e
 
 ## 5. Qué tienes que hacer
 
-Lee primero los mensajes N-004 a N-008 en `MENSAJES-NUBE.md`.
+Lee primero los mensajes N-004 a N-009 en `MENSAJES-NUBE.md`.
 
 ### Tarea 1: probar la etapa 2
 
@@ -93,7 +93,7 @@ flutter test integration_test -d <id-del-dispositivo>
 | Comando | Resultado esperado |
 |---|---|
 | `flutter analyze` | `No issues found!` |
-| `flutter test` | `All tests passed!`, con `+115 ~50` |
+| `flutter test` | `All tests passed!`, con `+116 ~51` |
 | `flutter test integration_test` | `All tests passed!`, 1 aprobada y 1 saltada |
 
 Si Docker responde, el archivo de detalle explica cómo registrar y publicar un hostal completo en el emulador contra el servidor local.

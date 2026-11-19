@@ -10,6 +10,7 @@ String bookingFailureMessage(AppLocalizations l10n, Object error) {
     BookingFailureReason.noRoomAvailable => l10n.bookingErrorNoRoom,
     BookingFailureReason.pendingBookingExists => l10n.bookingErrorPending,
     BookingFailureReason.adultNotConfirmed => l10n.businessErrorNotAdult,
+    BookingFailureReason.phoneNotVerified => l10n.bookingPhoneNeeded,
     BookingFailureReason.accountBlocked => l10n.authErrorBlocked,
     BookingFailureReason.productNotAvailable => l10n.bookingErrorProduct,
     BookingFailureReason.notBookable => l10n.bookingErrorNotBookable,

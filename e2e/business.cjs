@@ -293,6 +293,18 @@ function adminReview(args) {
     await shows('Total').waitFor({ timeout: 20000 });
     await shows('S/ 45.00').waitFor({ timeout: 10000 });
     await shot('11-reservar');
+  });
+
+  await step('la primera vez verifica su celular con el código demo', async () => {
+    await tap(button('Verificar celular'));
+    const number = `9${String(run).slice(-8)}`;
+    await fill('Celular', number);
+    await tap(button('Enviar código'));
+    await shows('DEMO · No se envía un mensaje real').waitFor({ timeout: 20000 });
+    await shot('11b-celular-demo');
+    await fill('Código de 6 dígitos', '123456');
+    await tap(button('Verificar'));
+    await button('Confirmar y pagar').waitFor({ timeout: 20000 });
     await tap(button('Confirmar y pagar'));
   });
 

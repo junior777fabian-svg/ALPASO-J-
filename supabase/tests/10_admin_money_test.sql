@@ -11,7 +11,7 @@ insert into auth.users (id, email) values
 insert into auth.identities (id, user_id, provider_id, identity_data, provider)
 values (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', '66666666-6666-6666-6666-666666666666',
         '{"email": "borrar@example.test"}', 'email');
-update public.profiles set adult_confirmed_at = now();
+update public.profiles set adult_confirmed_at = now(), phone_verified_at = now();
 update public.profiles set full_name = 'Beto Borrar' where id = '66666666-6666-6666-6666-666666666666';
 insert into private.admins (user_id) values ('33333333-3333-3333-3333-333333333333');
 

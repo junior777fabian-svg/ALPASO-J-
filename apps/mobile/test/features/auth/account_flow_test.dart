@@ -293,7 +293,13 @@ void main() {
       expect(find.text('Ana María'), findsOneWidget);
       expect(server.profiles[server.currentUser!.id]!.fullName, 'Ana María');
 
-      await tester.ensureVisible(find.text('Cerrar sesión'));
+      // El perfil es una lista que construye solo lo visible.
+      await tester.scrollUntilVisible(
+        find.text('Cerrar sesión'),
+        200,
+        scrollable: find.byType(Scrollable).hitTestable().first,
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Cerrar sesión'));
       await tester.pumpAndSettle();
       expect(find.text('Iniciar sesión'), findsOneWidget);

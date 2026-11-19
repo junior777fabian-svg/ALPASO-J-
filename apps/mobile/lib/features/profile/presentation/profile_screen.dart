@@ -270,6 +270,20 @@ class _SignedInState extends ConsumerState<_SignedIn> {
             title: Text(l10n.profileAdultConfirmedLabel),
           ),
         ListTile(
+          leading: const Icon(Icons.phone_iphone),
+          title: Text(l10n.phoneLabel),
+          subtitle: Text(
+            profile.isPhoneVerified ? profile.phone! : l10n.phoneNotVerified,
+            key: const Key('profile-phone'),
+          ),
+          trailing: profile.isPhoneVerified
+              ? null
+              : TextButton(
+                  onPressed: () => context.push(AppRoutes.verifyPhone),
+                  child: Text(l10n.phoneVerifyShort),
+                ),
+        ),
+        ListTile(
           leading: const Icon(Icons.help_outline),
           title: Text(l10n.supportTitle),
           onTap: () => context.push(AppRoutes.support),

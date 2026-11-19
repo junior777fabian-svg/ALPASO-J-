@@ -14,6 +14,13 @@ abstract interface class ProfileRepository {
   /// la llamada no la cambia.
   Future<DateTime> confirmAdult();
 
+  /// Pide un código para verificar el celular. Con el conector demo
+  /// devuelve el código para mostrarlo rotulado; con uno real, nulo.
+  Future<String?> requestPhoneCode(String phone);
+
+  /// Comprueba el código. Devuelve el celular verificado.
+  Future<String> verifyPhoneCode(String code);
+
   /// Abre una incidencia de soporte.
   Future<void> createSupportCase(String subject, String message);
 
@@ -27,7 +34,8 @@ class SupabaseProfileRepository implements ProfileRepository {
 
   final sb.SupabaseClient _client;
 
-  static const _columns = 'id, full_name, adult_confirmed_at, is_blocked';
+  static const _columns =
+      'id, full_name, adult_confirmed_at, is_blocked, phone, phone_verified_at';
 
   String get _userId {
     final id = _client.auth.currentUser?.id;
@@ -65,6 +73,20 @@ class SupabaseProfileRepository implements ProfileRepository {
   });
 
   @override
+  Future<String?> requestPhoneCode(String phone) => _guard(() async {
+    final json = await _client.rpc<Map<String, dynamic>>(
+      'request_phone_code',
+      params: {'p_phone': phone},
+    );
+    return json['demo_code'] as String?;
+  });
+
+  @override
+  Future<String> verifyPhoneCode(String code) => _guard(
+    () => _client.rpc<String>('verify_phone_code', params: {'p_code': code}),
+  );
+
+  @override
   Future<void> createSupportCase(String subject, String message) =>
       _guard(() async {
         await _client.rpc<String>(
@@ -87,7 +109,12 @@ class SupabaseProfileRepository implements ProfileRepository {
       throw AuthFailure(switch (error.message) {
         'active_bookings' => AuthFailureReason.activeBookings,
         'owns_lodgings' => AuthFailureReason.ownsLodgings,
-        'too_many_cases' => AuthFailureReason.rateLimited,
+        'too_many_cases' ||
+        'too_many_requests' ||
+        'too_many_attempts' => AuthFailureReason.rateLimited,
+        'invalid_phone' => AuthFailureReason.invalidPhone,
+        'phone_in_use' => AuthFailureReason.phoneInUse,
+        'wrong_code' || 'code_expired' => AuthFailureReason.wrongCode,
         _ => AuthFailureReason.unknown,
       }, '${error.code}: ${error.message}');
     } on Exception catch (error) {

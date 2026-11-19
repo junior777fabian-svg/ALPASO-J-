@@ -18,6 +18,9 @@ String authFailureMessage(AppLocalizations l10n, Object error) {
     AuthFailureReason.blocked => l10n.authErrorBlocked,
     AuthFailureReason.activeBookings => l10n.deleteErrorActiveBookings,
     AuthFailureReason.ownsLodgings => l10n.deleteErrorOwnsLodgings,
+    AuthFailureReason.invalidPhone => l10n.phoneErrorInvalid,
+    AuthFailureReason.phoneInUse => l10n.phoneErrorInUse,
+    AuthFailureReason.wrongCode => l10n.phoneErrorWrongCode,
     AuthFailureReason.unknown => l10n.authErrorUnknown,
   };
 }

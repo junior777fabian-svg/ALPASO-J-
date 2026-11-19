@@ -4,6 +4,12 @@ Formato y reglas: `AGENTE_LOCAL.md`, sección 2. El mensaje más nuevo va arriba
 
 ---
 
+## N-009 · 2026-11-19 · Celular
+**Tipo:** aviso
+**Estado:** abierto
+
+Antes de la primera reserva, la app pide verificar un celular peruano. En demo no se envía un mensaje: la app muestra el código de prueba 123456 en un recuadro naranja DEMO. En las pruebas a mano de la etapa 4 en adelante, usa un número inventado que empiece con 9 (por ejemplo 900000001) y ese código. `flutter test` ahora da `+116 ~51`.
+
 ## N-008 · 2026-11-19 · Etapa 6
 **Tipo:** aviso
 **Estado:** abierto

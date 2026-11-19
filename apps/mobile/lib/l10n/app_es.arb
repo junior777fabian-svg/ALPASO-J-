@@ -735,5 +735,27 @@
   "payoutBank": "Banco",
   "payoutCci": "CCI (20 dígitos)",
   "payoutCciError": "El CCI tiene 20 dígitos.",
-  "payoutAccountSaved": "Cuenta guardada."
+  "payoutAccountSaved": "Cuenta guardada.",
+  "phoneTitle": "Verifica tu celular",
+  "phoneHelp": "Te enviamos un código por mensaje. Solo se pide antes de tu primera reserva.",
+  "phoneLabel": "Celular",
+  "phoneSendCode": "Enviar código",
+  "phoneDemoCode": "DEMO · No se envía un mensaje real. Tu código de prueba es {code}",
+  "@phoneDemoCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "phoneCodeLabel": "Código de 6 dígitos",
+  "phoneVerifyAction": "Verificar",
+  "phoneChangeNumber": "Cambiar número",
+  "phoneVerified": "Celular verificado.",
+  "phoneNotVerified": "Sin verificar",
+  "phoneVerifyShort": "Verificar celular",
+  "phoneErrorInvalid": "Escribe un celular peruano: 9 dígitos, empieza con 9.",
+  "phoneErrorInUse": "Ese celular ya está verificado en otra cuenta.",
+  "phoneErrorWrongCode": "El código no es correcto o ya venció.",
+  "bookingPhoneNeeded": "Para tu primera reserva, verifica tu celular."
 }

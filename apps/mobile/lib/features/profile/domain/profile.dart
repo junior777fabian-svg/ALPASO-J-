@@ -5,6 +5,8 @@ class Profile {
     required this.fullName,
     required this.adultConfirmedAt,
     required this.isBlocked,
+    this.phone,
+    this.phoneVerifiedAt,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
@@ -15,6 +17,11 @@ class Profile {
       _ => null,
     },
     isBlocked: (json['is_blocked'] as bool?) ?? false,
+    phone: json['phone'] as String?,
+    phoneVerifiedAt: switch (json['phone_verified_at']) {
+      final String value => DateTime.parse(value),
+      _ => null,
+    },
   );
 
   final String id;
@@ -26,10 +33,23 @@ class Profile {
 
   bool get isAdultConfirmed => adultConfirmedAt != null;
 
-  Profile copyWith({String? fullName, DateTime? adultConfirmedAt}) => Profile(
+  /// Celular verificado, en formato +519XXXXXXXX.
+  final String? phone;
+  final DateTime? phoneVerifiedAt;
+
+  bool get isPhoneVerified => phoneVerifiedAt != null;
+
+  Profile copyWith({
+    String? fullName,
+    DateTime? adultConfirmedAt,
+    String? phone,
+    DateTime? phoneVerifiedAt,
+  }) => Profile(
     id: id,
     fullName: fullName ?? this.fullName,
     adultConfirmedAt: adultConfirmedAt ?? this.adultConfirmedAt,
     isBlocked: isBlocked,
+    phone: phone ?? this.phone,
+    phoneVerifiedAt: phoneVerifiedAt ?? this.phoneVerifiedAt,
   );
 }

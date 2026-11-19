@@ -33,6 +33,7 @@ class FakeAccountServer {
     required String password,
     String fullName = '',
     bool adult = true,
+    bool phoneVerified = true,
   }) {
     final user = AppUser(id: 'u${_ids++}', email: email);
     _users[email] = (user: user, password: password);
@@ -41,6 +42,8 @@ class FakeAccountServer {
       fullName: fullName,
       adultConfirmedAt: adult ? DateTime.utc(2026, 1, 1) : null,
       isBlocked: false,
+      phone: phoneVerified ? '+51987654321' : null,
+      phoneVerifiedAt: phoneVerified ? DateTime.utc(2026, 1, 1) : null,
     );
     return user;
   }
@@ -91,6 +94,7 @@ class _FakeAuth implements AuthRepository {
       password: password,
       fullName: fullName.trim(),
       adult: false,
+      phoneVerified: false,
     );
     server._setUser(user);
     return user;
@@ -136,6 +140,30 @@ class _FakeProfiles implements ProfileRepository {
     return server.profiles[_id] = server.profiles[_id]!.copyWith(
       fullName: fullName.trim(),
     );
+  }
+
+  String? _pendingPhone;
+
+  @override
+  Future<String?> requestPhoneCode(String phone) async {
+    final digits = phone.replaceAll(RegExp('[^0-9]'), '');
+    if (!RegExp(r'^9\d{8}$').hasMatch(digits)) {
+      throw const AuthFailure(AuthFailureReason.invalidPhone);
+    }
+    _pendingPhone = '+51$digits';
+    return '123456';
+  }
+
+  @override
+  Future<String> verifyPhoneCode(String code) async {
+    if (code.trim() != '123456' || _pendingPhone == null) {
+      throw const AuthFailure(AuthFailureReason.wrongCode);
+    }
+    server.profiles[_id] = server.profiles[_id]!.copyWith(
+      phone: _pendingPhone,
+      phoneVerifiedAt: DateTime.utc(2026, 11, 19),
+    );
+    return _pendingPhone!;
   }
 
   @override

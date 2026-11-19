@@ -36,6 +36,15 @@ enum AuthFailureReason {
   /// No se elimina la cuenta: es dueña de un hostal.
   ownsLodgings,
 
+  /// No es un celular peruano.
+  invalidPhone,
+
+  /// Ese celular ya está verificado en otra cuenta.
+  phoneInUse,
+
+  /// El código no es el correcto o venció.
+  wrongCode,
+
   /// Cualquier otro error.
   unknown,
 }

@@ -153,11 +153,11 @@ select results_eq(
             ('public.host_set_item_status'), ('public.host_today'),
             ('public.invite_staff'), ('public.lodging_earnings'),
             ('public.lodging_staff'),
-            ('public.revoke_staff'),
+            ('public.request_phone_code'), ('public.revoke_staff'),
             ('public.save_room_type'), ('public.search_lodgings'),
             ('public.set_payout_account'),
             ('public.start_payment'), ('public.submit_complaint'),
-            ('public.submit_lodging') $$,
+            ('public.submit_lodging'), ('public.verify_phone_code') $$,
   'una cuenta solo puede ejecutar las funciones previstas'
 );
 

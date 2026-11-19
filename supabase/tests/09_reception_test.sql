@@ -9,7 +9,7 @@ insert into auth.users (id, email) values
   ('44444444-4444-4444-4444-444444444444', 'rosa@example.test'),
   ('22222222-2222-2222-2222-222222222222', 'cli@example.test'),
   ('33333333-3333-3333-3333-333333333333', 'luis@example.test');
-update public.profiles set adult_confirmed_at = now();
+update public.profiles set adult_confirmed_at = now(), phone_verified_at = now();
 update public.profiles set full_name = 'Carla Cliente' where id = '22222222-2222-2222-2222-222222222222';
 
 insert into public.lodgings (id, name, district_id, address, latitude, longitude,
